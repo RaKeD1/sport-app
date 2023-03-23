@@ -63,6 +63,45 @@ button {
   &:focus {
   }
 }
+
+// Добавлять только при условие что значение в input верное
+.input-true {
+  background-color: transparent;
+
+  color: var(--butt);
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    right: 10px;
+    bottom: 0;
+    margin: auto 0;
+    top: 0;
+    width: 12px;
+    height: 10px;
+    background: url('./assets/img/checkTrue.svg') no-repeat;
+    background-size: cover;
+  }
+}
+.input-false {
+  background-color: transparent;
+
+  color: var(--butt);
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    right: 10px;
+    bottom: 0;
+    margin: auto 0;
+    top: 0;
+    width: 12px;
+    height: 12px;
+    background: url('./assets/img/checkFalse.svg') no-repeat;
+    background-size: cover;
+  }
+}
+
 .container {
   width: calc(100vw - 100px);
   margin: 150px auto;
@@ -95,7 +134,9 @@ button {
   }
   &__input {
     color: #939393;
-    margin-top: 12px;
+  }
+  &__for-input {
+    margin-top: 10px;
   }
   &__button {
     margin-top: 0px;
@@ -108,6 +149,9 @@ button {
   &__link {
     text-decoration: underline;
     cursor: pointer;
+    font-weight: 400;
+    font-size: 10px;
+    color: #a4a4a4;
   }
 }
 

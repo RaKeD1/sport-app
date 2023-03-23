@@ -1,6 +1,6 @@
 import React from 'react';
 
 export const Profile = () => {
-  return <div>Profile</div>;
+  return <div>Тут будет профиль!</div>;
 };
 export default Profile;

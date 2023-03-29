@@ -9,9 +9,10 @@ type Inputs = {
   onChange: (value: string) => void;
 }[];
 
-export const Registr = () => {
+export const Registr: React.FC = () => {
   const [fio, setFio] = React.useState<string>('');
   const [tel, setTel] = React.useState<string>('');
+  const [email, setEmail] = React.useState<string>('');
   const [group, setGroup] = React.useState<string>('');
   const [login, setLogin] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
@@ -20,6 +21,7 @@ export const Registr = () => {
   const inputs: Inputs = [
     { placeholder: 'ФИО', type: 'text', onChange: (value) => setFio(value) },
     { placeholder: 'Телефон', type: 'tel', onChange: (value) => setTel(value) },
+    { placeholder: 'Email', type: 'email', onChange: (value) => setEmail(value) },
     { placeholder: 'Группа', type: 'text', onChange: (value) => setGroup(value) },
     { placeholder: 'Логин', type: 'text', onChange: (value) => setLogin(value) },
     { placeholder: 'Пароль', type: 'password', onChange: (value) => setPassword(value) },
@@ -29,6 +31,11 @@ export const Registr = () => {
       onChange: (value) => setPasswordCheck(value),
     },
   ];
+
+  const onClickConfirm = () => {
+    if (password === passwordCheck) {
+    }
+  };
 
   return (
     <div className='auth'>
@@ -50,7 +57,9 @@ export const Registr = () => {
           Войти
         </Link>
       </p>
-      <button className='auth__button'>Зарегистрироваться</button>
+      <button onClick={onClickConfirm} className='auth__button'>
+        Зарегистрироваться
+      </button>
     </div>
   );
 };

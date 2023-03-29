@@ -15,8 +15,7 @@ body {
   background-color: var(--back);
   color: #000;
 }
-h1 {
-}
+
 h2 {
   font-size: 20px;
   font-size: 20px;
@@ -59,8 +58,6 @@ button {
     background-color: transparent;
     border: 1px solid var(--butt);
     color: var(--butt);
-  }
-  &:focus {
   }
 }
 

@@ -1,6 +1,10 @@
 import React from 'react';
 
 export const Profile = () => {
-  return <div>Тут будет профиль!</div>;
+  return (
+    <>
+      <div className="profile"></div>
+    </>
+  );
 };
 export default Profile;

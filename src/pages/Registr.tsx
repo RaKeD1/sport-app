@@ -1,55 +1,40 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Formik, Form, Field, withFormik, FormikProps, FormikErrors } from 'formik';
 import logo from '../assets/img/ball.svg';
-import AuthInputs from '../components/AuthInputs';
+import RegisterSchema from '../models/validation/RegisterSchema';
 
-type Inputs = {
-  placeholder: string;
-  type: string;
-  onChange: (value: string) => void;
-}[];
+interface FormValues {
+  fio: string;
+  phone: string;
+  email: string;
+  group: string;
+  login: string;
+  password: string;
+  passwordCheck: string;
+}
 
-export const Registr: React.FC = () => {
-  const [fio, setFio] = React.useState<string>('');
-  const [tel, setTel] = React.useState<string>('');
-  const [email, setEmail] = React.useState<string>('');
-  const [group, setGroup] = React.useState<string>('');
-  const [login, setLogin] = React.useState<string>('');
-  const [password, setPassword] = React.useState<string>('');
-  const [passwordCheck, setPasswordCheck] = React.useState<string>('');
-
-  const inputs: Inputs = [
-    { placeholder: 'ФИО', type: 'text', onChange: (value) => setFio(value) },
-    { placeholder: 'Телефон', type: 'tel', onChange: (value) => setTel(value) },
-    { placeholder: 'Email', type: 'email', onChange: (value) => setEmail(value) },
-    { placeholder: 'Группа', type: 'text', onChange: (value) => setGroup(value) },
-    { placeholder: 'Логин', type: 'text', onChange: (value) => setLogin(value) },
-    { placeholder: 'Пароль', type: 'password', onChange: (value) => setPassword(value) },
-    {
-      placeholder: 'Повторите пароль',
-      type: 'password',
-      onChange: (value) => setPasswordCheck(value),
-    },
-  ];
-
-  const onClickConfirm = () => {
-    if (password === passwordCheck) {
-    }
-  };
-
+const InnerForm = (props: FormikProps<FormValues>) => {
+  const { touched, errors, isSubmitting } = props;
   return (
-    <div className='auth'>
+    <Form className='auth'>
       <img className='auth__logo' width='44' src={logo} alt='Valleyball logo'></img>
       <h2 className='auth__title'>Регистрация</h2>
       <div className='auth__inputs'>
-        {inputs.map((obj, i) => (
-          <AuthInputs
-            key={i}
-            placeholder={obj.placeholder}
-            type={obj.type}
-            onChangeInput={obj.onChange}
-          />
-        ))}
+        <Field name='fio' type='text' placeholder='ФИО' />
+        {errors.fio && touched.fio && <div>{errors.fio}</div>}
+        <Field name='phone' type='tel' placeholder='Телефон' />
+        {errors.phone && touched.phone && <div>{errors.phone}</div>}
+        <Field name='email' type='email' placeholder='Email' />
+        {errors.email && touched.email && <div>{errors.email}</div>}
+        <Field name='group' type='text' placeholder='Группа' />
+        {errors.group && touched.group && <div>{errors.group}</div>}
+        <Field name='login' type='text' placeholder='Логин' />
+        {errors.login && touched.login && <div>{errors.login}</div>}
+        <Field name='password' type='password' placeholder='Пароль' />
+        {errors.password && touched.password && <div>{errors.password}</div>}
+        <Field name='passwordCheck' type='password' placeholder='Повторите пароль' />
+        {errors.passwordCheck && touched.passwordCheck && <div>{errors.passwordCheck}</div>}
       </div>
       <p className='auth__text'>
         Уже есть аккаунт?&nbsp;
@@ -57,10 +42,39 @@ export const Registr: React.FC = () => {
           Войти
         </Link>
       </p>
-      <button onClick={onClickConfirm} className='auth__button'>
+      <button type='submit' className='auth__button' disabled={isSubmitting}>
         Зарегистрироваться
       </button>
-    </div>
+    </Form>
   );
+};
+
+interface MyFormProps {
+  initialLogin?: string;
+}
+
+const MyForm = withFormik<MyFormProps, FormValues>({
+  // Transform outer props into form values
+  mapPropsToValues: (props) => {
+    return {
+      fio: '',
+      phone: '',
+      email: '',
+      group: '',
+      login: props.initialLogin || '',
+      password: '',
+      passwordCheck: '',
+    };
+  },
+
+  validationSchema: RegisterSchema,
+
+  handleSubmit: (values) => {
+    alert(JSON.stringify(values));
+  },
+})(InnerForm);
+
+export const Registr: React.FC = () => {
+  return <MyForm />;
 };
 export default Registr;

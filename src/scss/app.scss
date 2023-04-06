@@ -55,104 +55,10 @@ button {
   }
 }
 
-// Добавлять только при условие что значение в input верное
-.input-true {
-  background-color: transparent;
-
-  color: $button-clr;
-  position: relative;
-  &::before {
-    content: '';
-    position: absolute;
-    right: 10px;
-    bottom: 0;
-    margin: auto 0;
-    top: 0;
-    width: 12px;
-    height: 10px;
-    background: url('./assets/img/checkTrue.svg') no-repeat;
-    background-size: cover;
-  }
-}
-.input-false {
-  background-color: transparent;
-
-  color: $button-clr;
-  position: relative;
-  &::before {
-    content: '';
-    position: absolute;
-    right: 10px;
-    bottom: 0;
-    margin: auto 0;
-    top: 0;
-    width: 12px;
-    height: 12px;
-    background: url('./assets/img/checkFalse.svg') no-repeat;
-    background-size: cover;
-  }
-}
-
 .container {
   width: calc(100vw - 100px);
   margin: 150px auto;
   max-width: 1400px;
-}
-
-.auth {
-  box-shadow: 10px 10px 20px rgb(0 0 0 / 10%);
-  justify-content: center;
-  text-align: center;
-  margin: 100px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0 auto;
-  &__for-input {
-    font-size: 10px;
-    color: red;
-    div {
-      text-align: start;
-      margin-left: 10px;
-      margin-top: 5px;
-    }
-  }
-  &__logo {
-    margin-bottom: 10px;
-  }
-  &__title {
-    color: $head-clr;
-    margin: 0;
-  }
-  &__inputs {
-    display: flex;
-    flex-direction: column;
-    transition: 0.5s all;
-  }
-  &__input {
-    color: #939393;
-  }
-  &__for-input {
-    margin-top: 10px;
-  }
-  &__button {
-    margin-top: 0px;
-  }
-  &__text {
-    font-weight: 400;
-    font-size: 10px;
-    color: #cecece;
-  }
-  &__link {
-    text-decoration: underline;
-    cursor: pointer;
-    font-weight: 400;
-    font-size: 10px;
-    color: #a4a4a4;
-  }
 }
 
 .App {

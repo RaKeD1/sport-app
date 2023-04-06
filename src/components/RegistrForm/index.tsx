@@ -5,6 +5,26 @@ import { Formik, Form, Field, withFormik, FormikProps, FormikErrors } from 'form
 import logo from '../../assets/img/ball.svg';
 import RegisterSchema from '../../models/validation/RegisterSchema';
 import styles from './RegistrForm.module.scss';
+import MaskedInput from 'react-text-mask';
+
+const phoneNumberMask = [
+  '+',
+  '7',
+  '(',
+  /[1-9]/,
+  /\d/,
+  /\d/,
+  ')',
+  ' ',
+  /\d/,
+  /\d/,
+  /\d/,
+  '-',
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+];
 
 interface FormValues {
   fio: string;
@@ -42,7 +62,13 @@ const InnerForm = (props: FormikProps<FormValues>) => {
             },
             { [styles.input_false]: touched.phone && errors.phone },
           )}>
-          <Field name='phone' type='tel' placeholder='Телефон' />
+          <Field
+            name='phone'
+            type='tel'
+            render={({ field }) => (
+              <MaskedInput {...field} placeholder='Телефон' mask={phoneNumberMask} />
+            )}
+          />
           {errors.phone && touched.phone && <div>{errors.phone}</div>}
         </div>
         <div
@@ -56,14 +82,7 @@ const InnerForm = (props: FormikProps<FormValues>) => {
           <Field name='email' type='email' placeholder='Email' />
           {errors.email && touched.email && <div>{errors.email}</div>}
         </div>
-        <div
-          className={classnames(
-            styles.auth__forinput,
-            {
-              [styles.input_true]: touched.group && !errors.group,
-            },
-            { [styles.input_false]: touched.group && errors.group },
-          )}>
+        <div className={classnames(styles.auth__forinput)}>
           <Field name='group' type='text' placeholder='Группа' />
           {errors.group && touched.group && <div>{errors.group}</div>}
         </div>
@@ -135,7 +154,14 @@ export const RegistrForm = withFormik<RegistrProps, FormValues>({
   validationSchema: RegisterSchema,
 
   handleSubmit: (values) => {
-    alert(JSON.stringify(values));
+    const changedPhone = values.phone
+      .replace(/\)/g, '')
+      .replace(/\(/g, '')
+      .replace(/-/g, '')
+      .replace(/ /g, '');
+    const user = { ...values };
+    user.phone = changedPhone;
+    alert(JSON.stringify(user));
   },
 })(InnerForm);
 

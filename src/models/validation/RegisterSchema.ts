@@ -1,4 +1,6 @@
 import * as Yup from 'yup';
+const phoneRegExp =
+  /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
 
 const RegisterSchema = Yup.object().shape({
   email: Yup.string()
@@ -9,7 +11,9 @@ const RegisterSchema = Yup.object().shape({
     //не сабмитим, если поле не заполнено
     .required('Обязательное поле'),
   fio: Yup.string().required('Обязательное поле'),
-  phone: Yup.string().required('Обязательное поле'),
+  phone: Yup.string()
+    .matches(phoneRegExp, 'Телефон должен содержать 10 цифр')
+    .required('Обязательное поле'),
   group: Yup.string(),
   login: Yup.string().required('Обязательное поле'),
   password: Yup.string()

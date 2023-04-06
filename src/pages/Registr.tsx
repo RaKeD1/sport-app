@@ -17,32 +17,46 @@ interface FormValues {
 const InnerForm = (props: FormikProps<FormValues>) => {
   const { touched, errors, isSubmitting } = props;
   return (
-    <Form className='auth'>
-      <img className='auth__logo' width='44' src={logo} alt='Valleyball logo'></img>
-      <h2 className='auth__title'>Регистрация</h2>
-      <div className='auth__inputs'>
-        <Field name='fio' type='text' placeholder='ФИО' />
-        {errors.fio && touched.fio && <div>{errors.fio}</div>}
-        <Field name='phone' type='tel' placeholder='Телефон' />
-        {errors.phone && touched.phone && <div>{errors.phone}</div>}
-        <Field name='email' type='email' placeholder='Email' />
-        {errors.email && touched.email && <div>{errors.email}</div>}
-        <Field name='group' type='text' placeholder='Группа' />
-        {errors.group && touched.group && <div>{errors.group}</div>}
-        <Field name='login' type='text' placeholder='Логин' />
-        {errors.login && touched.login && <div>{errors.login}</div>}
-        <Field name='password' type='password' placeholder='Пароль' />
-        {errors.password && touched.password && <div>{errors.password}</div>}
-        <Field name='passwordCheck' type='password' placeholder='Повторите пароль' />
-        {errors.passwordCheck && touched.passwordCheck && <div>{errors.passwordCheck}</div>}
+    <Form className="auth">
+      <img className="auth__logo" width="44" src={logo} alt="Valleyball logo"></img>
+      <h2 className="auth__title">Регистрация</h2>
+      <div className="auth__inputs">
+        <div className="auth__for-input input-true">
+          <Field name="fio" type="text" placeholder="ФИО" />
+          {errors.fio && touched.fio && <div>{errors.fio}</div>}
+        </div>
+        <div className="auth__for-input input-true">
+          <Field name="phone" type="tel" placeholder="Телефон" />
+          {errors.phone && touched.phone && <div>{errors.phone}</div>}
+        </div>
+        <div className="auth__for-input input-true">
+          <Field name="email" type="email" placeholder="Email" />
+          {errors.email && touched.email && <div>{errors.email}</div>}
+        </div>
+        <div className="auth__for-input input-true">
+          <Field name="group" type="text" placeholder="Группа" />
+          {errors.group && touched.group && <div>{errors.group}</div>}
+        </div>
+        <div className="auth__for-input input-true">
+          <Field name="login" type="text" placeholder="Логин" />
+          {errors.login && touched.login && <div>{errors.login}</div>}
+        </div>
+        <div className="auth__for-input input-true">
+          <Field name="password" type="password" placeholder="Пароль" />
+          {errors.password && touched.password && <div>{errors.password}</div>}
+        </div>
+        <div className="auth__for-input input-true">
+          <Field name="passwordCheck" type="password" placeholder="Повторите пароль" />
+          {errors.passwordCheck && touched.passwordCheck && <div>{errors.passwordCheck}</div>}
+        </div>
       </div>
-      <p className='auth__text'>
+      <p className="auth__text">
         Уже есть аккаунт?&nbsp;
-        <Link to='/login' className='auth__link'>
+        <Link to="/login" className="auth__link">
           Войти
         </Link>
       </p>
-      <button type='submit' className='auth__button' disabled={isSubmitting}>
+      <button type="submit" className="auth__button" disabled={isSubmitting}>
         Зарегистрироваться
       </button>
     </Form>

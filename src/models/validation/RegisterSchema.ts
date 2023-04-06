@@ -17,7 +17,7 @@ const RegisterSchema = Yup.object().shape({
     .required('Обязательное поле'),
   passwordCheck: Yup.string()
     .required('Обязательное поле')
-    .test('password-match', 'Пароли должны совпадать', function (value) {
+    .test('password-match', 'Пароли должны совпадать', function (value: string) {
       return this.parent.password === value;
     }),
 });

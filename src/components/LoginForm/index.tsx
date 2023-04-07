@@ -3,15 +3,17 @@ import classnames from 'classnames';
 import { Link } from 'react-router-dom';
 import { Formik, Form, Field, withFormik, FormikProps, FormikErrors } from 'formik';
 import logo from '../../assets/img/ball.svg';
-import RegisterSchema from '../../models/validation/RegisterSchema';
 import styles from '../RegistrForm/RegistrForm.module.scss';
+import LoginSchema from '../../models/validation/LoginSchema';
+import { useAppDispatch } from '../../redux/store';
+import { loginAccount } from '../../redux/slices/profileSlice';
 
 interface FormValues {
   login: string;
   password: string;
 }
 
-const InnerForm = (props: FormikProps<FormValues>) => {
+const InnerForm: React.FC = (props: FormikProps<FormValues>) => {
   const { touched, errors, isSubmitting } = props;
   return (
     <Form className={styles.auth}>
@@ -53,10 +55,12 @@ export const LoginForm = withFormik<LoginProps, FormValues>({
     };
   },
 
-  validationSchema: RegisterSchema,
+  validationSchema: LoginSchema,
 
   handleSubmit: (values) => {
-    alert(JSON.stringify(values));
+    const dispatch = useAppDispatch();
+    console.log(JSON.stringify(values));
+    dispatch(loginAccount(values));
   },
 })(InnerForm);
 

@@ -1,32 +1,32 @@
 @import '../../scss/vars';
 
-input {
-  background-color: $input-clr;
-  width: 25vh;
-  color: #939393;
-  border-radius: 10px;
-  padding: 10px 15px;
-  border: 1px solid rgba(0, 0, 0, 0);
-  font-weight: 400;
-  font-size: 12px;
+// input {
+//   width: 100%;
+//   background-color: $input-clr;
+//   color: #939393;
+//   border-radius: 10px;
+//   padding: 10px 15px;
+//   border: 1px solid rgba(0, 0, 0, 0);
+//   font-weight: 400;
+//   font-size: calc((100vw - 480px) / (1280 - 480) * (22 - 12) + 12px);
 
-  transition: all 1s;
-  &:focus,
-  :focus-visible {
-    color: #000;
-    background-color: #fff;
-    border: 1px solid;
-    border-color: rgba(0, 0, 0, 0.1);
-    outline: -webkit-focus-ring-color auto 0px !important;
-  }
-}
+//   transition: all 1s;
+//   &:focus,
+//   :focus-visible {
+//     color: #000;
+//     background-color: #fff;
+//     border: 1px solid;
+//     border-color: rgba(0, 0, 0, 0.1);
+//     outline: -webkit-focus-ring-color auto 0px !important;
+//   }
+// }
 button {
   background-color: $button-clr;
   border: none;
-  border-radius: 10px;
+  border-radius: calc((100vw - 480px) / (1280 - 480) * (16 - 10) + 10px);
   padding: 10px 30px;
   color: #fff;
-  font-size: 10px;
+  font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 10) + 10px);
   font-weight: 600;
   transition: 0.5s;
   border: 1px solid rgba($color: #000, $alpha: 0);
@@ -49,12 +49,14 @@ button {
   &::before {
     content: '';
     position: absolute;
-    right: 10px;
+    right: calc((100vw - 480px) / (1280 - 480) * (20 - 13) + 13px);
     bottom: 0;
     margin: 12px 0;
+    margin-top: calc((100vw - 480px) / (1280 - 480) * (17 - 13) + 13px);
+    margin-bottom: calc((100vw - 480px) / (1280 - 480) * (17 - 13) + 13px);
     top: 0;
-    width: 12px;
-    height: 10px;
+    width: calc((100vw - 480px) / (1280 - 480) * (22 - 12) + 12px);
+    height: calc((100vw - 480px) / (1280 - 480) * (17 - 10) + 10px);
     background: url('../../assets/img/checkTrue.svg') no-repeat;
     background-size: cover;
   }
@@ -67,32 +69,28 @@ button {
   &::before {
     content: '';
     position: absolute;
-    right: 10px;
+    right: calc((100vw - 480px) / (1280 - 480) * (20 - 13) + 13px);
     bottom: 0;
     margin: 12px 0;
+    margin-top: calc((100vw - 480px) / (1280 - 480) * (17 - 13) + 13px);
+    margin-bottom: calc((100vw - 480px) / (1280 - 480) * (17 - 13) + 13px);
     top: 0;
-    width: 12px;
-    height: 12px;
+    width: calc((100vw - 480px) / (1280 - 480) * (20 - 12) + 12px);
+    height: calc((100vw - 480px) / (1280 - 480) * (20 - 12) + 12px);
     background: url('../../assets/img/checkFalse.svg') no-repeat;
     background-size: cover;
   }
 }
 
 .auth {
-  box-shadow: 10px 10px 20px rgb(0 0 0 / 10%);
-  justify-content: center;
-  text-align: center;
-  margin: 100px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 30px;
+  background: #fff;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin: 0 auto;
+  padding: 20px;
+  border-radius: 30px;
   &__forinput {
-    margin: 4px;
-    font-size: 10px;
+    margin: 6px auto;
+    width: 80%;
     color: red;
     div {
       text-align: start;
@@ -101,14 +99,16 @@ button {
     }
   }
   &__logo {
-    margin-bottom: 10px;
+    margin: 0 auto;
+    width: calc((100vw - 480px) / (1280 - 480) * (100 - 44) + 44px);
   }
   &__title {
     color: $head-clr;
-    margin: 0;
+    margin: 5px auto 5px;
   }
   &__inputs {
     display: flex;
+    margin: 10px 0px;
     flex-direction: column;
     transition: 0.5s all;
   }
@@ -119,18 +119,73 @@ button {
     margin-top: 10px;
   }
   &__button {
-    margin-top: 6px;
+    margin: 10px auto 0;
+    width: 80%;
   }
   &__text {
     font-weight: 400;
-    font-size: 10px;
+    font-size: calc((100vw - 480px) / (1280 - 480) * (16 - 10) + 10px);
+    margin: $mh-auto;
     color: #cecece;
   }
   &__link {
     text-decoration: underline;
     cursor: pointer;
     font-weight: 400;
-    font-size: 10px;
-    color: #a4a4a4;
+    color: $button-clr;
+  }
+}
+@media (min-height: 750px) {
+  .container {
+    margin-top: 70%;
+  }
+}
+@media (min-height: 600px) {
+  .auth {
+  }
+}
+@media (min-height: 700px) {
+  .auth {
+  }
+}
+@media (min-width: 1000px) {
+  .auth {
+    padding: 35px;
+    &__title {
+      color: $head-clr;
+      margin: 10px auto 10px;
+    }
+  }
+}
+@media (min-width: 600px) {
+  @media (min-width: 600px) {
+    .auth {
+      margin: 0 100px;
+    }
+  }
+}
+@media (min-width: 900px) {
+  @media (min-width: 900px) {
+    .auth {
+      margin: 0 200px;
+      &__title {
+        color: $head-clr;
+        margin: 15px auto 15px;
+      }
+    }
+  }
+}
+@media (min-width: 1300px) {
+  @media (min-width: 1300px) {
+    .auth {
+      &__logo {
+        display: none;
+      }
+      margin: 10px 400px;
+      &__title {
+        color: $head-clr;
+        margin: 15px auto 15px;
+      }
+    }
   }
 }

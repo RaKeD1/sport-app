@@ -26,7 +26,7 @@ button {
   border-radius: calc((100vw - 480px) / (1280 - 480) * (16 - 10) + 10px);
   padding: 10px 30px;
   color: #fff;
-  font-size: calc((100vw - 480px) / (1280 - 480) * (24 - 10) + 10px);
+  font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 10) + 10px);
   font-weight: 600;
   transition: 0.5s;
   border: 1px solid rgba($color: #000, $alpha: 0);
@@ -124,7 +124,7 @@ button {
   }
   &__text {
     font-weight: 400;
-    font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 10) + 10px);
+    font-size: calc((100vw - 480px) / (1280 - 480) * (16 - 10) + 10px);
     margin: $mh-auto;
     color: #cecece;
   }

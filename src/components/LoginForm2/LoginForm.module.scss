@@ -25,7 +25,7 @@
   }
   &__text {
     font-weight: 400;
-    font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 10) + 10px);
+    font-size: calc((100vw - 480px) / (1280 - 480) * (16 - 10) + 10px);
     margin: $mh-auto;
     color: #cecece;
   }

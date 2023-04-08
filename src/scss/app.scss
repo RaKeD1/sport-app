@@ -28,7 +28,7 @@ input {
   padding: 10px 15px;
   border: 1px solid rgba(0, 0, 0, 0);
   font-weight: 400;
-  font-size: calc((100vw - 480px) / (1280 - 480) * (22 - 12) + 12px);
+  font-size: calc((100vw - 480px) / (1280 - 480) * (16 - 12) + 12px);
 
   transition: all 1s;
   &:focus,
@@ -71,29 +71,4 @@ button {
 
 .App {
   text-align: center;
-}
-
-.header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  &__title {
-    color: #fff;
-    border: 0.5vh solid;
-    padding: 50px;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: all 0.5s;
-    &:hover {
-      background-color: #fff;
-      color: #282c34;
-    }
-  }
-}
-.main {
-  &__title {
-    text-align: center;
-  }
 }

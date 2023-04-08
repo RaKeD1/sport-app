@@ -93,7 +93,7 @@ const profileSlice = createSlice({
   },
   extraReducers: (builder) => {
     // Кейсы для логина
-    builder.addCase(loginAccount.pending, (state, action) => {
+    builder.addCase(loginAccount.pending, (state) => {
       state.status = Status.LOADING;
       state.user = initialState.user;
     });
@@ -103,12 +103,12 @@ const profileSlice = createSlice({
       localStorage.setItem('token', action.payload.data.accessToken);
       state.isAuth = true;
     });
-    builder.addCase(loginAccount.rejected, (state, action) => {
+    builder.addCase(loginAccount.rejected, (state) => {
       state.status = Status.ERROR;
       state.user = initialState.user;
     });
     // Кейсы для регистрации
-    builder.addCase(registrAccount.pending, (state, action) => {
+    builder.addCase(registrAccount.pending, (state) => {
       state.status = Status.LOADING;
       state.user = initialState.user;
     });
@@ -118,21 +118,21 @@ const profileSlice = createSlice({
       localStorage.setItem('token', action.payload.data.accessToken);
       state.isAuth = true;
     });
-    builder.addCase(registrAccount.rejected, (state, action) => {
+    builder.addCase(registrAccount.rejected, (state) => {
       state.status = Status.ERROR;
       state.user = initialState.user;
     });
     // Кейсы для логаута
-    builder.addCase(logoutAccount.pending, (state, action) => {
+    builder.addCase(logoutAccount.pending, (state) => {
       state.status = Status.LOADING;
     });
-    builder.addCase(logoutAccount.fulfilled, (state, action) => {
+    builder.addCase(logoutAccount.fulfilled, (state) => {
       state.status = Status.SUCCESS;
       localStorage.removeItem('token');
       state.isAuth = false;
       state.user = initialState.user;
     });
-    builder.addCase(logoutAccount.rejected, (state, action) => {
+    builder.addCase(logoutAccount.rejected, (state) => {
       state.status = Status.ERROR;
     });
   },

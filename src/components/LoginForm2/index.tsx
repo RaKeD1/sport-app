@@ -1,9 +1,9 @@
 import React from 'react';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
-import { Formik, Form, Field, withFormik, FormikProps, FormikErrors } from 'formik';
+import { Form, Field, withFormik, FormikProps } from 'formik';
 import logo from '../../assets/img/ball.svg';
-import styles from '../RegistrForm/RegistrForm.module.scss';
+import styles from './LoginForm.module.scss';
 import LoginSchema from '../../models/validation/LoginSchema';
 import { useAppDispatch } from '../../redux/store';
 import { loginAccount } from '../../redux/slices/profileSlice';
@@ -31,7 +31,7 @@ const InnerForm: React.FC = (props: FormikProps<FormValues>) => {
       </div>
       <p className={styles.auth__text}>
         Нет аккаунта?&nbsp;
-        <Link to="/registration" className="auth__link">
+        <Link to="/registration" className={styles.auth__link}>
           Зарегистрироваться
         </Link>
       </p>

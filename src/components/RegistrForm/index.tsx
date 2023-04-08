@@ -40,7 +40,7 @@ const InnerForm = (props: FormikProps<FormValues>) => {
   const { touched, errors, isSubmitting } = props;
   return (
     <Form className={styles.auth}>
-      <img className={styles.auth__logo} width='44' src={logo} alt='Volleyball logo'></img>
+      <img className={styles.auth__logo} width="44" src={logo} alt="Volleyball logo"></img>
       <h2 className={styles.auth__title}>Регистрация</h2>
       <div className={styles.auth__inputs}>
         <div
@@ -51,7 +51,7 @@ const InnerForm = (props: FormikProps<FormValues>) => {
             },
             { [styles.input_false]: touched.fio && errors.fio },
           )}>
-          <Field name='fio' type='text' placeholder='ФИО' />
+          <Field name="fio" type="text" placeholder="ФИО" />
           {errors.fio && touched.fio && <div>{errors.fio}</div>}
         </div>
         <div
@@ -63,10 +63,10 @@ const InnerForm = (props: FormikProps<FormValues>) => {
             { [styles.input_false]: touched.phone && errors.phone },
           )}>
           <Field
-            name='phone'
-            type='tel'
+            name="phone"
+            type="tel"
             render={({ field }) => (
-              <MaskedInput {...field} placeholder='Телефон' mask={phoneNumberMask} />
+              <MaskedInput {...field} placeholder="Телефон" mask={phoneNumberMask} />
             )}
           />
           {errors.phone && touched.phone && <div>{errors.phone}</div>}
@@ -79,11 +79,11 @@ const InnerForm = (props: FormikProps<FormValues>) => {
             },
             { [styles.input_false]: touched.email && errors.email },
           )}>
-          <Field name='email' type='email' placeholder='Email' />
+          <Field name="email" type="email" placeholder="Email" />
           {errors.email && touched.email && <div>{errors.email}</div>}
         </div>
         <div className={classnames(styles.auth__forinput)}>
-          <Field name='group' type='text' placeholder='Группа' />
+          <Field name="group" type="text" placeholder="Группа" />
           {errors.group && touched.group && <div>{errors.group}</div>}
         </div>
         <div
@@ -94,7 +94,7 @@ const InnerForm = (props: FormikProps<FormValues>) => {
             },
             { [styles.input_false]: touched.login && errors.login },
           )}>
-          <Field name='login' type='text' placeholder='Логин' />
+          <Field name="login" type="text" placeholder="Логин" />
           {errors.login && touched.login && <div>{errors.login}</div>}
         </div>
         <div
@@ -105,7 +105,7 @@ const InnerForm = (props: FormikProps<FormValues>) => {
             },
             { [styles.input_false]: touched.password && errors.password },
           )}>
-          <Field name='password' type='password' placeholder='Пароль' />
+          <Field name="password" type="password" placeholder="Пароль" />
           {errors.password && touched.password && <div>{errors.password}</div>}
         </div>
         <div
@@ -116,17 +116,17 @@ const InnerForm = (props: FormikProps<FormValues>) => {
             },
             { [styles.input_false]: touched.passwordCheck && errors.passwordCheck },
           )}>
-          <Field name='passwordCheck' type='password' placeholder='Повторите пароль' />
+          <Field name="passwordCheck" type="password" placeholder="Повторите пароль" />
           {errors.passwordCheck && touched.passwordCheck && <div>{errors.passwordCheck}</div>}
         </div>
       </div>
       <p className={styles.auth__text}>
         Уже есть аккаунт?&nbsp;
-        <Link to='/login' className='auth__link'>
+        <Link to="/login" className={styles.auth__link}>
           Войти
         </Link>
       </p>
-      <button type='submit' className={styles.auth__button} disabled={isSubmitting}>
+      <button type="submit" className={styles.auth__button} disabled={isSubmitting}>
         Зарегистрироваться
       </button>
     </Form>

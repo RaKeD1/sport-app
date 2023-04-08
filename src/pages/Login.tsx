@@ -1,9 +1,7 @@
 import React from 'react';
-import logo from '../assets/img/ball.svg';
-import { Link } from 'react-router-dom';
-import LoginForm from '../components/LoginForm';
+import LoginForm2 from '../components/LoginForm2';
 
 export const Login = () => {
-  return <LoginForm />;
+  return <LoginForm2 />;
 };
 export default Login;

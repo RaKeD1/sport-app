@@ -5,13 +5,16 @@ import { Formik, Form, Field, withFormik, FormikProps, FormikErrors } from 'form
 import logo from '../../assets/img/ball.svg';
 import styles from '../RegistrForm/RegistrForm.module.scss';
 import LoginSchema from '../../models/validation/LoginSchema';
-import { useAppDispatch } from '../../redux/store';
 import { loginAccount } from '../../redux/slices/profileSlice';
+import { bindActionCreators } from '@reduxjs/toolkit';
+import { connect } from 'react-redux';
 
 interface FormValues {
   login: string;
   password: string;
 }
+
+let setSubmittingHigher;
 
 const InnerForm: React.FC = (props: FormikProps<FormValues>) => {
   const { touched, errors, isSubmitting } = props;
@@ -44,6 +47,7 @@ const InnerForm: React.FC = (props: FormikProps<FormValues>) => {
 
 interface LoginProps {
   initialLogin?: string;
+  loginAccount: (values: FormValues) => void;
 }
 
 export const LoginForm = withFormik<LoginProps, FormValues>({
@@ -57,11 +61,22 @@ export const LoginForm = withFormik<LoginProps, FormValues>({
 
   validationSchema: LoginSchema,
 
-  handleSubmit: (values) => {
-    const dispatch = useAppDispatch();
+  handleSubmit: (values, { props, setSubmitting }) => {
     console.log(JSON.stringify(values));
-    dispatch(loginAccount(values));
+    props.loginAccount(values);
+    setSubmittingHigher = setSubmitting;
   },
+  displayName: 'LoginForm',
 })(InnerForm);
 
-export default LoginForm;
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      loginAccount,
+    },
+    dispatch,
+  );
+
+const Redux = connect(null, mapDispatchToProps)(LoginForm);
+
+export default Redux;

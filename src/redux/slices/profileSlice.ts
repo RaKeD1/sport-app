@@ -23,9 +23,11 @@ export type RegistrParams = {
 export const loginAccount = createAsyncThunk<AxiosResponse<AuthResponse>, LoginParams>(
   'user/loginStatus',
   async (params) => {
+    console.log('FUNCTION LOGIN');
     try {
       const { login, password } = params;
       const response = await AuthService.login(login, password);
+      console.log(response);
       return response;
     } catch (error) {
       console.log(error.response?.data?.message);
@@ -40,6 +42,7 @@ export const registrAccount = createAsyncThunk<AxiosResponse<AuthResponse>, Regi
     try {
       const { fio, phone, email, group, login, password } = params;
       const response = await AuthService.registration(login, password, fio, email, phone, group);
+      console.log(response);
       return response;
     } catch (error) {
       console.log(error.response?.data?.message);

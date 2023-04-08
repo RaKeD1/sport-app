@@ -11,7 +11,9 @@ export type LoginParams = {
 };
 
 export type RegistrParams = {
-  fio: string;
+  name: string;
+  surname: string;
+  patronimyc: string;
   email: string;
   phone: string;
   group: string;
@@ -40,8 +42,17 @@ export const registrAccount = createAsyncThunk<AxiosResponse<AuthResponse>, Regi
   'user/registrStatus',
   async (params) => {
     try {
-      const { fio, phone, email, group, login, password } = params;
-      const response = await AuthService.registration(login, password, fio, email, phone, group);
+      const { name, surname, patronimyc, phone, email, group, login, password } = params;
+      const response = await AuthService.registration(
+        login,
+        password,
+        name,
+        surname,
+        patronimyc,
+        email,
+        phone,
+        group,
+      );
       console.log(response);
       return response;
     } catch (error) {
@@ -76,7 +87,9 @@ const initialState: Profile = {
   user: {
     id_account: null,
     id_user: null,
-    fio: '',
+    name: '',
+    surname: '',
+    patronimyc: '',
     email: '',
     phone: '',
     group: '',
@@ -91,7 +104,7 @@ const profileSlice = createSlice({
   initialState,
   reducers: {
     setUser(state, action: PayloadAction<IUser>) {
-      state.user.fio = action.payload.fio;
+      state.user = action.payload;
     },
   },
   extraReducers: (builder) => {

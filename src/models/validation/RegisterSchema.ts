@@ -11,19 +11,9 @@ const RegisterSchema = Yup.object().shape({
 
     //не сабмитим, если поле не заполнено
     .required('Обязательное поле'),
-  fio: Yup.string()
-    .required('Обязательное поле')
-    .test('fio-match', 'Проверьте правильность введенных данных', function (value: string) {
-      if (
-        value.replace(/[^a-zа-яё]/gi, '').replace(/[а-я]/g, '').length === 3 &&
-        value.replace(/[a-zA-Zа-яА-Я]/g, '').length === 2
-      ) {
-        return true;
-        //Убираем все символы кроме русских букв
-      } else {
-        return false;
-      }
-    }),
+  name: Yup.string().required('Обязательное поле'),
+  surname: Yup.string().required('Обязательное поле'),
+  patronimyc: Yup.string(),
   phone: Yup.string()
     .matches(phoneRegExp, 'Телефон должен содержать 10 цифр')
     .required('Обязательное поле'),

@@ -1,7 +1,9 @@
 export interface IUser {
   id_account: number;
   id_user: number;
-  fio: string;
+  name: string;
+  surname: string;
+  patronimyc: string;
   email: string;
   phone: string;
   group: string;

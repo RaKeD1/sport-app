@@ -2,8 +2,9 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import AuthService from '../../services/AuthService';
 import { AuthResponse } from '../../models/response/AuthResponse';
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { IUser } from '../../models/IUser';
+import { API_URL } from '../../http';
 
 export type LoginParams = {
   login: string;
@@ -69,6 +70,22 @@ export const logoutAccount = createAsyncThunk<void, void>('user/logoutStatus', a
     console.log(error.response?.data?.message);
   }
 });
+
+// Функция проверки авторизации
+export const checkAuth = createAsyncThunk<AxiosResponse<AuthResponse>, void>(
+  'user/checkAuthStatus',
+  async () => {
+    try {
+      const response = await axios.get<AuthResponse>(`${API_URL}/refresh`, {
+        withCredentials: true,
+      });
+      console.log('RESPONSE', response);
+      return response;
+    } catch (error) {
+      console.log('ERROR', error.response?.data?.message);
+    }
+  },
+);
 
 // Ключи статуса
 export enum Status {
@@ -149,6 +166,20 @@ const profileSlice = createSlice({
       state.user = initialState.user;
     });
     builder.addCase(logoutAccount.rejected, (state) => {
+      state.status = Status.ERROR;
+    });
+    // Кейсы для проверки авторизации
+    builder.addCase(checkAuth.pending, (state) => {
+      state.status = Status.LOADING;
+    });
+    builder.addCase(checkAuth.fulfilled, (state, action) => {
+      state.status = Status.SUCCESS;
+      localStorage.setItem('token', action.payload.data.accessToken);
+      state.isAuth = true;
+      state.user = action.payload.data.user;
+    });
+    builder.addCase(checkAuth.rejected, (state) => {
+      console.log('ERROR');
       state.status = Status.ERROR;
     });
   },

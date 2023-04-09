@@ -11,6 +11,11 @@ export type LoginParams = {
   password: string;
 };
 
+export type Error = {
+  message: string;
+  errors: [];
+};
+
 export type RegistrParams = {
   name: string;
   surname: string;
@@ -25,7 +30,7 @@ export type RegistrParams = {
 // Функция логина
 export const loginAccount = createAsyncThunk<AxiosResponse<AuthResponse>, LoginParams>(
   'user/loginStatus',
-  async (params) => {
+  async (params, { rejectWithValue }) => {
     console.log('FUNCTION LOGIN');
     try {
       const { login, password } = params;
@@ -33,7 +38,10 @@ export const loginAccount = createAsyncThunk<AxiosResponse<AuthResponse>, LoginP
       console.log(response);
       return response;
     } catch (error) {
-      console.log(error.response?.data?.message);
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error.response.data.message);
     }
   },
 );
@@ -41,7 +49,7 @@ export const loginAccount = createAsyncThunk<AxiosResponse<AuthResponse>, LoginP
 // Функция регистрации
 export const registrAccount = createAsyncThunk<AxiosResponse<AuthResponse>, RegistrParams>(
   'user/registrStatus',
-  async (params) => {
+  async (params, { rejectWithValue }) => {
     try {
       const { name, surname, patronimyc, phone, email, group, login, password } = params;
       const response = await AuthService.registration(
@@ -57,7 +65,12 @@ export const registrAccount = createAsyncThunk<AxiosResponse<AuthResponse>, Regi
       console.log(response);
       return response;
     } catch (error) {
-      console.log(error.response?.data?.message);
+      if (!error.response) {
+        throw error;
+      }
+      alert(error.response.data.message);
+      console.log(error.response);
+      return rejectWithValue(error.response.data.message);
     }
   },
 );
@@ -113,7 +126,7 @@ const initialState: Profile = {
     role: '',
     login: '',
   },
-  status: Status.LOADING,
+  status: Status.SUCCESS,
   isAuth: false,
 };
 const profileSlice = createSlice({
@@ -123,10 +136,14 @@ const profileSlice = createSlice({
     setUser(state, action: PayloadAction<IUser>) {
       state.user = action.payload;
     },
+    setError(state) {
+      state.status = Status.ERROR;
+    },
   },
   extraReducers: (builder) => {
     // Кейсы для логина
     builder.addCase(loginAccount.pending, (state) => {
+      console.log('LOADING');
       state.status = Status.LOADING;
       state.user = initialState.user;
     });
@@ -136,7 +153,9 @@ const profileSlice = createSlice({
       localStorage.setItem('token', action.payload.data.accessToken);
       state.isAuth = true;
     });
-    builder.addCase(loginAccount.rejected, (state) => {
+    builder.addCase(loginAccount.rejected, (state, action) => {
+      console.log('REJECTED');
+      alert(action.payload);
       state.status = Status.ERROR;
       state.user = initialState.user;
     });
@@ -151,7 +170,9 @@ const profileSlice = createSlice({
       localStorage.setItem('token', action.payload.data.accessToken);
       state.isAuth = true;
     });
-    builder.addCase(registrAccount.rejected, (state) => {
+    builder.addCase(registrAccount.rejected, (state, action) => {
+      console.log('REJECTED');
+      alert(action.payload);
       state.status = Status.ERROR;
       state.user = initialState.user;
     });
@@ -185,7 +206,7 @@ const profileSlice = createSlice({
   },
 });
 
-export const { setUser } = profileSlice.actions;
+export const { setUser, setError } = profileSlice.actions;
 export const SelectProfile = (state: RootState) => state.profile;
 
 export default profileSlice.reducer;

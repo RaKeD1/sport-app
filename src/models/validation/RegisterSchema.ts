@@ -20,7 +20,7 @@ const RegisterSchema = Yup.object().shape({
   group: Yup.string(),
   login: Yup.string().required('Обязательное поле'),
   password: Yup.string()
-    .min(3, 'Пароль должен быть длинее 3 символов')
+    .min(4, 'Пароль должен быть длинее 3 символов')
     .required('Обязательное поле'),
   passwordCheck: Yup.string()
     .required('Обязательное поле')

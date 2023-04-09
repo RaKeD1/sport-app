@@ -9,6 +9,7 @@ import React from 'react';
 import { RootState, useAppDispatch } from './redux/store';
 import { checkAuth } from './redux/slices/profileSlice';
 import { useSelector } from 'react-redux';
+import { Status } from './redux/slices/profileSlice';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -22,11 +23,15 @@ function App() {
 
   const isAuth = useSelector((state: RootState) => state.profile.isAuth);
   console.log('isAuth', isAuth);
+  const status = useSelector((state: RootState) => state.profile.status);
+  console.log('status', status);
 
   React.useEffect(() => {
     if (isAuth) navigate('/');
     else navigate('/login');
   }, [isAuth]);
+
+  if (status === Status.LOADING) return <div>Загрузка...</div>;
 
   return (
     <div className='wrapper'>

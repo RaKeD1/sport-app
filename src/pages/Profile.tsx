@@ -31,7 +31,7 @@ export const Profile: FC = () => {
           </svg>
         </button>
       </div>
-      <div className="main">
+      {/* <div className="main">
         <div className=" main__places">
           <div className="main__places_left">
             <div className="main__fio main__place">
@@ -73,6 +73,13 @@ export const Profile: FC = () => {
             <button className="main__item">Добавить тренировку</button>
           </div>
         </div>
+      </div> */}
+      <div className="track">
+        <div className="box1">Орлов Данила Дмитриевич</div>
+        <div className="box2">Two</div>
+        <div className="box3">Three</div>
+        <div className="box4">Four</div>
+        <div className="box5">five</div>
       </div>
     </>
   );

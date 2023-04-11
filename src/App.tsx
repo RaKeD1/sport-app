@@ -26,22 +26,22 @@ function App() {
   const status = useSelector((state: RootState) => state.profile.status);
   console.log('status', status);
 
-  React.useEffect(() => {
-    if (isAuth) navigate('/');
-    else navigate('/login');
-  }, [isAuth]);
+  // React.useEffect(() => {
+  //   if (isAuth) navigate('/');
+  //   else navigate('/login');
+  // }, [isAuth]);
 
   if (status === Status.LOADING) return <div>Загрузка...</div>;
 
   return (
-    <div className='wrapper'>
-      <div className='content'>
-        <div className='container'>
+    <div className="wrapper">
+      <div className="content">
+        <div className="container">
           <Routes>
-            <Route path='/' element={<Home />}></Route>
-            <Route path='/login' element={<Login />}></Route>
-            <Route path='/registration' element={<Registr />}></Route>
-            <Route path='/profile' element={<Profile />}></Route>
+            <Route path="/" element={<Home />}></Route>
+            <Route path="/login" element={<Login />}></Route>
+            <Route path="/registration" element={<Registr />}></Route>
+            <Route path="/profile" element={<Profile />}></Route>
           </Routes>
         </div>
       </div>

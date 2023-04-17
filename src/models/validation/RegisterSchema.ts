@@ -17,7 +17,7 @@ const RegisterSchema = Yup.object().shape({
   phone: Yup.string()
     .matches(phoneRegExp, 'Телефон должен содержать 10 цифр')
     .required('Обязательное поле'),
-  group: Yup.string(),
+  team: Yup.string(),
   login: Yup.string().required('Обязательное поле'),
   password: Yup.string()
     .min(4, 'Пароль должен быть длинее 3 символов')

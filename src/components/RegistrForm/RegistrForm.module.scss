@@ -37,6 +37,10 @@ button {
     background-color: transparent;
     border: 1px solid $button-clr;
     color: $button-clr;
+    svg {
+      -webkit-filter: invert(100%);
+      filter: invert(100%);
+    }
   }
 }
 

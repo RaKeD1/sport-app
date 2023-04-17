@@ -15,7 +15,7 @@ export default class AuthService {
     patronimyc: string,
     email: string,
     phone: string,
-    group: string,
+    team: string,
   ): Promise<AxiosResponse<AuthResponse>> {
     return $api.post<AuthResponse>('/registration', {
       login,
@@ -25,7 +25,7 @@ export default class AuthService {
       patronimyc,
       email,
       phone,
-      group,
+      team,
     });
   }
 

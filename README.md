@@ -3,6 +3,6 @@
 ## Доступные виды спорта:
 🏐 Волейбол
 ## Разработано командой:
-👦 [*Богдан Тугай*](https://github.com/Bogdan-67)
-👦 [*Орлов Данила*](https://github.com/RaKeD1)
+👦 [*Богдан Тугай*](https://github.com/Bogdan-67)/
+👦 [*Орлов Данила*](https://github.com/RaKeD1)/
 👦 [*Кухта Кирилл*](https://github.com/KKuhta)

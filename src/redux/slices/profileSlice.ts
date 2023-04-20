@@ -7,6 +7,12 @@ import { IUser } from '../../models/IUser';
 import { API_URL } from '../../http';
 
 export type LoginParams = {
+  name: string;
+  surname: string;
+  patronimyc: string;
+  email: string;
+  phone: string;
+  team: string;
   login: string;
   password: string;
 };
@@ -22,7 +28,7 @@ export type RegistrParams = {
   patronimyc: string;
   email: string;
   phone: string;
-  group: string;
+  team: string;
   login: string;
   password: string;
 };
@@ -51,7 +57,7 @@ export const registrAccount = createAsyncThunk<AxiosResponse<AuthResponse>, Regi
   'user/registrStatus',
   async (params, { rejectWithValue }) => {
     try {
-      const { name, surname, patronimyc, phone, email, group, login, password } = params;
+      const { name, surname, patronimyc, phone, email, team, login, password } = params;
       const response = await AuthService.registration(
         login,
         password,
@@ -60,7 +66,7 @@ export const registrAccount = createAsyncThunk<AxiosResponse<AuthResponse>, Regi
         patronimyc,
         email,
         phone,
-        group,
+        team,
       );
       console.log(response);
       return response;
@@ -122,7 +128,7 @@ const initialState: Profile = {
     patronimyc: '',
     email: '',
     phone: '',
-    group: '',
+    team: '',
     role: '',
     login: '',
   },
@@ -149,6 +155,7 @@ const profileSlice = createSlice({
     });
     builder.addCase(loginAccount.fulfilled, (state, action) => {
       state.user = action.payload.data.user;
+      console.log('USer', state.user);
       state.status = Status.SUCCESS;
       localStorage.setItem('token', action.payload.data.accessToken);
       state.isAuth = true;
@@ -208,5 +215,6 @@ const profileSlice = createSlice({
 
 export const { setUser, setError } = profileSlice.actions;
 export const SelectProfile = (state: RootState) => state.profile;
+export const SelectUser = (state: RootState) => state.profile.user;
 
 export default profileSlice.reducer;

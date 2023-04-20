@@ -1,10 +1,15 @@
 import { FC } from 'react';
 import logo from '../assets/img/ball.svg';
 import '../scss/profile.scss';
-import profile from '../assets/img/Profile.svg';
-import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { SelectUser, logoutAccount } from '../redux/slices/profileSlice';
+import { useAppDispatch } from '../redux/store';
 
 export const Profile: FC = () => {
+  const { name, surname, patronimyc, email, phone, team, login } = useSelector(SelectUser);
+  console.log({ name, surname, patronimyc, email, phone, team, login });
+  const dispatch = useAppDispatch();
+
   return (
     <>
       <div className="header">
@@ -31,6 +36,21 @@ export const Profile: FC = () => {
           </svg>
         </button>
       </div>
+
+      <div className="track">
+        <div className="box1">
+          {surname}
+          <br />
+          {name}
+          <br />
+          {patronimyc}
+        </div>
+        <div className="box2">{team}</div>
+        <div className="box3">{email}</div>
+        <div className="box4">{phone}</div>
+        <div className="box5">{login}</div>
+      </div>
+      <button onClick={() => dispatch(logoutAccount())}>Выйти</button>
       {/* <div className="main">
         <div className=" main__places">
           <div className="main__places_left">
@@ -74,13 +94,6 @@ export const Profile: FC = () => {
           </div>
         </div>
       </div> */}
-      <div className="track">
-        <div className="box1">Орлов Данила Дмитриевич</div>
-        <div className="box2">Two</div>
-        <div className="box3">Three</div>
-        <div className="box4">Four</div>
-        <div className="box5">five</div>
-      </div>
     </>
   );
 };

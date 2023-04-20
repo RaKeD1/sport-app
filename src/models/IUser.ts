@@ -6,7 +6,7 @@ export interface IUser {
   patronimyc: string;
   email: string;
   phone: string;
-  group: string;
+  team: string;
   login: string;
   role: string;
 }

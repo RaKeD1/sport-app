@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Registr from './pages/Registr';
 import Profile from './pages/Profile';
+import Statistics from './pages/Statistics';
 import React from 'react';
 import { RootState, useAppDispatch } from './redux/store';
 import { checkAuth } from './redux/slices/profileSlice';
@@ -27,10 +28,10 @@ function App() {
   const status = useSelector((state: RootState) => state.profile.status);
   console.log('status', status);
 
-  React.useEffect(() => {
-    if (isAuth) navigate('/');
-    else navigate('/login');
-  }, [isAuth]);
+  // React.useEffect(() => {
+  //   if (isAuth) navigate('/');
+  //   else navigate('/login');
+  // }, [isAuth]);
 
   if (status === Status.LOADING) return <Loading />;
 
@@ -38,11 +39,13 @@ function App() {
     <div className="wrapper">
       <div className="content">
         <div className="container">
+          <Header />
           <Routes>
             <Route path="/" element={<Profile />}></Route>
             <Route path="/login" element={<Login />}></Route>
             <Route path="/registration" element={<Registr />}></Route>
             <Route path="/profile" element={<Profile />}></Route>
+            <Route path="/statistics" element={<Statistics />}></Route>
           </Routes>
         </div>
       </div>

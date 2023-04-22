@@ -47,7 +47,7 @@ const InnerForm = (props: FormikProps<FormValues>) => {
   const { touched, errors, isSubmitting } = props;
   return (
     <Form className={styles.auth}>
-      <img className={styles.auth__logo} width="44" src={logo} alt="Volleyball logo"></img>
+      <img className={styles.auth__logo} width='44' src={logo} alt='Volleyball logo'></img>
       <h2 className={styles.auth__title}>Регистрация</h2>
       <div className={styles.auth__inputs}>
         <div
@@ -58,7 +58,7 @@ const InnerForm = (props: FormikProps<FormValues>) => {
             },
             { [styles.input_false]: touched.name && errors.name },
           )}>
-          <Field name="name" type="text" placeholder="Имя" />
+          <Field name='name' type='text' placeholder='Имя' />
           {errors.name && touched.name && <div>{errors.name}</div>}
         </div>
         <div
@@ -69,7 +69,7 @@ const InnerForm = (props: FormikProps<FormValues>) => {
             },
             { [styles.input_false]: touched.surname && errors.surname },
           )}>
-          <Field name="surname" type="text" placeholder="Фамилия" />
+          <Field name='surname' type='text' placeholder='Фамилия' />
           {errors.surname && touched.surname && <div>{errors.surname}</div>}
         </div>
         <div
@@ -80,7 +80,7 @@ const InnerForm = (props: FormikProps<FormValues>) => {
             },
             { [styles.input_false]: touched.patronimyc && errors.patronimyc },
           )}>
-          <Field name="patronimyc" type="text" placeholder="Отчество (если есть)" />
+          <Field name='patronimyc' type='text' placeholder='Отчество (если есть)' />
           {errors.patronimyc && touched.patronimyc && <div>{errors.patronimyc}</div>}
         </div>
         <div
@@ -92,10 +92,10 @@ const InnerForm = (props: FormikProps<FormValues>) => {
             { [styles.input_false]: touched.phone && errors.phone },
           )}>
           <Field
-            name="phone"
-            type="tel"
+            name='phone'
+            type='tel'
             render={({ field }) => (
-              <MaskedInput {...field} placeholder="Телефон" mask={phoneNumberMask} />
+              <MaskedInput {...field} placeholder='Телефон' mask={phoneNumberMask} />
             )}
           />
           {errors.phone && touched.phone && <div>{errors.phone}</div>}
@@ -108,11 +108,11 @@ const InnerForm = (props: FormikProps<FormValues>) => {
             },
             { [styles.input_false]: touched.email && errors.email },
           )}>
-          <Field name="email" type="email" placeholder="Email" />
+          <Field name='email' type='email' placeholder='Email' />
           {errors.email && touched.email && <div>{errors.email}</div>}
         </div>
         <div className={classnames(styles.auth__forinput)}>
-          <Field name="team" type="text" placeholder="Группа" />
+          <Field name='team' type='text' placeholder='Группа' />
           {errors.team && touched.team && <div>{errors.team}</div>}
         </div>
         <div
@@ -123,7 +123,7 @@ const InnerForm = (props: FormikProps<FormValues>) => {
             },
             { [styles.input_false]: touched.login && errors.login },
           )}>
-          <Field name="login" type="text" placeholder="Логин" />
+          <Field name='login' type='text' placeholder='Логин' />
           {errors.login && touched.login && <div>{errors.login}</div>}
         </div>
         <div
@@ -134,7 +134,7 @@ const InnerForm = (props: FormikProps<FormValues>) => {
             },
             { [styles.input_false]: touched.password && errors.password },
           )}>
-          <Field name="password" type="password" placeholder="Пароль" />
+          <Field name='password' type='password' placeholder='Пароль' />
           {errors.password && touched.password && <div>{errors.password}</div>}
         </div>
         <div
@@ -145,17 +145,17 @@ const InnerForm = (props: FormikProps<FormValues>) => {
             },
             { [styles.input_false]: touched.passwordCheck && errors.passwordCheck },
           )}>
-          <Field name="passwordCheck" type="password" placeholder="Повторите пароль" />
+          <Field name='passwordCheck' type='password' placeholder='Повторите пароль' />
           {errors.passwordCheck && touched.passwordCheck && <div>{errors.passwordCheck}</div>}
         </div>
       </div>
       <p className={styles.auth__text}>
         Уже есть аккаунт?&nbsp;
-        <Link to="/login" className={styles.auth__link}>
+        <Link to='/login' className={styles.auth__link}>
           Войти
         </Link>
       </p>
-      <button type="submit" className={styles.auth__button} disabled={isSubmitting}>
+      <button type='submit' className={styles.auth__button} disabled={isSubmitting}>
         Зарегистрироваться
       </button>
     </Form>
@@ -193,7 +193,6 @@ export const RegistrForm = withFormik<RegistrProps, FormValues>({
       .replace(/ /g, '');
     const user = { ...values };
     user.phone = changedPhone;
-    alert(JSON.stringify(user));
     props.registrAccount(user);
     setSubmittingHigher = setSubmitting;
   },

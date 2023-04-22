@@ -1,20 +1,63 @@
-import { FC } from 'react';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import logo from '../assets/img/ball.svg';
 import '../scss/profile.scss';
 import { useSelector } from 'react-redux';
-import { SelectUser, logoutAccount } from '../redux/slices/profileSlice';
+import {
+  FetchUserParams,
+  SelectUser,
+  fetchUser,
+  logoutAccount,
+} from '../redux/slices/profileSlice';
 import { useAppDispatch } from '../redux/store';
 import Header from '../components/Header';
 
 export const Profile: FC = () => {
-  const { name, surname, patronimyc, email, phone, team, login } = useSelector(SelectUser);
-  console.log({ name, surname, patronimyc, email, phone, team, login });
+  const { id_user, id_account, name, surname, patronimyc, email, phone, team, login } =
+    useSelector(SelectUser);
+  console.log({ id_user, id_account, name, surname, patronimyc, email, phone, team, login });
   const dispatch = useAppDispatch();
+  const isMounted = useRef(false);
+
+  useEffect(() => {
+    if (isMounted.current || !name || !surname || !phone || !email) {
+      if (id_user) {
+        dispatch(fetchUser({ id_user } as FetchUserParams));
+      }
+    }
+    isMounted.current = true;
+  }, [id_user, id_account, name, surname, patronimyc, email, phone, team, login]);
 
   return (
     <>
       <div className="track">
         <div className="box1">
+      <div className='header'>
+        <div className='header__logo'>
+          <img src={logo} alt='logo' width='44px' />
+          <div className='header__title'>
+            Volley
+            <br /> Ball
+          </div>
+        </div>
+        <button className='header__button'>
+          Профиль
+          <svg
+            className='header__svg'
+            width='14'
+            height='18'
+            viewBox='0 0 14 18'
+            fill='none'
+            xmlns='http://www.w3.org/2000/svg'>
+            <path
+              d='M6.85879 11.2947C10.5785 11.2947 13.7176 11.8991 13.7176 14.2311C13.7176 16.564 10.5579 17.147 6.85879 17.147C3.13993 17.147 0 16.5425 0 14.2105C0 11.8777 3.15966 11.2947 6.85879 11.2947ZM6.85879 0C9.37862 0 11.3976 2.01822 11.3976 4.53628C11.3976 7.05434 9.37862 9.07341 6.85879 9.07341C4.33981 9.07341 2.32 7.05434 2.32 4.53628C2.32 2.01822 4.33981 0 6.85879 0Z'
+              fill='white'
+            />
+          </svg>
+        </button>
+      </div>
+
+      <div className='track'>
+        <div className='box1'>
           {surname}
           <br />
           {name}

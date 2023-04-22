@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import logo from '../assets/img/ball.svg';
 import '../scss/profile.scss';
 import { useSelector } from 'react-redux';
@@ -15,28 +15,16 @@ export const Profile: FC = () => {
     useSelector(SelectUser);
   console.log({ id_user, id_account, name, surname, patronimyc, email, phone, team, login });
   const dispatch = useAppDispatch();
-
-  const user = useMemo(
-    () => ({
-      id_user: id_user,
-      id_account: id_account,
-      name: name,
-      surname: surname,
-      patronimyc: patronimyc,
-      email: email,
-      phone: phone,
-      team: team,
-      login: login,
-    }),
-    [], // зависимостей нет, поэтому значение не меняется
-  );
+  const isMounted = useRef(false);
 
   useEffect(() => {
-    console.log('первый рендер');
-    if (id_user) {
-      dispatch(fetchUser({ id_user } as FetchUserParams));
+    if (isMounted.current || !name || !surname || !phone || !email) {
+      if (id_user) {
+        dispatch(fetchUser({ id_user } as FetchUserParams));
+      }
     }
-  }, [user]);
+    isMounted.current = true;
+  }, [id_user, id_account, name, surname, patronimyc, email, phone, team, login]);
 
   return (
     <>

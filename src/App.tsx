@@ -23,7 +23,6 @@ function App() {
   }, []);
 
   const isAuth = useSelector((state: RootState) => state.profile.isAuth);
-  console.log('isAuth', isAuth);
   const status = useSelector((state: RootState) => state.profile.status);
   console.log('status', status);
 
@@ -35,14 +34,14 @@ function App() {
   if (status === Status.LOADING) return <Loading />;
 
   return (
-    <div className="wrapper">
-      <div className="content">
-        <div className="container">
+    <div className='wrapper'>
+      <div className='content'>
+        <div className='container'>
           <Routes>
-            <Route path="/" element={<Profile />}></Route>
-            <Route path="/login" element={<Login />}></Route>
-            <Route path="/registration" element={<Registr />}></Route>
-            <Route path="/profile" element={<Profile />}></Route>
+            <Route path='/' element={<Profile />}></Route>
+            <Route path='/login' element={<Login />}></Route>
+            <Route path='/registration' element={<Registr />}></Route>
+            <Route path='/profile' element={<Profile />}></Route>
           </Routes>
         </div>
       </div>

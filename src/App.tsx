@@ -39,9 +39,6 @@ function App() {
       <div className="content">
         <div className="container">
           <Header />
-    <div className='wrapper'>
-      <div className='content'>
-        <div className='container'>
           <Routes>
             <Route path="/" element={<Profile />}></Route>
             <Route path="/login" element={<Login />}></Route>
@@ -54,5 +51,4 @@ function App() {
     </div>
   );
 }
-
 export default App;

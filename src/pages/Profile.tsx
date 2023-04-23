@@ -29,7 +29,6 @@ export const Profile: FC = () => {
 
   return (
     <>
-      <Header />
       <div className="track">
         <div className="box1">
           {surname}

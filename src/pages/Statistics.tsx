@@ -41,7 +41,7 @@ export const Statistics: React.FC = () => {
         id: 'Select',
         Header: 'Добавить',
         Cell: ({ row }) => (
-          <Popup trigger={<button className="select--button"> Добавить </button>} modal nested>
+          <Popup trigger={<button className='select--button'> Добавить </button>} modal nested>
             <div>
               <h2>Модальное окно </h2>
               <button onClick={() => alert('Добавить: ' + row.values.Id)}>Добавить</button>
@@ -67,13 +67,13 @@ export const Statistics: React.FC = () => {
   }, []);
 
   const isEven = (idx: number) => idx % 2 === 0;
-  const isEven2 = (idx: number) => idx % 2 === 1;
+  const isOdd = (idx: number) => idx % 2 === 1;
 
   return (
     <>
-      <div className="main">
+      <div className='main'>
         <table {...getTableProps()}>
-          <thead className="backgroud_table2">
+          <thead className='backgroud_table2'>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
@@ -90,7 +90,7 @@ export const Statistics: React.FC = () => {
                 <tr
                   {...row.getRowProps()}
                   className={
-                    isEven(idx) ? 'backgroud_table' : isEven2(idx) ? 'backgroud_table2' : ''
+                    isEven(idx) ? 'backgroud_table' : isOdd(idx) ? 'backgroud_table2' : ''
                   }>
                   {row.cells.map((cell) => (
                     <td {...row.getRowProps()}>{cell.render('Cell')}</td>

@@ -4,6 +4,7 @@ import { useTable } from 'react-table';
 import axios from 'axios';
 import Popup from 'reactjs-popup';
 import styles from './statistics.module.scss';
+import Header from '../../components/Header';
 
 export const Statistics: React.FC = () => {
   const [playersStats, setPlayersStats] = useState([]);
@@ -99,30 +100,34 @@ export const Statistics: React.FC = () => {
 
   if (width < breakpoint) {
     return (
-      <div className="main">
-        <div className={styles.accordion}>
-          <button onClick={toggleState} className={styles.accordion_visible}>
-            <span>Lorem ipsum dolor sit amet.</span>
-          </button>
-          <div
-            className={toggle ? 'accordion-toggle animated' : 'accordion-toggle'}
-            style={{ height: toggle ? `${heightEl}` : '0px' }}
-            ref={refHeight}>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore, suscipit quae
-              maiores sunt ducimus est dolorem perspiciatis earum corporis unde, dicta quibusdam aut
-              placeat dignissimos distinctio vel quo eligendi ipsam.
-            </p>
+      <>
+        <Header />
+        <div className="main">
+          <div className={styles.accordion}>
+            <button onClick={toggleState} className={styles.accordion_visible}>
+              <span>Lorem ipsum dolor sit amet.</span>
+            </button>
+            <div
+              className={toggle ? 'accordion-toggle animated' : 'accordion-toggle'}
+              style={{ height: toggle ? `${heightEl}` : '0px' }}
+              ref={refHeight}>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore, suscipit quae
+                maiores sunt ducimus est dolorem perspiciatis earum corporis unde, dicta quibusdam
+                aut placeat dignissimos distinctio vel quo eligendi ipsam.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
     <>
+      <Header />
       <div className="main">
-        <table {...getTableProps()}>
+        <table className="table" {...getTableProps()}>
           <thead className="backgroud_table2">
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>

@@ -38,7 +38,6 @@ function App() {
     <div className="wrapper">
       <div className="content">
         <div className="container">
-          <Header />
           <Routes>
             <Route path="/" element={<Profile />}></Route>
             <Route path="/login" element={<Login />}></Route>

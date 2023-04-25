@@ -29,7 +29,8 @@ export const Profile: FC = () => {
 
   return (
     <>
-      <div className="header">
+      <Header />
+      {/* <div className="header">
         <div className="header__logo">
           <img src={logo} alt="logo" width="44px" />
           <div className="header__title">
@@ -52,7 +53,7 @@ export const Profile: FC = () => {
             />
           </svg>
         </button>
-      </div>
+      </div> */}
 
       <div className="track">
         <div className="box1 box">

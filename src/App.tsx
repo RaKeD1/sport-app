@@ -27,10 +27,10 @@ function App() {
   const status = useSelector((state: RootState) => state.profile.status);
   console.log('status', status);
 
-  // React.useEffect(() => {
-  //   if (isAuth) navigate('/');
-  //   else navigate('/login');
-  // }, [isAuth]);
+  React.useEffect(() => {
+    if (isAuth) navigate('/');
+    else navigate('/login');
+  }, [isAuth]);
 
   if (status === Status.LOADING) return <Loading />;
 

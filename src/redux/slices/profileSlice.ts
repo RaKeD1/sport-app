@@ -5,6 +5,7 @@ import { AuthResponse } from '../../models/response/AuthResponse';
 import axios, { AxiosResponse } from 'axios';
 import { IUser } from '../../models/IUser';
 import { API_URL } from '../../http';
+import UserService from '../../services/UserService';
 
 export type LoginParams = {
   name: string;
@@ -33,6 +34,10 @@ export type RegistrParams = {
   password: string;
 };
 
+export type FetchUserParams = {
+  id_user: number;
+};
+
 // Функция логина
 export const loginAccount = createAsyncThunk<AxiosResponse<AuthResponse>, LoginParams>(
   'user/loginStatus',
@@ -41,7 +46,7 @@ export const loginAccount = createAsyncThunk<AxiosResponse<AuthResponse>, LoginP
     try {
       const { login, password } = params;
       const response = await AuthService.login(login, password);
-      console.log(response);
+      console.log('login', response);
       return response;
     } catch (error) {
       if (!error.response) {
@@ -68,7 +73,7 @@ export const registrAccount = createAsyncThunk<AxiosResponse<AuthResponse>, Regi
         phone,
         team,
       );
-      console.log(response);
+      console.log('registration', response);
       return response;
     } catch (error) {
       if (!error.response) {
@@ -93,7 +98,7 @@ export const logoutAccount = createAsyncThunk<void, void>('user/logoutStatus', a
 // Функция проверки авторизации
 export const checkAuth = createAsyncThunk<AxiosResponse<AuthResponse>, void>(
   'user/checkAuthStatus',
-  async () => {
+  async (params, { rejectWithValue }) => {
     try {
       const response = await axios.get<AuthResponse>(`${API_URL}/refresh`, {
         withCredentials: true,
@@ -101,7 +106,29 @@ export const checkAuth = createAsyncThunk<AxiosResponse<AuthResponse>, void>(
       console.log('RESPONSE', response);
       return response;
     } catch (error) {
-      console.log('ERROR', error.response?.data?.message);
+      if (!error.response) {
+        throw error;
+      }
+      alert(error.response.data.message);
+      return rejectWithValue(error.response.data.message);
+    }
+  },
+);
+
+// Функция запроса данных о пользователе
+export const fetchUser = createAsyncThunk<AxiosResponse<IUser>, FetchUserParams>(
+  'user/fetchUserStatus',
+  async (params, { rejectWithValue }) => {
+    try {
+      const { id_user } = params;
+      const response = await UserService.fetchUser(id_user);
+      return response;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      alert(error.response?.data?.message);
+      return rejectWithValue(error.response?.data?.message);
     }
   },
 );
@@ -166,6 +193,7 @@ const profileSlice = createSlice({
       state.status = Status.ERROR;
       state.user = initialState.user;
     });
+
     // Кейсы для регистрации
     builder.addCase(registrAccount.pending, (state) => {
       state.status = Status.LOADING;
@@ -183,6 +211,7 @@ const profileSlice = createSlice({
       state.status = Status.ERROR;
       state.user = initialState.user;
     });
+
     // Кейсы для логаута
     builder.addCase(logoutAccount.pending, (state) => {
       state.status = Status.LOADING;
@@ -196,6 +225,7 @@ const profileSlice = createSlice({
     builder.addCase(logoutAccount.rejected, (state) => {
       state.status = Status.ERROR;
     });
+
     // Кейсы для проверки авторизации
     builder.addCase(checkAuth.pending, (state) => {
       state.status = Status.LOADING;
@@ -207,6 +237,25 @@ const profileSlice = createSlice({
       state.user = action.payload.data.user;
     });
     builder.addCase(checkAuth.rejected, (state) => {
+      console.log('ERROR');
+      state.status = Status.ERROR;
+    });
+
+    // Кейсы для запроса данных о пользователе
+    builder.addCase(fetchUser.pending, (state) => {
+      state.status = Status.LOADING;
+    });
+    builder.addCase(fetchUser.fulfilled, (state, action) => {
+      state.status = Status.SUCCESS;
+      console.log(action.payload.data);
+      state.user.name = action.payload.data.name;
+      state.user.surname = action.payload.data.surname;
+      state.user.patronimyc = action.payload.data.patronimyc;
+      state.user.phone = action.payload.data.phone;
+      state.user.email = action.payload.data.email;
+      state.user.team = action.payload.data.team;
+    });
+    builder.addCase(fetchUser.rejected, (state) => {
       console.log('ERROR');
       state.status = Status.ERROR;
     });

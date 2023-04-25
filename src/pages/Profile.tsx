@@ -1,14 +1,31 @@
-import { FC } from 'react';
+import { FC, useEffect, useMemo, useRef, useState } from 'react';
 import logo from '../assets/img/ball.svg';
 import '../scss/profile.scss';
 import { useSelector } from 'react-redux';
-import { SelectUser, logoutAccount } from '../redux/slices/profileSlice';
+import {
+  FetchUserParams,
+  SelectUser,
+  fetchUser,
+  logoutAccount,
+} from '../redux/slices/profileSlice';
 import { useAppDispatch } from '../redux/store';
+import Header from '../components/Header';
 
 export const Profile: FC = () => {
-  const { name, surname, patronimyc, email, phone, team, login } = useSelector(SelectUser);
-  console.log({ name, surname, patronimyc, email, phone, team, login });
+  const { id_user, id_account, name, surname, patronimyc, email, phone, team, login } =
+    useSelector(SelectUser);
+  console.log({ id_user, id_account, name, surname, patronimyc, email, phone, team, login });
   const dispatch = useAppDispatch();
+  const isMounted = useRef(false);
+
+  useEffect(() => {
+    if (isMounted.current || !name || !surname || !phone || !email) {
+      if (id_user) {
+        dispatch(fetchUser({ id_user } as FetchUserParams));
+      }
+    }
+    isMounted.current = true;
+  }, [id_user, id_account, name, surname, patronimyc, email, phone, team, login]);
 
   return (
     <>
@@ -36,6 +53,7 @@ export const Profile: FC = () => {
           </svg>
         </button>
       </div>
+
       <div className="track">
         <div className="box1 box">
           <div className="box_fio ">

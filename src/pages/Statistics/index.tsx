@@ -1,8 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import '../scss/statistics.scss';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import '../../scss/statistics.scss';
 import { useTable } from 'react-table';
 import axios from 'axios';
 import Popup from 'reactjs-popup';
+import styles from './statistics.module.scss';
+import Header from '../../components/Header';
 
 export const Statistics: React.FC = () => {
   const [playersStats, setPlayersStats] = useState([]);
@@ -39,9 +41,9 @@ export const Statistics: React.FC = () => {
       ...columns,
       {
         id: 'Select',
-        Header: 'Добавить',
+        Header: '',
         Cell: ({ row }) => (
-          <Popup trigger={<button className='select--button'> Добавить </button>} modal nested>
+          <Popup trigger={<button className="select--button"> Добавить </button>} modal nested>
             <div>
               <h2>Модальное окно </h2>
               <button onClick={() => alert('Добавить: ' + row.values.Id)}>Добавить</button>
@@ -69,11 +71,64 @@ export const Statistics: React.FC = () => {
   const isEven = (idx: number) => idx % 2 === 0;
   const isOdd = (idx: number) => idx % 2 === 1;
 
+  const [width, setWidth] = React.useState(window.innerWidth);
+  const breakpoint = 769;
+  React.useEffect(() => {
+    const handleResizeWindow = () => setWidth(window.innerWidth);
+    // subscribe to window resize event "onComponentDidMount"
+    window.addEventListener('resize', handleResizeWindow);
+    return () => {
+      // unsubscribe "onComponentDestroy"
+      window.removeEventListener('resize', handleResizeWindow);
+    };
+  }, []);
+  const [toggle, setToggle] = useState(false);
+  const [heightEl, setHeightEl] = useState();
+
+  const refHeight = useRef();
+
+  // useEffect(() => {
+  //   console.log(refHeight);
+  //   setHeightEl(`${refHeight.current.scrollHeight}px`);
+  // }, []);
+
+  const toggleState = () => {
+    setToggle(!toggle);
+  };
+
+  console.log(toggle);
+
+  if (width < breakpoint) {
+    return (
+      <>
+        <Header />
+        <div className="main">
+          <div className={styles.accordion}>
+            <button onClick={toggleState} className={styles.accordion_visible}>
+              <span>Lorem ipsum dolor sit amet.</span>
+            </button>
+            <div
+              className={toggle ? 'accordion-toggle animated' : 'accordion-toggle'}
+              style={{ height: toggle ? `${heightEl}` : '0px' }}
+              ref={refHeight}>
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore, suscipit quae
+                maiores sunt ducimus est dolorem perspiciatis earum corporis unde, dicta quibusdam
+                aut placeat dignissimos distinctio vel quo eligendi ipsam.
+              </p>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
-      <div className='main'>
-        <table {...getTableProps()}>
-          <thead className='backgroud_table2'>
+      <Header />
+      <div className="main">
+        <table className="table" {...getTableProps()}>
+          <thead className="backgroud_table2">
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
@@ -100,30 +155,6 @@ export const Statistics: React.FC = () => {
             })}
           </tbody>
         </table>
-        {/* <table>
-          <tr>
-            <th className="one_rows">ФИО</th>
-            <th>Подачи</th>
-            <th>Блоки</th>
-            <th>Атаки</th>
-            <th>Приемы</th>
-            <th>Защиты</th>
-            <th>Передачи</th>
-            <th>_</th>
-          </tr>
-          { {data.map((val, key) => {
-            return (
-              <tr key={key}>
-                <td>{vol.name}</td>
-                <td>{vol.age}</td>
-                <td>{val.gender}</td>
-              </tr>
-            );
-          })}}
-          <tr>
-            <th></th>
-          </tr>
-        </table> */}
       </div>
     </>
   );

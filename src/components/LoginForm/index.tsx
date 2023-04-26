@@ -34,7 +34,7 @@ const InnerForm: React.FC = (props: FormikProps<FormValues>) => {
       </div>
       <p className={styles.auth__text}>
         Нет аккаунта?&nbsp;
-        <Link to="/registration" className="auth__link">
+        <Link to="/registration" className={styles.auth__link}>
           Зарегистрироваться
         </Link>
       </p>

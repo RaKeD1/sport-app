@@ -29,63 +29,33 @@ export const Profile: FC = () => {
 
   return (
     <>
+      <Header />
       <div className="track">
-        <div className="box1">
-          {surname}
-          <br />
-          {name}
-          <br />
-          {patronimyc}
+        <div className="box1 box">
+          <div className="box_fio ">
+            {surname}
+            <br />
+            {name}
+            <br />
+            {patronimyc}
+          </div>
+          <div className="box__team">{team}</div>
         </div>
-        <div className="box2">{team}</div>
-        <div className="box3">{email}</div>
-        <div className="box4">{phone}</div>
-        <div className="box5">{login}</div>
+        <div className="box2 box">Пока не понятно, что тут будет</div>
+        <div className="box3 box">
+          <div className="box_title">Почта</div>
+          <div className="box__email">{email}</div>
+        </div>
+        <div className="box4 box">
+          <div className="box_title">Телефон</div>
+          <div className="box__email">{phone}</div>
+        </div>
+        <div className="box5 box">
+          <div className="box_title">Логин</div>
+          <div className="box__login">{login}</div>
+        </div>
       </div>
       <button onClick={() => dispatch(logoutAccount())}>Выйти</button>
-      {/* <div className="main">
-        <div className=" main__places">
-          <div className="main__places_left">
-            <div className="main__fio main__place">
-              <div className="main__fio_surname">Орлов</div>
-              <div className="main__fio_name">Данила</div>
-              <div className="main__fio_patronymic">Дмитриевич</div>
-            </div>
-            <div className="main__group main__place">
-              <div className="main__group_title">Группа</div>
-              <div className="main__group_i">П-23</div>
-            </div>
-          </div>
-          <div className="main__places_right">
-            <div className="main__places_right_1">
-              <div className="main__email main__place">
-                <div className="main__email_title">Почта</div>
-                <Link to="/" className="main__email_link">
-                  orlovdanorlov@gmail.com
-                </Link>
-              </div>
-            </div>
-            <div className="main__places_right_2">
-              <div className="main__phone main__place">
-                <div className="main__phone_title">Телефон</div>
-                <div className="main__phone_i">+7(903)-518-3996</div>
-              </div>
-              <div className="main__login main__place">
-                <div className="main__login_title">Логин</div>
-                <div className="main__login_i">RaKeD</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="main__buttons ">
-          <div className="main__info  ">
-            <button className="main__item">Редактировать данные профиля</button>
-          </div>
-          <div className="main__info ">
-            <button className="main__item">Добавить тренировку</button>
-          </div>
-        </div>
-      </div> */}
     </>
   );
 };

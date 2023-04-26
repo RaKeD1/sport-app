@@ -1,7 +1,17 @@
 import React from 'react';
 import logo from '../assets/img/ball.svg';
+import { useNavigate } from 'react-router';
 
 const Header: React.FC = () => {
+  const navigate = useNavigate();
+  const routeStat = () => {
+    const stat = `/statistics`;
+    navigate(stat);
+  };
+  const routeProfile = () => {
+    const prof = `/profile`;
+    navigate(prof);
+  };
   return (
     <div className="header">
       <div className="header__logo">
@@ -11,7 +21,10 @@ const Header: React.FC = () => {
           <br /> Ball
         </div>
       </div>
-      <button className="header__button">
+      <button className="header__button" onClick={routeStat}>
+        Статистика
+      </button>
+      <button className="header__button" onClick={routeProfile}>
         Профиль
         <svg
           className="header__svg"

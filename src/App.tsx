@@ -28,7 +28,8 @@ function App() {
   }, []);
 
   // React.useEffect(() => {
-  //   if (!isAuth) navigate('/login');
+  //   if (isAuth) navigate('/');
+  //   else navigate('/login');
   // }, [isAuth]);
 
   if (status === Status.LOADING) return <Loading />;

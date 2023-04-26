@@ -38,6 +38,12 @@ export type FetchUserParams = {
   id_user: number;
 };
 
+const localAuth = (local: string) => {
+  if (local === 'false') return false;
+  else if (local === 'true') return true;
+  else return null;
+};
+
 // Функция логина
 export const loginAccount = createAsyncThunk<AxiosResponse<AuthResponse>, LoginParams>(
   'user/loginStatus',
@@ -161,7 +167,8 @@ const initialState: Profile = {
     login: '',
   },
   status: Status.SUCCESS,
-  isAuth: false,
+  // isAuth: null,
+  isAuth: localStorage.isAuth ? localAuth(localStorage.isAuth) : false,
 };
 const profileSlice = createSlice({
   name: 'Profile',
@@ -187,6 +194,7 @@ const profileSlice = createSlice({
       state.status = Status.SUCCESS;
       localStorage.setItem('token', action.payload.data.accessToken);
       state.isAuth = true;
+      localStorage.isAuth = true;
     });
     builder.addCase(loginAccount.rejected, (state, action) => {
       console.log('REJECTED');
@@ -205,6 +213,7 @@ const profileSlice = createSlice({
       state.status = Status.SUCCESS;
       localStorage.setItem('token', action.payload.data.accessToken);
       state.isAuth = true;
+      localStorage.isAuth = true;
     });
     builder.addCase(registrAccount.rejected, (state, action) => {
       console.log('REJECTED');
@@ -221,6 +230,7 @@ const profileSlice = createSlice({
       state.status = Status.SUCCESS;
       localStorage.removeItem('token');
       state.isAuth = false;
+      localStorage.isAuth = false;
       state.user = initialState.user;
     });
     builder.addCase(logoutAccount.rejected, (state) => {
@@ -235,6 +245,7 @@ const profileSlice = createSlice({
       state.status = Status.SUCCESS;
       localStorage.setItem('token', action.payload.data.accessToken);
       state.isAuth = true;
+      localStorage.isAuth = true;
       state.user = action.payload.data.user;
     });
     builder.addCase(checkAuth.rejected, (state) => {

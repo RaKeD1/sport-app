@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import './scss/app.scss';
 import Header from './components/Header';
 import Home from './pages/Home';
@@ -20,17 +20,36 @@ function App() {
   console.log('isAuth', isAuth);
   const status = useSelector((state: RootState) => state.profile.status);
   console.log('status', status);
+  let location = useLocation();
 
   React.useEffect(() => {
     if (localStorage.getItem('token')) {
+      console.log(localStorage.getItem('token'));
       dispatch(checkAuth());
     }
   }, []);
 
-  // React.useEffect(() => {
-  //   if (isAuth) navigate('/');
-  //   else navigate('/login');
-  // }, [isAuth]);
+  React.useEffect(() => {
+    console.log(window.location.pathname);
+    if (
+      isAuth &&
+      (window.location.pathname === '/login' || window.location.pathname === '/registration')
+    ) {
+      console.log('NAVIGATE /');
+      navigate('/');
+    } else if (
+      !isAuth &&
+      isAuth != null &&
+      window.location.pathname !== '/login' &&
+      window.location.pathname !== '/registration'
+    ) {
+      console.log('NAVIGATE /login');
+      navigate('/login');
+    } else if (isAuth === null) {
+      console.log('isAuth === null NAVIGATE /login');
+      navigate('/login');
+    }
+  }, [isAuth]);
 
   if (status === Status.LOADING) return <Loading />;
 
@@ -56,8 +75,6 @@ function App() {
           <Header />
           <Routes>
             <Route path='/' element={<Profile />}></Route>
-            {/* <Route path='/login' element={<Login />}></Route>
-            <Route path='/registration' element={<Registr />}></Route> */}
             <Route path='/profile' element={<Profile />}></Route>
             <Route path='/statistics' element={<Statistics />}></Route>
           </Routes>

@@ -29,30 +29,29 @@ export const Profile: FC = () => {
 
   return (
     <>
-      <Header />
-      <div className="track">
-        <div className="box1 box">
-          <div className="box_fio ">
+      <div className='track'>
+        <div className='box1 box'>
+          <div className='box_fio '>
             {surname}
             <br />
             {name}
             <br />
             {patronimyc}
           </div>
-          <div className="box__team">{team}</div>
+          <div className='box__team'>{team}</div>
         </div>
-        <div className="box2 box">Пока не понятно, что тут будет</div>
-        <div className="box3 box">
-          <div className="box_title">Почта</div>
-          <div className="box__email">{email}</div>
+        <div className='box2 box'>Пока не понятно, что тут будет</div>
+        <div className='box3 box'>
+          <div className='box_title'>Почта</div>
+          <div className='box__email'>{email}</div>
         </div>
-        <div className="box4 box">
-          <div className="box_title">Телефон</div>
-          <div className="box__email">{phone}</div>
+        <div className='box4 box'>
+          <div className='box_title'>Телефон</div>
+          <div className='box__email'>{phone}</div>
         </div>
-        <div className="box5 box">
-          <div className="box_title">Логин</div>
-          <div className="box__login">{login}</div>
+        <div className='box5 box'>
+          <div className='box_title'>Логин</div>
+          <div className='box__login'>{login}</div>
         </div>
       </div>
       <button onClick={() => dispatch(logoutAccount())}>Выйти</button>

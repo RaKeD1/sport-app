@@ -43,7 +43,7 @@ export const Statistics: React.FC = () => {
         id: 'Select',
         Header: '',
         Cell: ({ row }) => (
-          <Popup trigger={<button className="select--button"> Добавить </button>} modal nested>
+          <Popup trigger={<button className='select--button'> Добавить </button>} modal nested>
             <div>
               <h2>Модальное окно </h2>
               <button onClick={() => alert('Добавить: ' + row.values.Id)}>Добавить</button>
@@ -101,8 +101,7 @@ export const Statistics: React.FC = () => {
   if (width < breakpoint) {
     return (
       <>
-        <Header />
-        <div className="main">
+        <div className='main'>
           <div className={styles.accordion}>
             <button onClick={toggleState} className={styles.accordion_visible}>
               <span>Lorem ipsum dolor sit amet.</span>
@@ -125,10 +124,9 @@ export const Statistics: React.FC = () => {
 
   return (
     <>
-      <Header />
-      <div className="main">
-        <table className="table" {...getTableProps()}>
-          <thead className="backgroud_table2">
+      <div className='main'>
+        <table className='table' {...getTableProps()}>
+          <thead className='backgroud_table2'>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (

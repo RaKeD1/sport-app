@@ -107,6 +107,7 @@ export const checkAuth = createAsyncThunk<AxiosResponse<AuthResponse>, void>(
       return response;
     } catch (error) {
       if (!error.response) {
+        alert(error.message);
         throw error;
       }
       alert(error.response.data.message);

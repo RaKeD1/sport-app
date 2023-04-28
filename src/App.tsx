@@ -20,7 +20,7 @@ function App() {
   console.log('isAuth', isAuth);
   const status = useSelector((state: RootState) => state.profile.status);
   console.log('status', status);
-  let location = useLocation();
+  //let location = useLocation();
 
   React.useEffect(() => {
     if (localStorage.getItem('token')) {
@@ -55,12 +55,12 @@ function App() {
 
   if (!isAuth) {
     return (
-      <div className='wrapper'>
-        <div className='content'>
-          <div className='container'>
+      <div className="wrapper">
+        <div className="content">
+          <div className="container">
             <Routes>
-              <Route path='/login' element={<Login />}></Route>
-              <Route path='/registration' element={<Registr />}></Route>
+              <Route path="/login" element={<Login />}></Route>
+              <Route path="/registration" element={<Registr />}></Route>
             </Routes>
           </div>
         </div>
@@ -69,14 +69,14 @@ function App() {
   }
 
   return (
-    <div className='wrapper'>
-      <div className='content'>
-        <div className='container'>
+    <div className="wrapper">
+      <div className="content">
+        <div className="container">
           <Header />
           <Routes>
-            <Route path='/' element={<Profile />}></Route>
-            <Route path='/profile' element={<Profile />}></Route>
-            <Route path='/statistics' element={<Statistics />}></Route>
+            <Route path="/" element={<Profile />}></Route>
+            <Route path="/profile" element={<Profile />}></Route>
+            <Route path="/statistics" element={<Statistics />}></Route>
           </Routes>
         </div>
       </div>

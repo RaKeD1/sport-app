@@ -20,7 +20,7 @@ function App() {
   console.log('isAuth', isAuth);
   const status = useSelector((state: RootState) => state.profile.status);
   console.log('status', status);
-  //let location = useLocation();
+  let location = useLocation();
 
   React.useEffect(() => {
     if (localStorage.getItem('token')) {

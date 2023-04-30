@@ -73,50 +73,53 @@
 .box {
   padding: 20px;
   border-radius: 30px;
-  color: #fff;
-  font-size: calc((100vw - 480px) / (1280 - 480) * (40 - 15) + 15px);
+  color: $stnd-clr;
+  font-size: calc((100vw - 480px) / (1280 - 480) * (30 - 15) + 15px);
   font-weight: 800;
   line-height: 1.2em;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(57, 57, 57, 0.1);
 }
 .box1 {
+  padding: 20px 40px;
   align-items: center;
-  padding: 50px;
   grid-column-start: 1;
   grid-column-end: 8;
   grid-row-start: 1;
   grid-row-end: 5;
-  background-color: #67ff;
+  font-size: calc((100vw - 480px) / (1280 - 480) * (40 - 15) + 15px);
+  .box__fio {
+  }
 }
 .box2 {
-  padding: 50px;
   grid-column-start: 8;
   grid-column-end: 15;
   grid-row-start: 1;
   grid-row-end: 3;
-  background-color: rgb(84, 101, 235);
   justify-content: start;
   padding: 20px;
 }
 .box3 {
-  grid-column-start: 15;
+  grid-column-start: 8;
   grid-column-end: 23;
   grid-row-start: 1;
   grid-row-end: 3;
-  background-color: rgb(45, 56, 129);
 }
 .box4 {
   grid-column-start: 8;
   grid-column-end: 16;
   grid-row-start: 3;
   grid-row-end: 5;
-  background-color: #67ff;
 }
 .box5 {
   align-items: center;
-  padding: 50px;
   grid-column-start: 16;
   grid-column-end: 23;
   grid-row-start: 3;
   grid-row-end: 5;
-  background-color: #67ff;
+}
+.box__title {
+  font-size: calc((100vw - 480px) / (1280 - 480) * (35 - 15) + 15px);
+  color: $button-clr;
+  margin-bottom: 10px;
 }

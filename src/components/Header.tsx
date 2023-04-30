@@ -8,6 +8,10 @@ const Header: React.FC = () => {
     const stat = `/statistics`;
     navigate(stat);
   };
+  const routeTrain = () => {
+    const train = `/createtraining`;
+    navigate(train);
+  };
   const routeProfile = () => {
     const prof = `/profile`;
     navigate(prof);
@@ -21,6 +25,9 @@ const Header: React.FC = () => {
           <br /> Ball
         </div>
       </div>
+      <button className="header__button" onClick={routeTrain}>
+        Создать тренировку
+      </button>
       <button className="header__button" onClick={routeStat}>
         Статистика
       </button>

@@ -2,11 +2,38 @@
 
 //---Аккордеон--//
 
-button {
+.accordion_item {
+  font-size: 30px;
+  margin-bottom: 20px;
+  background-color: #78c6ff;
+  padding: 25px;
+  border-radius: 20px;
+}
+.accordion_title {
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+}
+.accordion_content {
+  margin-top: 12px;
+  color: #fff;
+  font-size: 24px;
+}
+.accordion_content_list {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.accordion_content_rez {
+  margin-left: 20px;
+  background-color: #fff;
+  color: #78c6ff;
+  border-radius: 20px;
+  padding: 6px 23px 6px 23px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
-.accordion {
-  max-width: 400px;
+.select_button {
 }
 
 .accordion_visible {

@@ -5,6 +5,7 @@ import axios from 'axios';
 import Popup from 'reactjs-popup';
 import styles from './statistics.module.scss';
 import Header from '../../components/Header';
+import { useNavigate } from 'react-router-dom';
 
 export const Statistics: React.FC = () => {
   const [playersStats, setPlayersStats] = useState([]);
@@ -43,7 +44,7 @@ export const Statistics: React.FC = () => {
         id: 'Select',
         Header: '',
         Cell: ({ row }) => (
-          <Popup trigger={<button className='select--button'> Добавить </button>} modal nested>
+          <Popup trigger={<button className="select--button"> Добавить </button>} modal nested>
             <div>
               <h2>Модальное окно </h2>
               <button onClick={() => alert('Добавить: ' + row.values.Id)}>Добавить</button>
@@ -72,7 +73,7 @@ export const Statistics: React.FC = () => {
   const isOdd = (idx: number) => idx % 2 === 1;
 
   const [width, setWidth] = React.useState(window.innerWidth);
-  const breakpoint = 769;
+  const breakpoint = 860;
   React.useEffect(() => {
     const handleResizeWindow = () => setWidth(window.innerWidth);
     // subscribe to window resize event "onComponentDidMount"
@@ -97,25 +98,80 @@ export const Statistics: React.FC = () => {
   };
 
   console.log(toggle);
+  const accordionData = [
+    {
+      title: 'Section 1',
+      content: `Lorem: `,
+    },
+    {
+      title: 'Section 2',
+      content: `Lorem: `,
+    },
+    {
+      title: 'Section 3',
+      content: `Sapiente: `,
+    },
+  ];
+  const navigate = useNavigate();
+  const [playerStats, setPlayerStats] = React.useState<{
+    Id: string;
+    FIO: string;
+    Feeds: number;
+    Blocks: number;
+    Attacks: number;
+    Techniques: number;
+    Defenses: number;
+    Transfers: number;
+  }>();
+  React.useEffect(() => {
+    async function fetchPlayer() {
+      try {
+        const { data } = await axios.get(
+          'https://644500d8b80f57f581af0fcb.mockapi.io/playersStats',
+        );
+        setPlayerStats(data);
+      } catch (error) {
+        alert('Ошибка при получении пиццы!');
+        navigate('/');
+      }
+    }
+
+    fetchPlayer();
+  }, []);
+
+  const Accordion = ({ FIO, Feeds, Blocks }) => {
+    const [isActive, setIsActive] = useState(false);
+
+    return (
+      <div className={styles.accordion_item}>
+        <div className={styles.accordion_title} onClick={() => setIsActive(!isActive)}>
+          <div>{FIO}</div>
+          <div>{isActive ? '-' : '+'}</div>
+        </div>
+        {isActive && (
+          <div className={styles.accordion_content}>
+            <div className={styles.accordion_content_list}>
+              <div>{Feeds}</div>
+              <div className={styles.accordion_content_rez}>{Feeds}</div>
+            </div>
+            <div className={styles.accordion_content_list}>
+              <div>{Blocks}</div>
+              <div className={styles.accordion_content_rez}>{Blocks}</div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   if (width < breakpoint) {
     return (
       <>
-        <div className='main'>
+        <div className="main">
           <div className={styles.accordion}>
-            <button onClick={toggleState} className={styles.accordion_visible}>
-              <span>Lorem ipsum dolor sit amet.</span>
-            </button>
-            <div
-              className={toggle ? 'accordion-toggle animated' : 'accordion-toggle'}
-              style={{ height: toggle ? `${heightEl}` : '0px' }}
-              ref={refHeight}>
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore, suscipit quae
-                maiores sunt ducimus est dolorem perspiciatis earum corporis unde, dicta quibusdam
-                aut placeat dignissimos distinctio vel quo eligendi ipsam.
-              </p>
-            </div>
+            {playersStats.map(({ FIO, Feeds, Blocks }) => (
+              <Accordion FIO={FIO} Feeds={Feeds} Blocks={Blocks} />
+            ))}
           </div>
         </div>
       </>
@@ -124,9 +180,9 @@ export const Statistics: React.FC = () => {
 
   return (
     <>
-      <div className='main'>
-        <table className='table' {...getTableProps()}>
-          <thead className='backgroud_table2'>
+      <div className="main">
+        <table className="table" {...getTableProps()}>
+          <thead className="backgroud_table2">
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (

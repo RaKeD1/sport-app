@@ -1,0 +1,25 @@
+@import '../../scss/vars';
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.train {
+  background-color: #fff;
+  margin: 30px 0;
+  padding: 40px;
+  border-radius: 30px;
+  &__title {
+    text-align: center;
+    margin-bottom: 80px;
+    font-size: calc((100vw - 480px) / (1280 - 480) * (32 - 16) + 16px);
+  }
+  label {
+    margin-right: 15px;
+    font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 12px);
+  }
+  input {
+    width: 300px;
+    font-size: calc((100vw - 480px) / (1280 - 480) * (17 - 11) + 11px);
+  }
+}

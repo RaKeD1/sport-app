@@ -30,8 +30,8 @@ const CreateTrain: FC = () => {
   const onClickRemovePlayer = (player: string) => {
     dispatch(removePlayer(player));
   };
-  const createTrain = (account_id: number, players: string[], team: string) => {
-    dispatch(postNewTrain(account_id, players, team));
+  const createTrain = (account_id: number, team: string, players: string[]) => {
+    dispatch(postNewTrain({ account_id, team, players }));
   };
 
   return (

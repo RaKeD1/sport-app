@@ -1,6 +1,11 @@
-import { FC, useState } from 'react';
-import styles from './CreateTrain.module.scss';
-import Header from '../Header';
+import React from 'react';
+import classnames from 'classnames';
+import { Formik, Form, Field, withFormik, FormikProps, FormikErrors } from 'formik';
+import styles from '../RegistrForm/RegistrForm.module.scss';
+import LoginSchema from '../../models/validation/LoginSchema';
+import { loginAccount } from '../../redux/slices/profileSlice';
+import { bindActionCreators } from '@reduxjs/toolkit';
+import { connect } from 'react-redux';
 import { useAppDispatch } from '../../redux/store';
 import { useSelector } from 'react-redux';
 import {
@@ -12,13 +17,21 @@ import {
 import { SelectAccountID } from '../../redux/slices/profileSlice';
 import { postNewTrain } from '../../redux/slices/trainSlice';
 
-const CreateTrain: FC = () => {
-  const [playerInput, setPlayerInput] = useState<string>('');
+interface FormValues {
+  team: string;
+  players: string[];
+}
+
+let setSubmittingHigher;
+
+const InnerForm: React.FC = (props: FormikProps<FormValues>) => {
+  const { touched, errors, isSubmitting } = props;
+  const [playerInput, setPlayerInput] = React.useState<string>('');
   const { players, team } = useSelector(SelectCreateTrain);
   const account_id = useSelector(SelectAccountID);
   const dispatch = useAppDispatch();
 
-  const updPlayerInput = (value) => {
+  const updPlayerInput = (value: string) => {
     setPlayerInput(value);
   };
 
@@ -36,15 +49,16 @@ const CreateTrain: FC = () => {
   };
 
   return (
-    <div className={styles.train}>
+    <Form className={styles.train}>
       <h2 className={styles.train__title}>Создание тренировки</h2>
       <div className={styles.train__elem}>
         <label htmlFor=''>Название команды:</label>
-        <input
+        <Field
           value={team}
           onChange={(event) => dispatch(setTeam(event.target.value))}
           type='text'
         />
+        {errors.team && touched.team && <div>{errors.team}</div>}
       </div>
       <div className={styles.train__elem}>
         <label htmlFor=''>Игроки:</label>
@@ -65,9 +79,48 @@ const CreateTrain: FC = () => {
           </div>
         ))}
       </div>
-      <button onClick={() => createTrain(account_id, team, players)}>Создать</button>
-    </div>
+      <button
+        type='submit'
+        disabled={isSubmitting}
+        onClick={() => createTrain(account_id, team, players)}>
+        Создать
+      </button>
+    </Form>
   );
 };
 
-export default CreateTrain;
+interface TrainProps {
+  initialTeam?: string;
+  postNewTrain: (values: FormValues) => void;
+}
+
+export const CreateTrainForm = withFormik<TrainProps, FormValues>({
+  // Transform outer props into form values
+  mapPropsToValues: (props) => {
+    return {
+      team: props.initialTeam || '',
+      players: [],
+    };
+  },
+
+  validationSchema: LoginSchema,
+
+  handleSubmit: (values, { props, setSubmitting }) => {
+    console.log(JSON.stringify(values));
+    props.postNewTrain(values);
+    setSubmittingHigher = setSubmitting;
+  },
+  displayName: 'CreateTrainForm',
+})(InnerForm);
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(
+    {
+      postNewTrain,
+    },
+    dispatch,
+  );
+
+const Redux = connect(null, mapDispatchToProps)(CreateTrainForm);
+
+export default Redux;

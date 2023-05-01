@@ -3,6 +3,7 @@ import { RootState } from '../store';
 import axios, { AxiosResponse } from 'axios';
 import { ITrain } from '../../models/ITrain';
 import TrainService from '../../services/TrainService';
+import { Status } from './profileSlice';
 
 export type NewTrainParams = {
   account_id: number;
@@ -50,13 +51,6 @@ export const getTeamTrain = createAsyncThunk<AxiosResponse<Players>, GetTrainPar
   },
 );
 
-// Ключи статуса
-export enum Status {
-  LOADING = 'loading',
-  SUCCESS = 'success',
-  ERROR = 'error',
-}
-
 export interface Train {
   players: Players;
   status: Status;
@@ -64,7 +58,7 @@ export interface Train {
 
 const initialState: Train = {
   players: [],
-  status: Status.SUCCESS,
+  status: Status.LOADING,
 };
 
 const trainSlice = createSlice({

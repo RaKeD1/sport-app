@@ -40,6 +40,15 @@
       cursor: pointer;
     }
   }
+  &__create {
+    display: block;
+    margin: auto;
+
+    &_notValid {
+      pointer-events: none;
+      opacity: 0.6;
+    }
+  }
   label {
     margin-right: 15px;
     font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 12px);

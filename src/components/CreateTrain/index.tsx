@@ -1,37 +1,43 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import styles from './CreateTrain.module.scss';
-import Header from '../Header';
 import { useAppDispatch } from '../../redux/store';
 import { useSelector } from 'react-redux';
-import {
-  SelectCreateTrain,
-  addPlayer,
-  removePlayer,
-  setTeam,
-} from '../../redux/slices/createTrainSlice';
-import { SelectAccountID } from '../../redux/slices/profileSlice';
-import { postNewTrain } from '../../redux/slices/trainSlice';
+import { SelectCreateTrain, setPlayers, setTeam } from '../../redux/slices/createTrainSlice';
+import { SelectAccountID, Status } from '../../redux/slices/profileSlice';
+import { SelectTrainStatus, postNewTrain } from '../../redux/slices/trainSlice';
+import { useNavigate } from 'react-router';
+import classNames from 'classnames';
+import AsyncSearchBar from '../AsyncSearchBar';
+import { ISelectUser } from '../../models/ISelectUser';
 
 const CreateTrain: FC = () => {
-  const [playerInput, setPlayerInput] = useState<string>('');
+  const [isValid, setIsValid] = useState<boolean>(false);
   const { players, team } = useSelector(SelectCreateTrain);
   const account_id = useSelector(SelectAccountID);
+  const status = useSelector(SelectTrainStatus);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const [collabs, setCollabs] = useState<ISelectUser[]>([]);
 
-  const updPlayerInput = (value) => {
-    setPlayerInput(value);
-  };
+  useEffect(() => {
+    console.log('collabs', collabs);
+    const players: number[] = collabs.map((obj) => obj.id_account);
+    dispatch(setPlayers(players));
+  }, [collabs]);
 
-  const onClickAdd = () => {
-    dispatch(addPlayer(playerInput));
-    setPlayerInput('');
-  };
+  useEffect(() => {
+    if (!team || collabs.length === 0) setIsValid(false);
+    else setIsValid(true);
+  }, [collabs, team]);
 
-  const onClickRemovePlayer = (player: string) => {
-    dispatch(removePlayer(player));
-  };
+  useEffect(() => {
+    if (status === Status.SUCCESS) {
+      navigate('/statistics');
+    }
+  }, [status]);
 
-  const createTrain = (account_id: number, team: string, players: string[]) => {
+  const createTrain = (account_id: number, team: string, players: number[]) => {
+    console.log('Button clicked', account_id, team, players);
     dispatch(postNewTrain({ account_id, team, players }));
   };
 
@@ -48,24 +54,14 @@ const CreateTrain: FC = () => {
       </div>
       <div className={styles.train__elem}>
         <label htmlFor=''>Игроки:</label>
-        <input
-          value={playerInput}
-          onChange={(event) => updPlayerInput(event.target.value)}
-          type='text'
-        />
-        <button onClick={() => onClickAdd()} className={styles.button__add}>
-          Добавить
-        </button>
+        <AsyncSearchBar setCollabs={setCollabs} />
       </div>
-      <div className={styles.plrContainer}>
-        {players.map((item: string) => (
-          <div className={styles.train__player}>
-            {item}
-            <span onClick={() => onClickRemovePlayer(item)}>x</span>
-          </div>
-        ))}
-      </div>
-      <button onClick={() => createTrain(account_id, team, players)}>Создать</button>
+      <button
+        className={classNames(styles.train__create, { [styles.train__create_notValid]: !isValid })}
+        disabled={!isValid}
+        onClick={() => createTrain(account_id, team, players)}>
+        Создать
+      </button>
     </div>
   );
 };

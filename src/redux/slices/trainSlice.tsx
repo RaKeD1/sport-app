@@ -8,7 +8,7 @@ import { Status } from './profileSlice';
 export type NewTrainParams = {
   account_id: number;
   team: string;
-  players: string[];
+  players: number[];
 };
 
 export type GetTrainParams = {
@@ -24,6 +24,7 @@ export const postNewTrain = createAsyncThunk<AxiosResponse<Players>, NewTrainPar
   async (params, { rejectWithValue }) => {
     try {
       const { account_id, team, players } = params;
+      console.log('team', team);
       const response = await TrainService.newTrain(account_id, team, players);
       return response;
     } catch (error) {
@@ -108,6 +109,7 @@ const trainSlice = createSlice({
   },
 });
 
-export const {} = trainSlice.actions;
+export const SelectTrainStatus = (state: RootState) => state.train.status;
+export const { setError } = trainSlice.actions;
 
 export default trainSlice.reducer;

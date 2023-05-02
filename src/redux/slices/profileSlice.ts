@@ -167,7 +167,6 @@ const initialState: Profile = {
     login: '',
   },
   status: Status.SUCCESS,
-  // isAuth: null,
   isAuth: localStorage.isAuth ? localAuth(localStorage.isAuth) : false,
 };
 const profileSlice = createSlice({

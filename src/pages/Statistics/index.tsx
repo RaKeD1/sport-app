@@ -44,7 +44,7 @@ export const Statistics: React.FC = () => {
         id: 'Select',
         Header: '',
         Cell: ({ row }) => (
-          <Popup trigger={<button className="select--button"> Добавить </button>} modal nested>
+          <Popup trigger={<button className='select--button'> Добавить </button>} modal nested>
             <div>
               <h2>Модальное окно </h2>
               <button onClick={() => alert('Добавить: ' + row.values.Id)}>Добавить</button>
@@ -88,10 +88,10 @@ export const Statistics: React.FC = () => {
 
   const refHeight = useRef();
 
-  // useEffect(() => {
-  //   console.log(refHeight);
-  //   setHeightEl(`${refHeight.current.scrollHeight}px`);
-  // }, []);
+  useEffect(() => {
+    console.log(refHeight);
+    // setHeightEl(`${refHeight.current.scrollHeight}px`);
+  }, []);
 
   const toggleState = () => {
     setToggle(!toggle);
@@ -167,7 +167,7 @@ export const Statistics: React.FC = () => {
   if (width < breakpoint) {
     return (
       <>
-        <div className="main">
+        <div className='main'>
           <div className={styles.accordion}>
             {playersStats.map(({ FIO, Feeds, Blocks }) => (
               <Accordion FIO={FIO} Feeds={Feeds} Blocks={Blocks} />
@@ -180,9 +180,9 @@ export const Statistics: React.FC = () => {
 
   return (
     <>
-      <div className="main">
-        <table className="table" {...getTableProps()}>
-          <thead className="backgroud_table2">
+      <div className='main'>
+        <table className='table' {...getTableProps()}>
+          <thead className='backgroud_table2'>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (

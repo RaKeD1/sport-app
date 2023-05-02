@@ -5,12 +5,12 @@ import { ITrain } from '../models/ITrain';
 export default class TrainService {
   static async newTrain(
     account_id: number,
-    team: string,
-    players: string[],
+    day_team: string,
+    players: number[],
   ): Promise<AxiosResponse<ITrain[]>> {
     return $api.post<ITrain[]>('/team-train', {
       account_id,
-      team,
+      day_team,
       players,
     });
   }

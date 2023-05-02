@@ -3,7 +3,7 @@ import { RootState } from '../store';
 
 export interface NewTrainData {
   team: string;
-  players: string[];
+  players: number[];
 }
 
 const initialState: NewTrainData = {
@@ -21,17 +21,20 @@ const createTrainSlice = createSlice({
     clearTeam(state) {
       state.team = initialState.team;
     },
-    addPlayer(state, action: PayloadAction<string>) {
-      state.players.push(action.payload);
+    setPlayers(state, action: PayloadAction<number[]>) {
+      state.players = action.payload;
     },
-    removePlayer(state, action: PayloadAction<string>) {
-      const player = action.payload;
-      state.players = state.players.filter((item) => item != player);
-    },
+    // addPlayer(state, action: PayloadAction<string>) {
+    //   state.players.push(action.payload);
+    // },
+    // removePlayer(state, action: PayloadAction<string>) {
+    //   const player = action.payload;
+    //   state.players = state.players.filter((item) => item != player);
+    // },
   },
 });
 
 export const SelectCreateTrain = (state: RootState) => state.createTrain;
-export const { setTeam, clearTeam, addPlayer, removePlayer } = createTrainSlice.actions;
+export const { setTeam, clearTeam, setPlayers } = createTrainSlice.actions;
 
 export default createTrainSlice.reducer;

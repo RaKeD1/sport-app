@@ -22,4 +22,8 @@ export default class TrainService {
   ): Promise<AxiosResponse<ITrain[]>> {
     return $api.get<ITrain[]>(`/team-train?account_id=${account_id}&date=${date}&team=${team}`);
   }
+
+  static async checkTeam(team: string): Promise<AxiosResponse<boolean>> {
+    return $api.get<boolean>(`/team/${team}`);
+  }
 }

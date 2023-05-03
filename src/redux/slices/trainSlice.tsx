@@ -8,7 +8,7 @@ import { Status } from './profileSlice';
 export type NewTrainParams = {
   account_id: number;
   team: string;
-  players: number[];
+  selectPlayers: number[];
 };
 
 export type GetTrainParams = {
@@ -23,9 +23,9 @@ export const postNewTrain = createAsyncThunk<AxiosResponse<Players>, NewTrainPar
   'train/postNewTrain',
   async (params, { rejectWithValue }) => {
     try {
-      const { account_id, team, players } = params;
+      const { account_id, team, selectPlayers } = params;
       console.log('team', team);
-      const response = await TrainService.newTrain(account_id, team, players);
+      const response = await TrainService.newTrain(account_id, team, selectPlayers);
       return response;
     } catch (error) {
       if (!error.response) {
@@ -53,11 +53,15 @@ export const getTeamTrain = createAsyncThunk<AxiosResponse<Players>, GetTrainPar
 );
 
 export interface Train {
+  date: string;
+  team: string;
   players: Players;
   status: Status;
 }
 
 const initialState: Train = {
+  date: '',
+  team: '',
   players: [],
   status: Status.LOADING,
 };
@@ -68,6 +72,12 @@ const trainSlice = createSlice({
   reducers: {
     setError(state) {
       state.status = Status.ERROR;
+    },
+    setLoading(state) {
+      state.status = Status.LOADING;
+    },
+    clearTrain(state) {
+      state = initialState;
     },
   },
   extraReducers: (builder) => {
@@ -110,6 +120,7 @@ const trainSlice = createSlice({
 });
 
 export const SelectTrainStatus = (state: RootState) => state.train.status;
-export const { setError } = trainSlice.actions;
+export const SelectTrainPlayers = (state: RootState) => state.train.players;
+export const { setError, setLoading, clearTrain } = trainSlice.actions;
 
 export default trainSlice.reducer;

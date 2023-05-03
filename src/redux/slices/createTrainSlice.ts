@@ -3,11 +3,11 @@ import { RootState } from '../store';
 
 export interface NewTrainData {
   team: string;
-  players: number[];
+  selectPlayers: number[];
 }
 
 const initialState: NewTrainData = {
-  players: [],
+  selectPlayers: [],
   team: '',
 };
 
@@ -22,15 +22,8 @@ const createTrainSlice = createSlice({
       state.team = initialState.team;
     },
     setPlayers(state, action: PayloadAction<number[]>) {
-      state.players = action.payload;
+      state.selectPlayers = action.payload;
     },
-    // addPlayer(state, action: PayloadAction<string>) {
-    //   state.players.push(action.payload);
-    // },
-    // removePlayer(state, action: PayloadAction<string>) {
-    //   const player = action.payload;
-    //   state.players = state.players.filter((item) => item != player);
-    // },
   },
 });
 

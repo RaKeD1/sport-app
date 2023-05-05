@@ -69,6 +69,7 @@ const CreateTrain: FC = () => {
   const createTrain = (account_id: number, team: string, selectPlayers: number[]) => {
     console.log('Button clicked', account_id, team, selectPlayers);
     dispatch(postNewTrain({ account_id, team, selectPlayers }));
+    dispatch(setTeam(team));
     navigate('/statistics');
   };
 
@@ -76,7 +77,7 @@ const CreateTrain: FC = () => {
     <div className={styles.train}>
       <h2 className={styles.train__title}>Создание тренировки</h2>
       <div className={styles.train__elem}>
-        <label htmlFor=''>Название команды:</label>
+        <label>Название команды:</label>
         <div className={styles.train__team}>
           <input
             className={classNames({ [styles.train__team_notValid]: !teamIsValid && teamValue })}

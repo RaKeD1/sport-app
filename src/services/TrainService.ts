@@ -1,6 +1,7 @@
 import $api from '../http';
 import { AxiosResponse } from 'axios';
 import { ITrain } from '../models/ITrain';
+import { ActionType } from '../models/IActionType';
 
 export default class TrainService {
   static async newTrain(
@@ -17,13 +18,19 @@ export default class TrainService {
 
   static async getTrain(
     account_id: number,
+    day_team: string,
     date: string,
-    team: string,
   ): Promise<AxiosResponse<ITrain[]>> {
-    return $api.get<ITrain[]>(`/team-train?account_id=${account_id}&date=${date}&team=${team}`);
+    return $api.get<ITrain[]>(
+      `/team-train?account_id=${account_id}&date=${date}&day_team=${day_team}`,
+    );
   }
 
   static async checkTeam(team: string): Promise<AxiosResponse<boolean>> {
     return $api.get<boolean>(`/team/${team}`);
+  }
+
+  static async getActionsTypes(): Promise<AxiosResponse<ActionType[]>> {
+    return $api.get<ActionType[]>(`/action-types`);
   }
 }

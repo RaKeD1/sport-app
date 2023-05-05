@@ -70,6 +70,9 @@ const trainSlice = createSlice({
   name: 'Training',
   initialState,
   reducers: {
+    setTeam(state, action: PayloadAction<string>) {
+      state.team = action.payload;
+    },
     setError(state) {
       state.status = Status.ERROR;
     },
@@ -121,6 +124,6 @@ const trainSlice = createSlice({
 
 export const SelectTrainStatus = (state: RootState) => state.train.status;
 export const SelectTrainPlayers = (state: RootState) => state.train.players;
-export const { setError, setLoading, clearTrain } = trainSlice.actions;
+export const { setTeam, setError, setLoading, clearTrain } = trainSlice.actions;
 
 export default trainSlice.reducer;

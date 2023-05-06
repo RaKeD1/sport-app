@@ -30,12 +30,6 @@ const CreateTrain: FC = () => {
   const navigate = useNavigate();
   const [collabs, setCollabs] = useState<ISelectUser[]>([]);
 
-  // useEffect(() => {
-  //   console.log('STATUS', status);
-  //   console.log('players', players);
-  //   dispatch(clearTrain());
-  // }, []);
-
   useEffect(() => {
     console.log('collabs', collabs);
     const players: number[] = collabs.map((obj) => obj.id_account);
@@ -47,23 +41,15 @@ const CreateTrain: FC = () => {
     else setIsValid(true);
   }, [collabs, teamIsValid]);
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     if (status === Status.SUCCESS && players[0]) {
-  //       navigate('/statistics');
-  //     }
-  //   }, 1000);
-  // }, [status]);
-
   const onChangeTeamInput = async (value: string) => {
+    setTeamValue(value);
+    dispatch(setTeam(value));
     if (value) {
       const valid = await TrainService.checkTeam(value);
       console.log('valid', valid.data);
       if (valid.data) setTeamIsValid(true);
       else setTeamIsValid(false);
     } else setTeamIsValid(false);
-    setTeamValue(value);
-    dispatch(setTeam(value));
   };
 
   const createTrain = (account_id: number, team: string, selectPlayers: number[]) => {

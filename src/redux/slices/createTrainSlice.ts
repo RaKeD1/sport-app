@@ -2,8 +2,8 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 
 export interface NewTrainData {
-  team: string;
   selectPlayers: number[];
+  team: string;
 }
 
 const initialState: NewTrainData = {

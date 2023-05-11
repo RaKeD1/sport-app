@@ -131,7 +131,7 @@ export const Statistics: React.FC = () => {
         );
         setPlayerStats(data);
       } catch (error) {
-        alert('Ошибка при получении пиццы!');
+        alert('Ошибка!');
         navigate('/');
       }
     }
@@ -139,7 +139,7 @@ export const Statistics: React.FC = () => {
     fetchPlayer();
   }, []);
 
-  const Accordion = ({ FIO, Feeds, Blocks }) => {
+  const Accordion = ({ FIO, name, Feeds, Blocks }) => {
     const [isActive, setIsActive] = useState(false);
 
     return (
@@ -151,7 +151,8 @@ export const Statistics: React.FC = () => {
         {isActive && (
           <div className={styles.accordion_content}>
             <div className={styles.accordion_content_list}>
-              <div>{Feeds}</div>
+              <div></div>
+              <div>{name}</div>
               <div className={styles.accordion_content_rez}>{Feeds}</div>
             </div>
             <div className={styles.accordion_content_list}>
@@ -169,8 +170,8 @@ export const Statistics: React.FC = () => {
       <>
         <div className="main">
           <div className={styles.accordion}>
-            {playersStats.map(({ FIO, Feeds, Blocks }) => (
-              <Accordion FIO={FIO} Feeds={Feeds} Blocks={Blocks} />
+            {playersStats.map(({ FIO, name, Feeds, Blocks }) => (
+              <Accordion FIO={FIO} name={name} Feeds={Feeds} Blocks={Blocks} />
             ))}
           </div>
         </div>

@@ -5,6 +5,7 @@ import profile from './slices/profileSlice';
 import train from './slices/trainSlice';
 import createTrain from './slices/createTrainSlice';
 import actionTypes from './slices/actionTypesSlice';
+import usersReducer from './slices/userSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,8 +13,9 @@ export const store = configureStore({
     train,
     createTrain,
     actionTypes,
+    usersReducer,
   },
 });
 export type RootState = ReturnType<typeof store.getState>;
-type AppDispatch = typeof store.dispatch;
+export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch = () => useDispatch<AppDispatch>();

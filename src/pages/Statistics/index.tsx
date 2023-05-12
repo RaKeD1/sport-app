@@ -106,7 +106,7 @@ export const Statistics: React.FC = () => {
           //   </div>
           // </Popup>
           <button
-            className='select--button'
+            className="select--button"
             onClick={() => onClickAddAction(+JSON.stringify(row.values.id_train))}>
             Добавить
           </button>
@@ -152,7 +152,7 @@ export const Statistics: React.FC = () => {
   if (width < breakpoint) {
     return (
       <>
-        <div className='main'>
+        <div className="main">
           <div className={styles.accordion}>
             {playersStats.map((obj) => (
               <AccordionItem key={obj.id_train} {...obj} />
@@ -165,9 +165,9 @@ export const Statistics: React.FC = () => {
 
   return (
     <>
-      <div className='main'>
-        <table className='table' {...getTableProps()}>
-          <thead className='backgroud_table2'>
+      <div className="main">
+        <table className="table" {...getTableProps()}>
+          <thead className="backgroud_table2">
             {headerGroups.map((headerGroup, index) => (
               <tr key={index} {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column, index) => (

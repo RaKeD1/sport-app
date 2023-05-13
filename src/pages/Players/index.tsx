@@ -1,10 +1,11 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useAppDispatch } from '../../redux/store';
-import { useSelector } from 'react-redux';
 import { useAppSelector } from '../../hooks/redux';
 import { fetchUsers } from '../../redux/slices/userSlice';
+
 import styles from './players.module.scss';
 import AccordionPlayers from '../../components/AccardionPlayers';
+import { FaSearch } from 'react-icons/fa';
 
 export const Players: FC = () => {
   const dispatch = useAppDispatch();
@@ -34,7 +35,12 @@ export const Players: FC = () => {
   const inputClickHandler = () => {
     setIsOpen(true);
   };
+  const [isLoad, setIsLoad] = useState(true);
 
+  useEffect(() => {
+    // Получение данных
+    setIsLoad(false);
+  }, []);
   return (
     <div className={styles.main}>
       <form className={styles.form}>

@@ -1,14 +1,15 @@
 import React from 'react';
-import logo from '../assets/img/ball.svg';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
+
+import logo from '../assets/img/ball.svg';
 import { FaUserAlt } from 'react-icons/fa';
 import { MdExitToApp } from 'react-icons/md';
+
 import { useAppDispatch } from '../hooks/redux';
 import { logoutAccount } from '../redux/slices/profileSlice';
 
 const Header: React.FC = () => {
-  const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
   const pages = [
@@ -53,21 +54,6 @@ const Header: React.FC = () => {
           </button>
         </ul>
       </nav>
-      {/* <Link
-        to='/createtraining'
-        className={location.pathname === '/createtraining' ? 'activePage' : ''}>
-        Создать тренировку
-      </Link>
-      <Link to='/statistics' className={location.pathname === '/statistics' ? 'activePage' : ''}>
-        {' '}
-        Статистика
-      </Link>
-      <Link to='/players' className={location.pathname === '/players' ? 'activePage' : ''}>
-        Игроки
-      </Link>
-      <Link className={location.pathname === '/profile' ? 'activePage' : ''} to='/profile'>
-        Профиль <FaUserAlt className='profileIcon' />
-      </Link> */}
     </div>
   );
 };

@@ -38,7 +38,7 @@ const AccordionPlayers: FC<IUser> = (props) => {
             <div>Почта:</div>
             <div className={styles.accordion__content_rez}>{props.email}</div>
           </div>
-          <Link to='/home' className={styles.button}>
+          <Link to='/' className={styles.button}>
             Изменить
           </Link>
         </div>

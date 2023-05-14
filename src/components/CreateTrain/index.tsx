@@ -13,7 +13,7 @@ import {
 } from '../../redux/slices/trainSlice';
 import { useNavigate } from 'react-router';
 import classNames from 'classnames';
-import AsyncSearchBar from '../AsyncSearchBar';
+import AsyncSearchBar from '../UserSearchBar';
 import { ISelectUser } from '../../models/ISelectUser';
 import TrainService from '../../services/TrainService';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';

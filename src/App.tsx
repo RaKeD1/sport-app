@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import { Status } from './redux/slices/profileSlice';
 import Loading from './components/Loading';
 import CreateTrain from './components/CreateTrain';
+import Players from './pages/Players';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -56,12 +57,12 @@ function App() {
 
   if (!isAuth) {
     return (
-      <div className="wrapper">
-        <div className="content">
-          <div className="container">
+      <div className='wrapper'>
+        <div className='content'>
+          <div className='container'>
             <Routes>
-              <Route path="/login" element={<Login />}></Route>
-              <Route path="/registration" element={<Registr />}></Route>
+              <Route path='/login' element={<Login />}></Route>
+              <Route path='/registration' element={<Registr />}></Route>
             </Routes>
           </div>
         </div>
@@ -70,15 +71,16 @@ function App() {
   }
 
   return (
-    <div className="wrapper">
-      <div className="content">
-        <div className="container">
+    <div className='wrapper'>
+      <div className='content'>
+        <div className='container'>
           <Header />
           <Routes>
-            <Route path="/" element={<Profile />}></Route>
-            <Route path="/profile" element={<Profile />}></Route>
-            <Route path="/createtraining" element={<CreateTrain />}></Route>
-            <Route path="/statistics" element={<Statistics />}></Route>
+            <Route path='/' element={<Profile />}></Route>
+            <Route path='/profile' element={<Profile />}></Route>
+            <Route path='/createtraining' element={<CreateTrain />}></Route>
+            <Route path='/statistics' element={<Statistics />}></Route>
+            <Route path='/players' element={<Players />}></Route>
           </Routes>
         </div>
       </div>

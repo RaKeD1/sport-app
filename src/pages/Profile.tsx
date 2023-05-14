@@ -27,12 +27,19 @@ export const Profile: FC = () => {
     isMounted.current = true;
   }, [id_user, id_account, name, surname, patronimyc, email, phone, team, login]);
 
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Получение данных
+    setIsLoading(false);
+  }, []);
+
   return (
     <>
-      <div className="track">
-        <div className="box1 box">
-          <div className="box__title">ФИО</div>
-          <div className="box__fio ">
+      <div className='track'>
+        <div className='box1 box'>
+          <div className='box__title'>ФИО</div>
+          <div className='box__fio '>
             {surname}
             <br />
             {name}
@@ -40,17 +47,17 @@ export const Profile: FC = () => {
             {patronimyc}
           </div>
         </div>
-        <div className="box3 box">
-          <div className="box__title">Почта</div>
-          <div className="box__email">{email}</div>
+        <div className='box3 box'>
+          <div className='box__title'>Почта</div>
+          <div className='box__email'>{email}</div>
         </div>
-        <div className="box4 box">
-          <div className="box__title">Телефон</div>
-          <div className="box__email">{phone}</div>
+        <div className='box4 box'>
+          <div className='box__title'>Телефон</div>
+          <div className='box__email'>{phone}</div>
         </div>
-        <div className="box5 box">
-          <div className="box__title">Логин</div>
-          <div className="box__login">{login}</div>
+        <div className='box5 box'>
+          <div className='box__title'>Логин</div>
+          <div className='box__login'>{login}</div>
         </div>
       </div>
       <button onClick={() => dispatch(logoutAccount())}>Выйти</button>

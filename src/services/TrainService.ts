@@ -26,6 +26,24 @@ export default class TrainService {
     );
   }
 
+  static async addAction(
+    id_train: number,
+    id_action_type: number,
+    name_action: string,
+    result: string,
+    condition: string,
+    score: number,
+  ): Promise<AxiosResponse<ITrain[]>> {
+    return $api.post<ITrain[]>('/action', {
+      id_train,
+      id_action_type,
+      name_action,
+      result,
+      condition,
+      score,
+    });
+  }
+
   static async checkTeam(team: string): Promise<AxiosResponse<boolean>> {
     return $api.get<boolean>(`/team/${team}`);
   }

@@ -17,6 +17,15 @@ export type GetTrainParams = {
   date: string;
 };
 
+export type PostActionParams = {
+  id_train: number;
+  id_action_type: number;
+  name_action: string;
+  result: string;
+  condition: string;
+  score: number;
+};
+
 export type Players = ITrain[];
 
 export const postNewTrain = createAsyncThunk<AxiosResponse<Players>, NewTrainParams>(
@@ -42,6 +51,29 @@ export const getTeamTrain = createAsyncThunk<AxiosResponse<Players>, GetTrainPar
     try {
       const { account_id, team, date } = params;
       const response = await TrainService.getTrain(account_id, team, date);
+      return response;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error.response.data.message);
+    }
+  },
+);
+
+export const postAction = createAsyncThunk<AxiosResponse<Players>, PostActionParams>(
+  'train/postActionParams',
+  async (params, { rejectWithValue }) => {
+    try {
+      const { id_train, id_action_type, name_action, result, condition, score } = params;
+      const response = await TrainService.addAction(
+        id_train,
+        id_action_type,
+        name_action,
+        result,
+        condition,
+        score,
+      );
       return response;
     } catch (error) {
       if (!error.response) {
@@ -118,6 +150,21 @@ const trainSlice = createSlice({
       alert(action.payload);
       state.status = Status.ERROR;
       state.players = initialState.players;
+    });
+
+    // Кейсы для добавления действия
+    builder.addCase(postAction.pending, (state) => {
+      console.log('LOADING');
+      state.status = Status.LOADING;
+    });
+    builder.addCase(postAction.fulfilled, (state, action) => {
+      state.status = Status.SUCCESS;
+    });
+    builder.addCase(postAction.rejected, (state, action) => {
+      console.log('REJECTED');
+      alert(action.payload);
+      console.log(action.payload);
+      state.status = Status.ERROR;
     });
   },
 });

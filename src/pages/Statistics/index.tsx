@@ -54,7 +54,7 @@ export const Statistics: React.FC = () => {
       getTeamTrain({
         account_id: 2,
         team: 'Бомбы',
-        date: '2023-05-05',
+        date: '2023-05-10',
       }),
     );
 
@@ -73,6 +73,16 @@ export const Statistics: React.FC = () => {
   const onClickAddAction = (id_train: number) => {
     setActivePlayer(id_train);
     setIsActive(true);
+  };
+
+  const updateTrain = () => {
+    dispatch(
+      getTeamTrain({
+        account_id: 2,
+        team: 'Бомбы',
+        date: '2023-05-10',
+      }),
+    );
   };
 
   const playersStatsData = useMemo(() => [...playersStats], [playersStats]);
@@ -200,7 +210,12 @@ export const Statistics: React.FC = () => {
           </tbody>
         </table>
       </div>
-      <ActionModal isActive={isActive} setIsActive={setIsActive} id_train={activePlayer} />
+      <ActionModal
+        isActive={isActive}
+        setIsActive={setIsActive}
+        id_train={activePlayer}
+        updateTrain={updateTrain}
+      />
     </>
   );
 };

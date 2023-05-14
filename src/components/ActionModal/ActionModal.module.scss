@@ -22,10 +22,10 @@
   &__content {
     background: #fff;
     border-radius: 10px;
-    padding: 20px;
     opacity: 0;
     margin-top: 50px;
     transition: 0.2s;
+    display: flex;
 
     &.active {
       opacity: 1;
@@ -37,12 +37,131 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding-right: 15px;
+    padding: 30px 20px 30px 40px;
   }
 
   &__title {
+    text-align: center;
+    font-weight: 500;
+    position: relative;
+    display: block;
+    margin: auto;
+
+    span {
+      font-size: 19px;
+      margin-right: 7px;
+      color: #c1c1c1;
+      position: relative;
+    }
+  }
+
+  &__info {
+    position: absolute;
+    background: #fff;
+    opacity: 1;
+    bottom: 30px;
+    left: 0;
+    width: calc((100vw) * 0.3);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5em;
+    padding: 14px;
+    border-radius: 8px;
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.15);
   }
 
   &__result {
     display: flex;
+    background: #e1eef7;
+    border-radius: 10px;
+    margin-top: 30px;
+  }
+
+  &__active {
+    background: #78c6ff;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: 500;
+
+    span {
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &__resultItem {
+    padding: 12px 50px;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+
+    span {
+      width: 100px;
+      display: inline-block;
+      color: inherit;
+      margin: auto;
+    }
+  }
+
+  &__condition {
+    margin-top: 30px;
+  }
+
+  &__addBtn {
+    margin: auto;
+    margin-top: 30px;
+    display: block;
+
+    &_notValid {
+      pointer-events: none;
+      opacity: 0.6;
+    }
+  }
+
+  .menu {
+    padding: 30px 20px;
+    position: relative;
+
+    &__title {
+      font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 13px);
+    }
+
+    &__list {
+      margin-top: 10px;
+    }
+
+    &__item {
+      font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 13px);
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    &__active {
+      background: #78c6ff;
+      border-radius: 5px;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    &:before {
+      content: '';
+      width: 1px;
+      background: #e1eef7;
+      height: 108px;
+
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    &:after {
+      content: '';
+      width: 1px;
+      background: #e1eef7;
+      height: 108px;
+
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
   }
 }

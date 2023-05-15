@@ -13,7 +13,7 @@ import {
 } from '../../redux/slices/trainSlice';
 import { useNavigate } from 'react-router';
 import classNames from 'classnames';
-import AsyncSearchBar from '../UserSearchBar';
+import UserSearchBar from '../UserSearchBar';
 import { ISelectUser } from '../../models/ISelectUser';
 import TrainService from '../../services/TrainService';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
@@ -86,7 +86,7 @@ const CreateTrain: FC = () => {
       </div>
       <div className={styles.train__elem}>
         <label htmlFor=''>Игроки:</label>
-        <AsyncSearchBar setCollabs={setCollabs} />
+        <UserSearchBar setCollabs={setCollabs} />
       </div>
       <button
         className={classNames(styles.train__create, { [styles.train__create_notValid]: !isValid })}

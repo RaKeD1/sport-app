@@ -52,6 +52,7 @@ const AsyncSearchBar: FC<Props> = ({ setCollabs }) => {
       <AsyncSelect
         cacheOptions
         placeholder='Выберите участника'
+        noOptionsMessage={() => 'Игрок не найден'}
         defaultOptions
         isClearable={true}
         isMulti

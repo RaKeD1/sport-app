@@ -48,6 +48,10 @@ export default class TrainService {
     return $api.get<boolean>(`/team/${team}`);
   }
 
+  static async getTeams(): Promise<AxiosResponse<string[]>> {
+    return $api.get<string[]>(`/teams`);
+  }
+
   static async getActionsTypes(): Promise<AxiosResponse<ActionType[]>> {
     return $api.get<ActionType[]>(`/action-types`);
   }

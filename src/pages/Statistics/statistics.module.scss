@@ -27,7 +27,7 @@
 .accordion_content_rez {
   margin-left: 20px;
   background-color: #fff;
-  color: #78c6ff;
+  color: $button-clr;
   border-radius: 20px;
   padding: 6px 23px 6px 23px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -50,7 +50,7 @@
 
 .accordion_visible:hover {
   background-color: #333;
-  border: 1px solid #78c6ff;
+  border: 1px solid $button-clr;
   color: #60b0ea;
 }
 
@@ -90,4 +90,90 @@
   pointer-events: none;
   line-height: 1.3;
   background: #93cef9;
+}
+
+.train {
+  margin: 30px 0;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 30px;
+  position: relative;
+
+  &__error {
+    text-align: center;
+    font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 20px);
+    padding: 150px 0;
+
+    span {
+      margin-right: 10px;
+    }
+  }
+
+  &__group,
+  &__date {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    margin-bottom: 30px;
+    font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 20px);
+
+    p {
+      margin-right: 10px;
+    }
+
+    span {
+      background: $button-clr;
+      border-radius: 40px;
+      padding: 5px 15px;
+      color: #fff;
+      font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 17px);
+    }
+  }
+
+  &__btnChange {
+    position: absolute;
+    top: 30px;
+    right: 20px;
+  }
+
+  &__changeModal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+.changeModal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  &__group,
+  &__date {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    margin-bottom: 30px;
+
+    p {
+      margin-right: 10px;
+      font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 20px);
+    }
+  }
+
+  &__date {
+    background: #a3a3a3;
+  }
+
+  &__btnAccept {
+    margin: auto;
+  }
+}
+
+.calendar {
+  .react-calendar__month-view__days__day--weekend {
+    color: #d10000;
+  }
 }

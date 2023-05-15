@@ -1,15 +1,26 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import '../../scss/statistics.scss';
 import { Column, SortByFn, useSortBy, useTable } from 'react-table';
-import axios from 'axios';
-import Popup from 'reactjs-popup';
+import Calendar from 'react-calendar';
 import styles from './statistics.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { SelectTrainPlayers, getTeamTrain } from '../../redux/slices/trainSlice';
+import {
+  SelectTrain,
+  SelectTrainError,
+  SelectTrainPlayers,
+  SelectTrainStatus,
+  getTeamTrain,
+  setDate,
+  setTeam,
+} from '../../redux/slices/trainSlice';
 import { useAppDispatch } from '../../redux/store';
 import AccordionItem from '../../components/AccordionItem';
-import ActionModal from '../../components/ActionModal';
+import ActionModal, { Option } from '../../components/ActionModal';
+import TeamSearchBar from '../../components/TeamSearchBar';
+import { SelectAccountID, Status } from '../../redux/slices/profileSlice';
+import Modal from '../../components/Modal';
+import MyCalendar from '../Calendar';
 
 interface Cols {
   fio: string;
@@ -24,10 +35,16 @@ interface Cols {
 
 export const Statistics: React.FC = () => {
   const playersStats = useSelector(SelectTrainPlayers);
+  const account_id = useSelector(SelectAccountID);
+  const status = useSelector(SelectTrainStatus);
+  const error = useSelector(SelectTrainError);
+  const { team, date } = useSelector(SelectTrain);
   const [toggle, setToggle] = useState<boolean>(false);
   const [isActive, setIsActive] = useState<boolean>(false);
+  const [isChangeTrain, setIsChangeTrain] = useState<boolean>(false);
   const [activePlayer, setActivePlayer] = useState<number>(null);
-  const [heightEl, setHeightEl] = useState();
+  const [activeDate, setActiveDate] = useState(null);
+  const [activeTeam, setActiveTeam] = useState<Option>(null);
   const [width, setWidth] = React.useState<number>(window.innerWidth);
 
   const columnNames = {
@@ -41,9 +58,7 @@ export const Statistics: React.FC = () => {
     id_train: 'ID',
   };
 
-  const refHeight = useRef();
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   const isEven = (idx: number) => idx % 2 === 0;
   const isOdd = (idx: number) => idx % 2 === 1;
@@ -52,34 +67,48 @@ export const Statistics: React.FC = () => {
   useEffect(() => {
     dispatch(
       getTeamTrain({
-        account_id: 2,
+        account_id,
         team: 'Бомбы',
         date: '2023-05-10',
       }),
     );
 
+    dispatch(setTeam('Бомбы'));
+    dispatch(setDate('2023-05-10'));
+
     const handleResizeWindow = () => setWidth(window.innerWidth);
-    // subscribe to window resize event "onComponentDidMount"
     window.addEventListener('resize', handleResizeWindow);
     return () => {
-      // unsubscribe "onComponentDestroy"
       window.removeEventListener('resize', handleResizeWindow);
     };
-
-    console.log(refHeight);
-    // setHeightEl(`${refHeight.current.scrollHeight}px`);
   }, []);
+
+  useEffect(() => {
+    console.log('Выбрана команда:', activeTeam);
+  }, [activeTeam]);
+
+  const onChangeDate = (value) => {
+    setActiveDate(value);
+    const formattedDate = `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()}`;
+    console.log('Date', activeDate);
+    console.log('Formatted Date', formattedDate);
+    dispatch(setDate(formattedDate));
+  };
 
   const onClickAddAction = (id_train: number) => {
     setActivePlayer(id_train);
     setIsActive(true);
   };
 
+  const onDateChange = (value: string) => {
+    setActiveDate(value);
+  };
+
   const updateTrain = () => {
     dispatch(
       getTeamTrain({
-        account_id: 2,
-        team: 'Бомбы',
+        account_id,
+        team: team,
         date: '2023-05-10',
       }),
     );
@@ -107,20 +136,11 @@ export const Statistics: React.FC = () => {
         id: 'Select',
         Header: '',
         Cell: ({ row, value }) => (
-          // <Popup trigger={<button className='select--button'> Добавить </button>} modal nested>
-          //   <div>
-          //     <h2>Модальное окно </h2>
-          //     <button onClick={() => alert('Добавить: ' + JSON.stringify(row.values.id_train))}>
-          //       Добавить
-          //     </button>
-          //   </div>
-          // </Popup>
           <button
-            className="select--button"
+            className='select--button'
             onClick={() => onClickAddAction(+JSON.stringify(row.values.id_train))}>
             Добавить
           </button>
-          // <ActionPopup  />
         ),
       },
     ]);
@@ -143,26 +163,10 @@ export const Statistics: React.FC = () => {
     setToggle(!toggle);
   };
 
-  console.log(toggle);
-  const accordionData = [
-    {
-      title: 'Section 1',
-      content: `Lorem: `,
-    },
-    {
-      title: 'Section 2',
-      content: `Lorem: `,
-    },
-    {
-      title: 'Section 3',
-      content: `Sapiente: `,
-    },
-  ];
-
   if (width < breakpoint) {
     return (
       <>
-        <div className="main">
+        <div className={styles.train}>
           <div className={styles.accordion}>
             {playersStats.map((obj) => (
               <AccordionItem key={obj.id_train} {...obj} />
@@ -175,40 +179,58 @@ export const Statistics: React.FC = () => {
 
   return (
     <>
-      <div className="main">
-        <table className="table" {...getTableProps()}>
-          <thead className="backgroud_table2">
-            {headerGroups.map((headerGroup, index) => (
-              <tr key={index} {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column, index) => (
-                  <th key={index} {...column.getHeaderProps()}>
-                    {column.render('Header')}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row, idx) => {
-              prepareRow(row);
-
-              return (
-                <tr
-                  key={idx}
-                  {...row.getRowProps()}
-                  className={
-                    isEven(idx) ? 'backgroud_table' : isOdd(idx) ? 'backgroud_table2' : ''
-                  }>
-                  {row.cells.map((cell, index) => (
-                    <td key={index} {...row.getRowProps()}>
-                      {cell.render('Cell')}
-                    </td>
+      <div className={styles.train}>
+        <div className={styles.train__date}>
+          <p>Дата:</p>
+          <span>{date.split('-').reverse().join('.')}</span>
+        </div>
+        <div className={styles.train__group}>
+          <p>Группа:</p>
+          <span>{team}</span>
+        </div>
+        <button className={styles.train__btnChange} onClick={() => setIsChangeTrain(true)}>
+          Сменить тренировку
+        </button>
+        {status === Status.ERROR ? (
+          <div className={styles.train__error}>
+            <span>😕</span>
+            {error}
+          </div>
+        ) : (
+          <table className='table' {...getTableProps()}>
+            <thead className='backgroud_table2'>
+              {headerGroups.map((headerGroup, index) => (
+                <tr key={index} {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column, index) => (
+                    <th key={index} {...column.getHeaderProps()}>
+                      {column.render('Header')}
+                    </th>
                   ))}
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {rows.map((row, idx) => {
+                prepareRow(row);
+
+                return (
+                  <tr
+                    key={idx}
+                    {...row.getRowProps()}
+                    className={
+                      isEven(idx) ? 'backgroud_table' : isOdd(idx) ? 'backgroud_table2' : ''
+                    }>
+                    {row.cells.map((cell, index) => (
+                      <td key={index} {...row.getRowProps()}>
+                        {cell.render('Cell')}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
       <ActionModal
         isActive={isActive}
@@ -216,6 +238,21 @@ export const Statistics: React.FC = () => {
         id_train={activePlayer}
         updateTrain={updateTrain}
       />
+      <Modal isActive={isChangeTrain} setIsActive={setIsChangeTrain}>
+        <div className={styles.changeModal}>
+          <div className={styles.changeModal__group}>
+            <p>Группа:</p>
+            <TeamSearchBar setTeam={setActiveTeam} />
+          </div>
+          <div className={styles.changeModal__date}>
+            {/* <p>Дата:</p> */}
+            <MyCalendar onChange={onChangeDate} value={activeDate} />
+          </div>
+          <button className={styles.changeModal__btnAccept} onClick={() => setIsChangeTrain(true)}>
+            Сменить тренировку
+          </button>
+        </div>
+      </Modal>
     </>
   );
 };

@@ -5,6 +5,10 @@ import { ITrain } from '../../models/ITrain';
 import TrainService from '../../services/TrainService';
 import { Status } from './profileSlice';
 
+type FetchError = {
+  message: string;
+};
+
 export type NewTrainParams = {
   account_id: number;
   team: string;
@@ -28,38 +32,40 @@ export type PostActionParams = {
 
 export type Players = ITrain[];
 
-export const postNewTrain = createAsyncThunk<AxiosResponse<Players>, NewTrainParams>(
-  'train/postNewTrain',
-  async (params, { rejectWithValue }) => {
-    try {
-      const { account_id, team, selectPlayers } = params;
-      console.log('team', team);
-      const response = await TrainService.newTrain(account_id, team, selectPlayers);
-      return response;
-    } catch (error) {
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data.message);
+export const postNewTrain = createAsyncThunk<
+  AxiosResponse<Players>,
+  NewTrainParams,
+  { rejectValue: FetchError }
+>('train/postNewTrain', async (params, { rejectWithValue }) => {
+  try {
+    const { account_id, team, selectPlayers } = params;
+    console.log('team', team);
+    const response = await TrainService.newTrain(account_id, team, selectPlayers);
+    return response;
+  } catch (error) {
+    if (!error.response) {
+      throw error;
     }
-  },
-);
+    return rejectWithValue(error.response?.data);
+  }
+});
 
-export const getTeamTrain = createAsyncThunk<AxiosResponse<Players>, GetTrainParams>(
-  'train/getTeamTrain',
-  async (params, { rejectWithValue }) => {
-    try {
-      const { account_id, team, date } = params;
-      const response = await TrainService.getTrain(account_id, team, date);
-      return response;
-    } catch (error) {
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response.data.message);
+export const getTeamTrain = createAsyncThunk<
+  AxiosResponse<Players>,
+  GetTrainParams,
+  { rejectValue: FetchError }
+>('train/getTeamTrain', async (params, { rejectWithValue }) => {
+  try {
+    const { account_id, team, date } = params;
+    const response = await TrainService.getTrain(account_id, team, date);
+    return response;
+  } catch (error) {
+    if (!error.response) {
+      throw error;
     }
-  },
-);
+    return rejectWithValue(error.response?.data);
+  }
+});
 
 export const postAction = createAsyncThunk<AxiosResponse<Players>, PostActionParams>(
   'train/postActionParams',
@@ -79,7 +85,7 @@ export const postAction = createAsyncThunk<AxiosResponse<Players>, PostActionPar
       if (!error.response) {
         throw error;
       }
-      return rejectWithValue(error.response.data.message);
+      return rejectWithValue(error.response?.data?.message);
     }
   },
 );
@@ -89,6 +95,7 @@ export interface Train {
   team: string;
   players: Players;
   status: Status;
+  error: string | null;
 }
 
 const initialState: Train = {
@@ -96,6 +103,7 @@ const initialState: Train = {
   team: '',
   players: [],
   status: Status.LOADING,
+  error: null,
 };
 
 const trainSlice = createSlice({
@@ -104,6 +112,9 @@ const trainSlice = createSlice({
   reducers: {
     setTeam(state, action: PayloadAction<string>) {
       state.team = action.payload;
+    },
+    setDate(state, action: PayloadAction<string>) {
+      state.date = action.payload;
     },
     setError(state) {
       state.status = Status.ERROR;
@@ -131,6 +142,7 @@ const trainSlice = createSlice({
       console.log('REJECTED');
       alert(action.payload);
       state.status = Status.ERROR;
+      state.error = action.payload.message;
       state.players = initialState.players;
     });
 
@@ -147,8 +159,8 @@ const trainSlice = createSlice({
     });
     builder.addCase(getTeamTrain.rejected, (state, action) => {
       console.log('REJECTED');
-      alert(action.payload);
       state.status = Status.ERROR;
+      state.error = action.payload.message;
       state.players = initialState.players;
     });
 
@@ -170,7 +182,9 @@ const trainSlice = createSlice({
 });
 
 export const SelectTrainStatus = (state: RootState) => state.train.status;
+export const SelectTrainError = (state: RootState) => state.train.error;
 export const SelectTrainPlayers = (state: RootState) => state.train.players;
-export const { setTeam, setError, setLoading, clearTrain } = trainSlice.actions;
+export const SelectTrain = (state: RootState) => state.train;
+export const { setTeam, setDate, setError, setLoading, clearTrain } = trainSlice.actions;
 
 export default trainSlice.reducer;

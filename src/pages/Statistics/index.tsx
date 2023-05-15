@@ -20,7 +20,7 @@ import ActionModal, { Option } from '../../components/ActionModal';
 import TeamSearchBar from '../../components/TeamSearchBar';
 import { SelectAccountID, Status } from '../../redux/slices/profileSlice';
 import Modal from '../../components/Modal';
-import MyCalendar from '../Calendar';
+import MyCalendar from '../../components/Calendar';
 
 interface Cols {
   fio: string;

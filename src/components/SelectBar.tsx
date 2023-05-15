@@ -4,13 +4,13 @@ import { Option } from './ActionModal';
 
 interface SelectBarProps {
   data: string[];
-  selectedCondition: Option;
-  setSelectedCondition: (selected: Option) => void;
+  selected: Option;
+  setSelected: (selected: Option) => void;
 }
 
-const SelectBar: FC<SelectBarProps> = ({ data, selectedCondition, setSelectedCondition }) => {
+const SelectBar: FC<SelectBarProps> = ({ data, selected, setSelected }) => {
   const [options, setOptions] = useState(data.map((option) => ({ value: option, label: option })));
-  const [selected, setSelected] = useState<Option>(null);
+  const [value, setValue] = useState<Option>(null);
 
   useEffect(() => {
     setOptions(data.map((option) => ({ value: option, label: option })));
@@ -18,8 +18,8 @@ const SelectBar: FC<SelectBarProps> = ({ data, selectedCondition, setSelectedCon
   }, [data]);
 
   const handleChange = (selectedOption: Option) => {
+    setValue(selectedOption);
     setSelected(selectedOption);
-    setSelectedCondition(selectedOption);
   };
 
   return (
@@ -27,8 +27,8 @@ const SelectBar: FC<SelectBarProps> = ({ data, selectedCondition, setSelectedCon
       <Select
         className='basic-single'
         classNamePrefix='select'
-        key={`my_unique_select_key__${selectedCondition}`}
-        value={selectedCondition}
+        key={`my_unique_select_key__${selected}`}
+        value={selected}
         placeholder='Выберите условие'
         noOptionsMessage={() => 'Нет условий'}
         getOptionLabel={(e: Option) => e.label}

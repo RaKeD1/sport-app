@@ -38,7 +38,10 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
   });
   const [activeResult, setActiveResult] = useState<number>(0);
   const [showInfo, setShowInfo] = useState<boolean>(false);
-  const [selectedCondition, setSelectedCondition] = useState<Option>({ value: '', label: '' });
+  const [selectedCondition, setSelectedCondition] = useState<Option>({
+    value: '',
+    label: 'Выберите условие',
+  });
   const [isValid, setIsValid] = useState<boolean>(false);
   const infoRef = useRef<HTMLDivElement>(null);
 
@@ -48,10 +51,10 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
 
     // const handleClickOutside = (event: MouseEvent) => {
     //   const _event = event as OutsideClick;
-    //   console.log(_event);
-    //   if (infoRef.current && !_event.path.includes(infoRef.current)) {
-    //     setShowInfo(false);
-    //   }
+    //   console.log(_event.path);
+    //   // if (infoRef.current && !_event.path.includes(infoRef.current)) {
+    //   //   setShowInfo(false);
+    //   // }
     // };
 
     // document.body.addEventListener('click', handleClickOutside);
@@ -61,7 +64,7 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
 
   useEffect(() => {
     console.log('activeResult', activeResult);
-    setSelectedCondition({ value: '', label: '' });
+    setSelectedCondition({ value: '', label: 'Выберите условие' });
     if (activeResult === 2) {
       console.log('in if activeResult === 2');
       setIsValid(true);
@@ -81,7 +84,7 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
   }, [selectedCondition]);
 
   useEffect(() => {
-    setSelectedCondition({ value: '', label: '' });
+    setSelectedCondition({ value: '', label: 'Выберите условие' });
   }, [currentAction]);
 
   useEffect(() => {
@@ -111,6 +114,7 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
     console.log('condition', condition);
     console.log('score', score);
 
+    setSelectedCondition({ value: '', label: 'Выберите условие' });
     dispatch(postAction({ id_train, id_action_type, name_action, result, condition, score }));
     updateTrain();
   };
@@ -145,8 +149,8 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
             <div className={styles.action__condition}>
               <SelectBar
                 data={currentAction.win_condition}
-                selectedCondition={selectedCondition}
-                setSelectedCondition={setSelectedCondition}
+                selected={selectedCondition}
+                setSelected={setSelectedCondition}
               />
             </div>
           )}
@@ -154,8 +158,8 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
             <div className={styles.action__condition}>
               <SelectBar
                 data={currentAction.loss_condition}
-                selectedCondition={selectedCondition}
-                setSelectedCondition={setSelectedCondition}
+                selected={selectedCondition}
+                setSelected={setSelectedCondition}
               />
             </div>
           )}

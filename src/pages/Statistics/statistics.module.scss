@@ -169,6 +169,11 @@
 
   &__btnAccept {
     margin: auto;
+
+    &_notValid {
+      pointer-events: none;
+      opacity: 0.6;
+    }
   }
 }
 

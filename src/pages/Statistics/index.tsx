@@ -21,6 +21,7 @@ import TeamSearchBar from '../../components/TeamSearchBar';
 import { SelectAccountID, Status } from '../../redux/slices/profileSlice';
 import Modal from '../../components/Modal';
 import MyCalendar from '../../components/Calendar';
+import classNames from 'classnames';
 
 interface Cols {
   fio: string;
@@ -44,6 +45,7 @@ export const Statistics: React.FC = () => {
   const [isChangeTrain, setIsChangeTrain] = useState<boolean>(false);
   const [activePlayer, setActivePlayer] = useState<number>(null);
   const [activeDate, setActiveDate] = useState(null);
+  const [isValidModal, setIsValidModal] = useState(false);
   const [activeTeam, setActiveTeam] = useState<Option>(null);
   const [width, setWidth] = React.useState<number>(window.innerWidth);
 
@@ -84,8 +86,18 @@ export const Statistics: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log('Выбрана команда:', activeTeam);
-  }, [activeTeam]);
+    if (isChangeTrain) {
+      setActiveDate(null);
+    }
+  }, [isChangeTrain]);
+
+  useEffect(() => {
+    if (activeDate && activeTeam) {
+      setIsValidModal(true);
+    } else {
+      setIsValidModal(false);
+    }
+  }, [activeDate, activeTeam]);
 
   const onChangeDate = (value) => {
     setActiveDate(value);
@@ -248,7 +260,12 @@ export const Statistics: React.FC = () => {
             {/* <p>Дата:</p> */}
             <MyCalendar onChange={onChangeDate} value={activeDate} />
           </div>
-          <button className={styles.changeModal__btnAccept} onClick={() => setIsChangeTrain(true)}>
+          <button
+            disabled={!isValidModal}
+            className={classNames(styles.changeModal__btnAccept, {
+              [styles.changeModal__btnAccept_notValid]: !isValidModal,
+            })}
+            onClick={() => setIsChangeTrain(true)}>
             Сменить тренировку
           </button>
         </div>

@@ -50,6 +50,7 @@
 
 .react-calendar__navigation__label {
   font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 8px);
+  padding: 10px 10px;
 }
 
 .react-calendar__navigation button {

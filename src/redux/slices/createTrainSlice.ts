@@ -15,7 +15,7 @@ const createTrainSlice = createSlice({
   name: 'createTraining',
   initialState,
   reducers: {
-    setTeam(state, action: PayloadAction<string>) {
+    setSelectedTeam(state, action: PayloadAction<string>) {
       state.team = action.payload;
     },
     clearTeam(state) {
@@ -28,6 +28,6 @@ const createTrainSlice = createSlice({
 });
 
 export const SelectCreateTrain = (state: RootState) => state.createTrain;
-export const { setTeam, clearTeam, setPlayers } = createTrainSlice.actions;
+export const { setSelectedTeam, clearTeam, setPlayers } = createTrainSlice.actions;
 
 export default createTrainSlice.reducer;

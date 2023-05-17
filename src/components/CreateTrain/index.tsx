@@ -2,14 +2,20 @@ import { FC, useEffect, useRef, useState } from 'react';
 import styles from './CreateTrain.module.scss';
 import { useAppDispatch } from '../../redux/store';
 import { useSelector } from 'react-redux';
-import { SelectCreateTrain, setPlayers, setTeam } from '../../redux/slices/createTrainSlice';
+import {
+  SelectCreateTrain,
+  setPlayers,
+  setSelectedTeam,
+} from '../../redux/slices/createTrainSlice';
 import { SelectAccountID, Status } from '../../redux/slices/profileSlice';
 import {
   SelectTrainPlayers,
   SelectTrainStatus,
+  SelectTrainTeam,
   clearTrain,
   postNewTrain,
   setLoading,
+  setTeam,
 } from '../../redux/slices/trainSlice';
 import { useNavigate } from 'react-router';
 import classNames from 'classnames';
@@ -43,7 +49,7 @@ const CreateTrain: FC = () => {
 
   const onChangeTeamInput = async (value: string) => {
     setTeamValue(value);
-    dispatch(setTeam(value));
+    dispatch(setSelectedTeam(value));
     if (value) {
       const valid = await TrainService.checkTeam(value);
       console.log('valid', valid.data);

@@ -28,29 +28,6 @@
   position: relative;
   width: 400px;
 }
-.autocomplete {
-  position: absolute;
-  left: 0;
-  top: 90px;
-  width: 100%;
-  background: white;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.15);
-  z-index: 10;
-  max-height: 240px;
-  height: auto;
-  overflow: auto;
-  &__item {
-    padding: 10px;
-    &:hover {
-      background-color: rgb(219, 219, 219);
-      cursor: pointer;
-      transition: cubic-bezier(1, 0, 0, 1) 0.1s all;
-    }
-  }
-}
 
 label {
   font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 12px);

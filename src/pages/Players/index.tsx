@@ -10,31 +10,26 @@ import { FaSearch } from 'react-icons/fa';
 export const Players: FC = () => {
   const dispatch = useAppDispatch();
 
-  const { users, isLoading, status } = useAppSelector((state) => state.usersReducer);
+  const { users } = useAppSelector((state) => state.usersReducer);
   React.useEffect(() => {
     dispatch(fetchUsers());
   }, []);
+
   const players = users.map((obj) => {
-    const users = {
+    const user = {
       ...obj,
       player: obj.surname + ' ' + obj.name + ' ' + obj.patronimyc,
     };
-    return users;
+    return user;
   });
-  const [isOpen, setIsOpen] = useState(true);
   const [value, setValue] = useState('');
-  const filtredPlayers = players.filter((users) => {
-    console.log(users.player.toLowerCase());
-    return users.player.toLowerCase().includes(value.toLowerCase());
+  const filtredPlayers = players.filter((user) => {
+    return user.player.toLowerCase().includes(value.toLowerCase());
   });
 
-  const itemClickHandler = (e) => {
-    setValue(e.target.textContent);
-    setIsOpen(!isOpen);
-  };
-  const inputClickHandler = () => {
-    setIsOpen(true);
-  };
+  // const inputClickHandler = () => {
+  //   setIsOpen(true);
+  // };
   const [isLoad, setIsLoad] = useState(true);
 
   useEffect(() => {
@@ -50,19 +45,7 @@ export const Players: FC = () => {
           type='text'
           value={value}
           onChange={(event) => setValue(event.target.value)}
-          onClick={inputClickHandler}
         />
-        <ul className={styles.autocomplete}>
-          {value && isOpen
-            ? filtredPlayers.map((obj) => {
-                return (
-                  <li className={styles.autocomplete__item} onClick={itemClickHandler}>
-                    {obj.player}
-                  </li>
-                );
-              })
-            : null}
-        </ul>
       </form>
       {filtredPlayers.map((obj) => (
         <AccordionPlayers key={obj.id_user} {...obj} />

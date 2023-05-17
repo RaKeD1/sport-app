@@ -92,6 +92,12 @@ export const Statistics: React.FC = () => {
   }, [isChangeTrain]);
 
   useEffect(() => {
+    if (activeTeam) {
+      dispatch(setTeam(activeTeam.value));
+    }
+  }, [activeTeam]);
+
+  useEffect(() => {
     if (activeDate && activeTeam) {
       setIsValidModal(true);
     } else {
@@ -112,16 +118,19 @@ export const Statistics: React.FC = () => {
     setIsActive(true);
   };
 
-  const onDateChange = (value: string) => {
-    setActiveDate(value);
+  const changeTrain = () => {
+    setIsChangeTrain(false);
+    updateTrain();
   };
 
   const updateTrain = () => {
+    console.log('team:', team);
+    console.log('date:', date);
     dispatch(
       getTeamTrain({
         account_id,
         team: team,
-        date: '2023-05-10',
+        date: date,
       }),
     );
   };
@@ -265,7 +274,7 @@ export const Statistics: React.FC = () => {
             className={classNames(styles.changeModal__btnAccept, {
               [styles.changeModal__btnAccept_notValid]: !isValidModal,
             })}
-            onClick={() => setIsChangeTrain(true)}>
+            onClick={() => changeTrain()}>
             Сменить тренировку
           </button>
         </div>

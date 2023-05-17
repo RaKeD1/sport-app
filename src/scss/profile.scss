@@ -132,6 +132,12 @@
   line-height: 1.2em;
   background-color: #fff;
   box-shadow: 0px 0px 10px rgba(57, 57, 57, 0.1);
+  transition: 0.5s;
+
+  &:hover {
+    box-shadow: 0px 0px 10px rgba(0, 161, 230, 0.3);
+    transform: scale(1.01);
+  }
 }
 .box1 {
   padding: 20px 40px;

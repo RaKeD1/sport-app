@@ -182,3 +182,17 @@
     color: #d10000;
   }
 }
+
+.table {
+  &__header {
+    &__column {
+      div {
+        display: inline-block;
+      }
+    }
+  }
+}
+
+.sortIcon {
+  padding-top: 4px;
+}

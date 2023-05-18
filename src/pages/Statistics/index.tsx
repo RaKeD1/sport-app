@@ -295,14 +295,14 @@ export const Statistics: React.FC = () => {
         ) : status === Status.LOADING ? (
           <SkeletonTable />
         ) : (
-          <table className='table' {...getTableProps()}>
+          <table className='table' {...getTableProps()} style={{ borderRadius: '5px !important' }}>
             <thead className='backgroud_table2'>
               {headerGroups.map((headerGroup, index) => (
                 <tr key={index} {...headerGroup.getHeaderGroupProps()}>
                   {headerGroup.headers.map((column, index) => (
                     <th
                       key={index}
-                      className={styles.table__header__column}
+                      className={classNames(styles.table__header__column)}
                       {...column.getHeaderProps(column.getSortByToggleProps({ title: undefined }))}>
                       {column.render('Header')}
                       {/* Add a sort direction indicator */}
@@ -334,7 +334,10 @@ export const Statistics: React.FC = () => {
                       isEven(idx) ? 'backgroud_table' : isOdd(idx) ? 'backgroud_table2' : ''
                     }>
                     {row.cells.map((cell, index) => (
-                      <td key={index} {...row.getRowProps()}>
+                      <td
+                        key={index}
+                        className={index === row.cells.length - 1 ? 'btn_cell' : ''}
+                        {...row.getRowProps()}>
                         {cell.render('Cell')}
                       </td>
                     ))}

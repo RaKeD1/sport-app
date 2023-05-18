@@ -53,6 +53,7 @@
       margin-right: 7px;
       color: #c1c1c1;
       position: relative;
+      cursor: pointer;
     }
   }
 
@@ -69,6 +70,8 @@
     padding: 14px;
     border-radius: 8px;
     box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.15);
+    cursor: auto;
+    z-index: 999;
   }
 
   &__result {

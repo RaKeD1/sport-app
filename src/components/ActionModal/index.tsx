@@ -8,6 +8,7 @@ import { ActionType } from '../../models/IActionType';
 import { BsInfoCircle } from 'react-icons/bs';
 import SelectBar from '../SelectBar';
 import { postAction } from '../../redux/slices/trainSlice';
+import useOnClickOutside from '../../hooks/onClickOutside';
 
 interface ActionModalProps {
   isActive: boolean;
@@ -44,23 +45,15 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
   });
   const [isValid, setIsValid] = useState<boolean>(false);
   const infoRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     dispatch(getActionsTypes());
     console.log(actionTypes);
-
-    // const handleClickOutside = (event: MouseEvent) => {
-    //   const _event = event as OutsideClick;
-    //   console.log(_event.path);
-    //   // if (infoRef.current && !_event.path.includes(infoRef.current)) {
-    //   //   setShowInfo(false);
-    //   // }
-    // };
-
-    // document.body.addEventListener('click', handleClickOutside);
-
-    // return () => document.body.removeEventListener('click', handleClickOutside);
   }, []);
+
+  useOnClickOutside(modalRef, () => setIsActive(false));
+  useOnClickOutside(infoRef, () => setShowInfo(false));
 
   useEffect(() => {
     console.log('activeResult', activeResult);
@@ -121,13 +114,15 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
 
   return (
     <div className={classNames(styles.action, { [styles.active]: isActive })}>
-      <div className={classNames(styles.action__content, { [styles.active]: isActive })}>
+      <div
+        ref={modalRef}
+        className={classNames(styles.action__content, { [styles.active]: isActive })}>
         <div className={styles.action__current}>
           <h2 className={styles.action__title}>
-            <span>
+            <span ref={infoRef}>
               <BsInfoCircle onClick={() => setShowInfo(!showInfo)} />
               {showInfo && (
-                <div ref={infoRef} className={styles.action__info}>
+                <div className={classNames(styles.action__info)}>
                   <p>{currentAction.description}</p>
                 </div>
               )}

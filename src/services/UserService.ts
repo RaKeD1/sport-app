@@ -11,4 +11,7 @@ export default class UserService {
   static fetchUser(id_account: number): Promise<AxiosResponse<IUser>> {
     return $api.get<IUser>('/user/' + id_account);
   }
+  static updateUser(id_account: number, userData: Partial<IUser>): Promise<AxiosResponse<IUser>> {
+    return $api.put<IUser>('/user/' + id_account, userData);
+  }
 }

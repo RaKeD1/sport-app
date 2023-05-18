@@ -14,6 +14,7 @@ import { Status } from './redux/slices/profileSlice';
 import Loading from './components/Loading';
 import CreateTrain from './components/CreateTrain';
 import Players from './pages/Players';
+import UpdateUser from './components/UpdateDataUser';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -81,6 +82,7 @@ function App() {
             <Route path='/createtraining' element={<CreateTrain />}></Route>
             <Route path='/statistics' element={<Statistics />}></Route>
             <Route path='/players' element={<Players />}></Route>
+            <Route path='/updateuser' element={<UpdateUser />}></Route>
           </Routes>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import '../../scss/statistics.scss';
+import qs from 'qs';
 import { Column, SortByFn, useSortBy, useTable } from 'react-table';
 import Calendar from 'react-calendar';
 import styles from './statistics.module.scss';
@@ -13,6 +14,8 @@ import {
   getTeamTrain,
   setDate,
   setTeam,
+  TrainParams,
+  setTrainParams,
 } from '../../redux/slices/trainSlice';
 import { useAppDispatch } from '../../redux/store';
 import AccordionItem from '../../components/AccordionItem';
@@ -22,6 +25,9 @@ import { SelectAccountID, Status } from '../../redux/slices/profileSlice';
 import Modal from '../../components/Modal';
 import MyCalendar from '../../components/Calendar';
 import classNames from 'classnames';
+import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai';
+import SkeletonTable from '../../components/SkeletonTable';
+import Accordion from '../../components/Accordion';
 
 interface Cols {
   fio: string;
@@ -33,6 +39,23 @@ interface Cols {
   support_stat: string;
   id_train: number;
 }
+
+interface ColumnInterface {
+  Header: string;
+  accessor: string;
+  sortType?: SortByFn<Record<string, unknown>>;
+}
+
+export const columnNames = {
+  fio: 'ФИО',
+  inning_stat: 'Подача',
+  blocks_stat: 'Блок',
+  attacks_stat: 'Атака',
+  catch_stat: 'Прием',
+  defence_stat: 'Защита',
+  support_stat: 'Передача',
+  id_train: 'ID',
+};
 
 export const Statistics: React.FC = () => {
   const playersStats = useSelector(SelectTrainPlayers);
@@ -48,36 +71,17 @@ export const Statistics: React.FC = () => {
   const [isValidModal, setIsValidModal] = useState(false);
   const [activeTeam, setActiveTeam] = useState<Option>(null);
   const [width, setWidth] = React.useState<number>(window.innerWidth);
-
-  const columnNames = {
-    fio: 'ФИО',
-    inning_stat: 'Подача',
-    blocks_stat: 'Блок',
-    attacks_stat: 'Атака',
-    catch_stat: 'Прием',
-    defence_stat: 'Защита',
-    support_stat: 'Передача',
-    id_train: 'ID',
-  };
+  const isSearch = React.useRef(false);
+  const isMounted = useRef(false);
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const isEven = (idx: number) => idx % 2 === 0;
   const isOdd = (idx: number) => idx % 2 === 1;
   const breakpoint = 860;
 
   useEffect(() => {
-    dispatch(
-      getTeamTrain({
-        account_id,
-        team: 'Бомбы',
-        date: '2023-05-10',
-      }),
-    );
-
-    dispatch(setTeam('Бомбы'));
-    dispatch(setDate('2023-05-10'));
-
     const handleResizeWindow = () => setWidth(window.innerWidth);
     window.addEventListener('resize', handleResizeWindow);
     return () => {
@@ -85,11 +89,62 @@ export const Statistics: React.FC = () => {
     };
   }, []);
 
+  // Если был первый рендер, то проверяем URL-параметры и сохраняем в редуксе
+  React.useEffect(() => {
+    if (window.location.search) {
+      const params = qs.parse(window.location.search.substring(1)) as unknown as TrainParams;
+
+      dispatch(
+        setTrainParams({
+          team: params.team,
+          date: params.date,
+        }),
+      );
+      isSearch.current = true;
+    }
+  }, []);
+
+  // Если изменили параметры и был первый рендер
+  React.useEffect(() => {
+    if (isMounted.current) {
+      const queryString = qs.stringify({
+        team: team,
+        date: date,
+      });
+
+      navigate(`?${queryString}`);
+    }
+    isMounted.current = true;
+  }, [team, date]);
+
+  // Если был первый рендер, то запрашиваем тренировку
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+    console.log('useEffect [team, date], isSearch.current=', isSearch.current);
+
+    if (isSearch.current && isMounted.current) {
+      dispatch(
+        getTeamTrain({
+          account_id,
+          team,
+          date,
+        }),
+      );
+    }
+    isSearch.current = false;
+  }, [team, date]);
+
   useEffect(() => {
     if (isChangeTrain) {
       setActiveDate(null);
     }
   }, [isChangeTrain]);
+
+  useEffect(() => {
+    if (activeTeam) {
+      dispatch(setTeam(activeTeam.value));
+    }
+  }, [activeTeam]);
 
   useEffect(() => {
     if (activeDate && activeTeam) {
@@ -101,10 +156,7 @@ export const Statistics: React.FC = () => {
 
   const onChangeDate = (value) => {
     setActiveDate(value);
-    const formattedDate = `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()}`;
     console.log('Date', activeDate);
-    console.log('Formatted Date', formattedDate);
-    dispatch(setDate(formattedDate));
   };
 
   const onClickAddAction = (id_train: number) => {
@@ -112,29 +164,61 @@ export const Statistics: React.FC = () => {
     setIsActive(true);
   };
 
-  const onDateChange = (value: string) => {
-    setActiveDate(value);
-  };
-
-  const updateTrain = () => {
+  const changeTrain = () => {
+    setIsChangeTrain(false);
+    console.log('team:', team);
+    console.log('date:', date);
+    const formattedDate = `${activeDate.getFullYear()}-${
+      activeDate.getMonth() + 1
+    }-${activeDate.getDate()}`;
+    console.log('Formatted Date', formattedDate);
+    dispatch(setDate(formattedDate));
     dispatch(
       getTeamTrain({
         account_id,
-        team: team,
-        date: '2023-05-10',
+        team,
+        date: formattedDate,
       }),
     );
   };
 
-  const playersStatsData = useMemo(() => [...playersStats], [playersStats]);
+  const updateTrain = () => {
+    console.log('team:', team);
+    console.log('date:', date);
+    dispatch(
+      getTeamTrain({
+        account_id,
+        team,
+        date,
+      }),
+    );
+  };
+
+  // const playersStatsData = useMemo(() => [...playersStats], [playersStats]);
+  const playersStatsData = useMemo(
+    () =>
+      playersStats.map((obj) => {
+        const newObj = { ...obj };
+        for (var key in newObj) {
+          if (newObj.hasOwnProperty(key)) {
+            if (key !== 'fio' && 'id_train') {
+              newObj[key] = String(newObj[key]).replace('0.', '') + '%';
+            }
+          }
+        }
+        return newObj;
+      }),
+    [playersStats],
+  );
 
   const playersStatsColumns = useMemo<Column<Cols>[]>(
     () =>
       playersStats[0]
         ? Object.keys(playersStats[0]).map((key) => {
             return {
-              Header: columnNames[key],
+              Header: () => <div title='Сортировать'>{columnNames[key]}</div>,
               accessor: key as keyof Cols,
+              disableSortBy: false,
             };
           })
         : [],
@@ -167,6 +251,7 @@ export const Statistics: React.FC = () => {
       },
     },
     tableHooks,
+    useSortBy,
   );
 
   useEffect(() => {}, []);
@@ -174,20 +259,6 @@ export const Statistics: React.FC = () => {
   const toggleState = () => {
     setToggle(!toggle);
   };
-
-  if (width < breakpoint) {
-    return (
-      <>
-        <div className={styles.train}>
-          <div className={styles.accordion}>
-            {playersStats.map((obj) => (
-              <AccordionItem key={obj.id_train} {...obj} />
-            ))}
-          </div>
-        </div>
-      </>
-    );
-  }
 
   return (
     <>
@@ -200,22 +271,45 @@ export const Statistics: React.FC = () => {
           <p>Группа:</p>
           <span>{team}</span>
         </div>
-        <button className={styles.train__btnChange} onClick={() => setIsChangeTrain(true)}>
+        <button
+          className={classNames(styles.train__btnChange)}
+          onClick={() => setIsChangeTrain(true)}>
           Сменить тренировку
         </button>
-        {status === Status.ERROR ? (
+        {status === Status.ERROR || (playersStats.length === 0 && status !== Status.LOADING) ? (
           <div className={styles.train__error}>
             <span>😕</span>
-            {error}
+            {error ? error : 'Произошла ошибка'}
           </div>
+        ) : status === Status.LOADING ? (
+          <SkeletonTable />
+        ) : width < breakpoint ? (
+          <>
+            <Accordion playersStats={playersStats} onClickAddAction={onClickAddAction} />
+          </>
         ) : (
-          <table className='table' {...getTableProps()}>
+          <table className='table' {...getTableProps()} style={{ borderRadius: '5px !important' }}>
             <thead className='backgroud_table2'>
               {headerGroups.map((headerGroup, index) => (
                 <tr key={index} {...headerGroup.getHeaderGroupProps()}>
                   {headerGroup.headers.map((column, index) => (
-                    <th key={index} {...column.getHeaderProps()}>
+                    <th
+                      key={index}
+                      className={classNames(styles.table__header__column)}
+                      {...column.getHeaderProps(column.getSortByToggleProps({ title: undefined }))}>
                       {column.render('Header')}
+                      {/* Add a sort direction indicator */}
+                      <span>
+                        {column.isSorted ? (
+                          column.isSortedDesc ? (
+                            <AiOutlineCaretDown title='По убыванию' className={styles.sortIcon} />
+                          ) : (
+                            <AiOutlineCaretUp title='По возрастанию' className={styles.sortIcon} />
+                          )
+                        ) : (
+                          ''
+                        )}
+                      </span>
                     </th>
                   ))}
                 </tr>
@@ -233,7 +327,10 @@ export const Statistics: React.FC = () => {
                       isEven(idx) ? 'backgroud_table' : isOdd(idx) ? 'backgroud_table2' : ''
                     }>
                     {row.cells.map((cell, index) => (
-                      <td key={index} {...row.getRowProps()}>
+                      <td
+                        key={index}
+                        className={index === row.cells.length - 1 ? 'btn_cell' : ''}
+                        {...row.getRowProps()}>
                         {cell.render('Cell')}
                       </td>
                     ))}
@@ -265,7 +362,7 @@ export const Statistics: React.FC = () => {
             className={classNames(styles.changeModal__btnAccept, {
               [styles.changeModal__btnAccept_notValid]: !isValidModal,
             })}
-            onClick={() => setIsChangeTrain(true)}>
+            onClick={() => changeTrain()}>
             Сменить тренировку
           </button>
         </div>

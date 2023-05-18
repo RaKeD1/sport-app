@@ -21,6 +21,11 @@ export type GetTrainParams = {
   date: string;
 };
 
+export type TrainParams = {
+  team: string;
+  date: string;
+};
+
 export type PostActionParams = {
   id_train: number;
   id_action_type: number;
@@ -116,6 +121,10 @@ const trainSlice = createSlice({
     setDate(state, action: PayloadAction<string>) {
       state.date = action.payload;
     },
+    setTrainParams(state, action: PayloadAction<TrainParams>) {
+      state.date = action.payload.date;
+      state.team = action.payload.team;
+    },
     setError(state) {
       state.status = Status.ERROR;
     },
@@ -184,7 +193,9 @@ const trainSlice = createSlice({
 export const SelectTrainStatus = (state: RootState) => state.train.status;
 export const SelectTrainError = (state: RootState) => state.train.error;
 export const SelectTrainPlayers = (state: RootState) => state.train.players;
+export const SelectTrainTeam = (state: RootState) => state.train.team;
 export const SelectTrain = (state: RootState) => state.train;
-export const { setTeam, setDate, setError, setLoading, clearTrain } = trainSlice.actions;
+export const { setTeam, setDate, setError, setLoading, clearTrain, setTrainParams } =
+  trainSlice.actions;
 
 export default trainSlice.reducer;

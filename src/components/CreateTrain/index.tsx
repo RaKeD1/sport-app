@@ -24,6 +24,7 @@ import UserSearchBar from '../UserSearchBar';
 import { ISelectUser } from '../../models/ISelectUser';
 import TrainService from '../../services/TrainService';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import qs from 'qs';
 
 const CreateTrain: FC = () => {
   const [isValid, setIsValid] = useState<boolean>(false);
@@ -67,7 +68,11 @@ const CreateTrain: FC = () => {
     const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
     console.log('Formatted Date', formattedDate);
     dispatch(setDate(formattedDate));
-    navigate('/statistics');
+    const queryString = qs.stringify({
+      team: team,
+      date: formattedDate,
+    });
+    navigate(`/statistics?${queryString}`);
   };
 
   return (

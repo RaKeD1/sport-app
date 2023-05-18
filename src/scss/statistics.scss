@@ -58,3 +58,35 @@ tr {
 .backgroud_table2 {
   background-color: #93cef9;
 }
+
+.table {
+  border-collapse: collapse;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.table th,
+.table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #1374d1;
+  font-weight: 500;
+  color: #fff;
+  text-shadow: 1px 1px 10px #00000012;
+  font-weight: 500;
+
+  span {
+    color: inherit;
+  }
+}
+
+.table .rt-tbody .rt-tr-group:last-child .rt-tr {
+  border-bottom: none;
+}
+
+.table .rt-tbody .rt-tr-group:last-child .rt-td {
+  border-bottom: none;
+}

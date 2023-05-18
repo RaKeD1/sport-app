@@ -180,3 +180,7 @@
   color: $button-clr;
   margin-bottom: 10px;
 }
+.buttons__user {
+  display: flex;
+  justify-content: space-between;
+}

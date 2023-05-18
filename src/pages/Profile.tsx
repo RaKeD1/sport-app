@@ -1,7 +1,5 @@
-import { FC, useEffect, useMemo, useRef, useState } from 'react';
-import logo from '../assets/img/ball.svg';
+import { FC, useEffect, useRef, useState } from 'react';
 import '../scss/profile.scss';
-import { useSelector } from 'react-redux';
 import {
   FetchUserParams,
   SelectUser,
@@ -9,15 +7,16 @@ import {
   logoutAccount,
 } from '../redux/slices/profileSlice';
 import { useAppDispatch } from '../redux/store';
-import Header from '../components/Header';
+import { Link } from 'react-router-dom';
+import { useAppSelector } from '../hooks/redux';
 
 export const Profile: FC = () => {
   const { id_user, id_account, name, surname, patronimyc, email, phone, team, login } =
-    useSelector(SelectUser);
-  console.log({ id_user, id_account, name, surname, patronimyc, email, phone, team, login });
+    useAppSelector(SelectUser);
+  console.log('Профиль', login);
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
-
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     if (isMounted.current || !name || !surname || !phone || !email) {
       if (id_user) {
@@ -26,8 +25,6 @@ export const Profile: FC = () => {
     }
     isMounted.current = true;
   }, [id_user, id_account, name, surname, patronimyc, email, phone, team, login]);
-
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Получение данных
@@ -60,7 +57,10 @@ export const Profile: FC = () => {
           <div className='box__login'>{login}</div>
         </div>
       </div>
-      <button onClick={() => dispatch(logoutAccount())}>Выйти</button>
+      <div className='buttons__user'>
+        <button onClick={() => dispatch(logoutAccount())}>Выйти</button>
+        <Link to='/updateuser'> Изменить данные</Link>
+      </div>
     </>
   );
 };

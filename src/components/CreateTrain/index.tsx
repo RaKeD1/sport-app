@@ -14,6 +14,7 @@ import {
   SelectTrainTeam,
   clearTrain,
   postNewTrain,
+  setDate,
   setLoading,
   setTeam,
 } from '../../redux/slices/trainSlice';
@@ -62,6 +63,10 @@ const CreateTrain: FC = () => {
     console.log('Button clicked', account_id, team, selectPlayers);
     dispatch(postNewTrain({ account_id, team, selectPlayers }));
     dispatch(setTeam(team));
+    const today = new Date();
+    const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+    console.log('Formatted Date', formattedDate);
+    dispatch(setDate(formattedDate));
     navigate('/statistics');
   };
 

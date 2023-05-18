@@ -27,6 +27,7 @@ import MyCalendar from '../../components/Calendar';
 import classNames from 'classnames';
 import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai';
 import SkeletonTable from '../../components/SkeletonTable';
+import Accordion from '../../components/Accordion';
 
 interface Cols {
   fio: string;
@@ -45,6 +46,17 @@ interface ColumnInterface {
   sortType?: SortByFn<Record<string, unknown>>;
 }
 
+export const columnNames = {
+  fio: 'ФИО',
+  inning_stat: 'Подача',
+  blocks_stat: 'Блок',
+  attacks_stat: 'Атака',
+  catch_stat: 'Прием',
+  defence_stat: 'Защита',
+  support_stat: 'Передача',
+  id_train: 'ID',
+};
+
 export const Statistics: React.FC = () => {
   const playersStats = useSelector(SelectTrainPlayers);
   const account_id = useSelector(SelectAccountID);
@@ -61,17 +73,6 @@ export const Statistics: React.FC = () => {
   const [width, setWidth] = React.useState<number>(window.innerWidth);
   const isSearch = React.useRef(false);
   const isMounted = useRef(false);
-
-  const columnNames = {
-    fio: 'ФИО',
-    inning_stat: 'Подача',
-    blocks_stat: 'Блок',
-    attacks_stat: 'Атака',
-    catch_stat: 'Прием',
-    defence_stat: 'Защита',
-    support_stat: 'Передача',
-    id_train: 'ID',
-  };
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -259,20 +260,6 @@ export const Statistics: React.FC = () => {
     setToggle(!toggle);
   };
 
-  if (width < breakpoint) {
-    return (
-      <>
-        <div className={styles.train}>
-          <div className={styles.accordion}>
-            {playersStats.map((obj) => (
-              <AccordionItem key={obj.id_train} {...obj} />
-            ))}
-          </div>
-        </div>
-      </>
-    );
-  }
-
   return (
     <>
       <div className={styles.train}>
@@ -284,7 +271,9 @@ export const Statistics: React.FC = () => {
           <p>Группа:</p>
           <span>{team}</span>
         </div>
-        <button className={styles.train__btnChange} onClick={() => setIsChangeTrain(true)}>
+        <button
+          className={classNames(styles.train__btnChange)}
+          onClick={() => setIsChangeTrain(true)}>
           Сменить тренировку
         </button>
         {status === Status.ERROR || (playersStats.length === 0 && status !== Status.LOADING) ? (
@@ -294,6 +283,10 @@ export const Statistics: React.FC = () => {
           </div>
         ) : status === Status.LOADING ? (
           <SkeletonTable />
+        ) : width < breakpoint ? (
+          <>
+            <Accordion playersStats={playersStats} onClickAddAction={onClickAddAction} />
+          </>
         ) : (
           <table className='table' {...getTableProps()} style={{ borderRadius: '5px !important' }}>
             <thead className='backgroud_table2'>

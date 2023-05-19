@@ -31,6 +31,11 @@
       opacity: 1;
       margin-top: 0;
     }
+
+    @media (max-width: 860px) {
+      width: 90vw;
+      flex-direction: column-reverse;
+    }
   }
 
   &__current {
@@ -148,23 +153,102 @@
 
     &:before {
       content: '';
-      width: 1px;
       background: #e1eef7;
-      height: 108px;
 
       position: absolute;
-      top: 0;
       left: 0;
+
+      @media (min-width: 860px) {
+        top: 0;
+        width: 1px;
+        height: 108px;
+      }
+
+      @media (max-width: 860px) {
+        width: 108px;
+        height: 1px;
+        bottom: 0;
+      }
     }
     &:after {
       content: '';
-      width: 1px;
       background: #e1eef7;
-      height: 108px;
 
       position: absolute;
-      bottom: 0;
-      left: 0;
+
+      @media (min-width: 860px) {
+        top: 0;
+        width: 1px;
+        height: 108px;
+        left: 0;
+      }
+
+      @media (max-width: 860px) {
+        width: 108px;
+        height: 1px;
+        bottom: 0;
+        right: 0;
+      }
+    }
+
+    @media (max-width: 860px) {
+      padding: 20px;
+
+      &__title {
+        text-align: center;
+        font-size: 20px;
+      }
+
+      &__list {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      &__item {
+        background: #dbeffd;
+        border-radius: 5px;
+        color: #000;
+        font-weight: 500;
+        margin-right: 7px;
+        margin-bottom: 7px;
+
+        font-size: 15px;
+        padding: 9px 15px;
+      }
+
+      &__active {
+        background: #78c6ff !important;
+        border-radius: 5px;
+        color: #fff;
+        font-weight: 500;
+
+        span {
+          text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+        }
+      }
+    }
+  }
+
+  @media (max-width: 860px) {
+    &__current {
+      padding: 30px 20px;
+    }
+
+    &__result {
+      flex-direction: column;
+    }
+
+    &__resultItem {
+      span {
+        width: 50vw;
+      }
+    }
+
+    &__addBtn {
+      font-size: 15px;
+      font-weight: 500;
+      padding: 15px 15px;
+      width: 50vw;
     }
   }
 }

@@ -15,6 +15,8 @@ import Loading from './components/Loading';
 import CreateTrain from './components/CreateTrain';
 import Players from './pages/Players';
 import UpdateUser from './components/UpdateDataUser';
+import NotFound from './pages/NotFound/NotFound';
+import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -54,7 +56,7 @@ function App() {
     }
   }, [isAuth]);
 
-  if (status === Status.LOADING) return <Loading />;
+  if (status === Status.LOADING) return <LoadingSpinner />;
 
   if (!isAuth) {
     return (
@@ -83,6 +85,7 @@ function App() {
             <Route path='/statistics' element={<Statistics />}></Route>
             <Route path='/players' element={<Players />}></Route>
             <Route path='/updateuser' element={<UpdateUser />}></Route>
+            <Route path='*' element={<NotFound />}></Route>
           </Routes>
         </div>
       </div>

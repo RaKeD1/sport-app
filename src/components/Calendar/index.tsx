@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import Calendar from 'react-calendar';
-import './calendar.css';
+import './calendar.scss';
 
 type MyCalendarProps = {
   value: string;

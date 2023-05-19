@@ -28,6 +28,7 @@ import classNames from 'classnames';
 import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai';
 import SkeletonTable from '../../components/SkeletonTable';
 import Accordion from '../../components/Accordion';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 interface Cols {
   fio: string;
@@ -73,6 +74,8 @@ export const Statistics: React.FC = () => {
   const [width, setWidth] = React.useState<number>(window.innerWidth);
   const isSearch = React.useRef(false);
   const isMounted = useRef(false);
+
+  console.log('playersStats', playersStats);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -141,12 +144,6 @@ export const Statistics: React.FC = () => {
   }, [isChangeTrain]);
 
   useEffect(() => {
-    if (activeTeam) {
-      dispatch(setTeam(activeTeam.value));
-    }
-  }, [activeTeam]);
-
-  useEffect(() => {
     if (activeDate && activeTeam) {
       setIsValidModal(true);
     } else {
@@ -160,6 +157,7 @@ export const Statistics: React.FC = () => {
   };
 
   const onClickAddAction = (id_train: number) => {
+    console.log('id_train in onClickAddAction', id_train);
     setActivePlayer(id_train);
     setIsActive(true);
   };
@@ -172,11 +170,12 @@ export const Statistics: React.FC = () => {
       activeDate.getMonth() + 1
     }-${activeDate.getDate()}`;
     console.log('Formatted Date', formattedDate);
+    dispatch(setTeam(activeTeam.value));
     dispatch(setDate(formattedDate));
     dispatch(
       getTeamTrain({
         account_id,
-        team,
+        team: activeTeam.value,
         date: formattedDate,
       }),
     );
@@ -201,8 +200,9 @@ export const Statistics: React.FC = () => {
         const newObj = { ...obj };
         for (var key in newObj) {
           if (newObj.hasOwnProperty(key)) {
-            if (key !== 'fio' && 'id_train') {
-              newObj[key] = String(newObj[key]).replace('0.', '') + '%';
+            if (key !== 'fio' && key !== 'id_train') {
+              const num = String(newObj[key]).replace('0.', '');
+              newObj[key] = num + (num.length === 1 && num !== '0' ? '0%' : '%');
             }
           }
         }
@@ -210,6 +210,8 @@ export const Statistics: React.FC = () => {
       }),
     [playersStats],
   );
+
+  console.log(playersStatsData);
 
   const playersStatsColumns = useMemo<Column<Cols>[]>(
     () =>
@@ -282,7 +284,9 @@ export const Statistics: React.FC = () => {
             {error ? error : 'Произошла ошибка'}
           </div>
         ) : status === Status.LOADING ? (
-          <SkeletonTable />
+          <>
+            <LoadingSpinner />
+          </>
         ) : width < breakpoint ? (
           <>
             <Accordion playersStats={playersStats} onClickAddAction={onClickAddAction} />

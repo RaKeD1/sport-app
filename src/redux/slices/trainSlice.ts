@@ -33,6 +33,8 @@ export type PostActionParams = {
   result: string;
   condition: string;
   score: number;
+  date: string;
+  team: string;
 };
 
 export type Players = ITrain[];
@@ -76,7 +78,8 @@ export const postAction = createAsyncThunk<AxiosResponse<ITrain>, PostActionPara
   'train/postActionParams',
   async (params, { rejectWithValue }) => {
     try {
-      const { id_train, id_action_type, name_action, result, condition, score } = params;
+      const { id_train, id_action_type, name_action, result, condition, score, date, team } =
+        params;
       console.log('id_train in redux', id_train);
       const response = await TrainService.addAction(
         id_train,
@@ -85,6 +88,8 @@ export const postAction = createAsyncThunk<AxiosResponse<ITrain>, PostActionPara
         result,
         condition,
         score,
+        date,
+        team,
       );
       return response;
     } catch (error) {
@@ -203,6 +208,7 @@ export const SelectTrainStatus = (state: RootState) => state.train.status;
 export const SelectTrainError = (state: RootState) => state.train.error;
 export const SelectTrainPlayers = (state: RootState) => state.train.players;
 export const SelectTrainTeam = (state: RootState) => state.train.team;
+export const SelectTrainDate = (state: RootState) => state.train.date;
 export const SelectTrain = (state: RootState) => state.train;
 export const { setTeam, setDate, setError, setLoading, clearTrain, setTrainParams } =
   trainSlice.actions;

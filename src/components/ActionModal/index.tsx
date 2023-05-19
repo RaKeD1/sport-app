@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { ActionType } from '../../models/IActionType';
 import { BsInfoCircle } from 'react-icons/bs';
 import SelectBar from '../SelectBar';
-import { postAction } from '../../redux/slices/trainSlice';
+import { SelectTrainDate, SelectTrainTeam, postAction } from '../../redux/slices/trainSlice';
 import useOnClickOutside from '../../hooks/onClickOutside';
 
 interface ActionModalProps {
@@ -29,6 +29,8 @@ export type Option = {
 const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, updateTrain }) => {
   const dispatch = useAppDispatch();
   const { actionTypes } = useSelector(SelectActionTypes);
+  const date = useSelector(SelectTrainDate);
+  const team = useSelector(SelectTrainTeam);
   const [currentAction, setCurrentAction] = useState<ActionType>({
     id_action_type: null,
     name_type: '',
@@ -110,7 +112,9 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
 
     setSelectedCondition({ value: '', label: 'Выберите условие' });
 
-    dispatch(postAction({ id_train, id_action_type, name_action, result, condition, score }));
+    dispatch(
+      postAction({ id_train, id_action_type, name_action, result, condition, score, date, team }),
+    );
   };
 
   return (

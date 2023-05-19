@@ -33,6 +33,8 @@ export default class TrainService {
     result: string,
     condition: string,
     score: number,
+    date: string,
+    day_team: string,
   ): Promise<AxiosResponse<ITrain>> {
     return $api.post<ITrain>('/action', {
       id_train,
@@ -41,6 +43,8 @@ export default class TrainService {
       result,
       condition,
       score,
+      date,
+      day_team,
     });
   }
 

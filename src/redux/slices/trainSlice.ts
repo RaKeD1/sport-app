@@ -72,11 +72,12 @@ export const getTeamTrain = createAsyncThunk<
   }
 });
 
-export const postAction = createAsyncThunk<AxiosResponse<Players>, PostActionParams>(
+export const postAction = createAsyncThunk<AxiosResponse<ITrain>, PostActionParams>(
   'train/postActionParams',
   async (params, { rejectWithValue }) => {
     try {
       const { id_train, id_action_type, name_action, result, condition, score } = params;
+      console.log('id_train in redux', id_train);
       const response = await TrainService.addAction(
         id_train,
         id_action_type,
@@ -180,6 +181,14 @@ const trainSlice = createSlice({
     });
     builder.addCase(postAction.fulfilled, (state, action) => {
       state.status = Status.SUCCESS;
+      const updPlayer = action.payload.data;
+      const playersData = state.players.map((item) => {
+        if (item.id_train === updPlayer.id_train) {
+          return updPlayer;
+        }
+        return item;
+      });
+      state.players = playersData;
     });
     builder.addCase(postAction.rejected, (state, action) => {
       console.log('REJECTED');

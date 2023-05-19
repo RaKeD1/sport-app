@@ -46,6 +46,7 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
   const [isValid, setIsValid] = useState<boolean>(false);
   const infoRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
+  console.log('id_train in modal', id_train);
 
   useEffect(() => {
     dispatch(getActionsTypes());
@@ -108,8 +109,8 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
     console.log('score', score);
 
     setSelectedCondition({ value: '', label: 'Выберите условие' });
+
     dispatch(postAction({ id_train, id_action_type, name_action, result, condition, score }));
-    updateTrain();
   };
 
   return (

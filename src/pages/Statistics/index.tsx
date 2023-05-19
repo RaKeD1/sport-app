@@ -18,7 +18,6 @@ import {
   setTrainParams,
 } from '../../redux/slices/trainSlice';
 import { useAppDispatch } from '../../redux/store';
-import AccordionItem from '../../components/AccordionItem';
 import ActionModal, { Option } from '../../components/ActionModal';
 import TeamSearchBar from '../../components/TeamSearchBar';
 import { SelectAccountID, Status } from '../../redux/slices/profileSlice';
@@ -26,9 +25,9 @@ import Modal from '../../components/Modal';
 import MyCalendar from '../../components/Calendar';
 import classNames from 'classnames';
 import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai';
-import SkeletonTable from '../../components/SkeletonTable';
-import Accordion from '../../components/Accordion';
+import Accordion from '../../components/AccordionTrain';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import { SelectTrainActions, getTrainActions } from '../../redux/slices/actionsSlice';
 
 interface Cols {
   fio: string;
@@ -39,12 +38,6 @@ interface Cols {
   defence_stat: string;
   support_stat: string;
   id_train: number;
-}
-
-interface ColumnInterface {
-  Header: string;
-  accessor: string;
-  sortType?: SortByFn<Record<string, unknown>>;
 }
 
 export const columnNames = {
@@ -60,6 +53,7 @@ export const columnNames = {
 
 export const Statistics: React.FC = () => {
   const playersStats = useSelector(SelectTrainPlayers);
+  const actions = useSelector(SelectTrainActions);
   const account_id = useSelector(SelectAccountID);
   const status = useSelector(SelectTrainStatus);
   const error = useSelector(SelectTrainError);
@@ -133,6 +127,12 @@ export const Statistics: React.FC = () => {
           date,
         }),
       );
+      dispatch(
+        getTrainActions({
+          team,
+          date,
+        }),
+      );
     }
     isSearch.current = false;
   }, [team, date]);
@@ -150,6 +150,15 @@ export const Statistics: React.FC = () => {
       setIsValidModal(false);
     }
   }, [activeDate, activeTeam]);
+
+  useEffect(() => {
+    dispatch(
+      getTrainActions({
+        team,
+        date,
+      }),
+    );
+  }, [playersStats]);
 
   const onChangeDate = (value) => {
     setActiveDate(value);
@@ -179,6 +188,12 @@ export const Statistics: React.FC = () => {
         date: formattedDate,
       }),
     );
+    dispatch(
+      getTrainActions({
+        team: activeTeam.value,
+        date: formattedDate,
+      }),
+    );
   };
 
   const updateTrain = () => {
@@ -189,6 +204,12 @@ export const Statistics: React.FC = () => {
         account_id,
         team,
         date,
+      }),
+    );
+    dispatch(
+      getTrainActions({
+        team: team,
+        date: date,
       }),
     );
   };
@@ -255,12 +276,6 @@ export const Statistics: React.FC = () => {
     tableHooks,
     useSortBy,
   );
-
-  useEffect(() => {}, []);
-
-  const toggleState = () => {
-    setToggle(!toggle);
-  };
 
   return (
     <>
@@ -344,6 +359,34 @@ export const Statistics: React.FC = () => {
             </tbody>
           </table>
         )}
+        <div className={styles.actions}>
+          <h3 className={styles.actions__title}>Последние действия</h3>
+          <div className={styles.actions__list}>
+            {actions
+              .map((obj) => (
+                <div className={styles.actions__item}>
+                  <div className={styles.actions__item__time}>
+                    {obj.time.split('').splice(0, 8).join('')}
+                  </div>
+                  <div className={styles.actions__item__header}>
+                    <div className={styles.actions__item__player}>{obj.fio}</div>
+                    <div className={styles.actions__item__actionName}>
+                      <span>{obj.name_action}</span>
+                    </div>
+                  </div>
+                  <div className={styles.actions__item__result}>
+                    Результат:<span>{obj.result}</span>
+                  </div>
+                  {obj.condition && (
+                    <div className={styles.actions__item__condition}>
+                      Условие:<span>{obj.condition}</span>
+                    </div>
+                  )}
+                </div>
+              ))
+              .reverse()}
+          </div>
+        </div>
       </div>
       <ActionModal
         isActive={isActive}

@@ -5,6 +5,7 @@ import profile from './slices/profileSlice';
 import train from './slices/trainSlice';
 import createTrain from './slices/createTrainSlice';
 import actionTypes from './slices/actionTypesSlice';
+import actions from './slices/actionsSlice';
 import usersReducer from './slices/userSlice';
 
 export const store = configureStore({
@@ -13,6 +14,7 @@ export const store = configureStore({
     train,
     createTrain,
     actionTypes,
+    actions,
     usersReducer,
   },
 });

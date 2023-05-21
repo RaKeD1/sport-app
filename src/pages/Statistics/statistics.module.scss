@@ -141,7 +141,7 @@
   border-radius: calc((100vw - 480px) / 800);
   padding: 8px 60px;
   color: #fff;
-  font-size: calc((100vw - 480px) / 800 * 8 + 8px);
+  font-size: 14px;
   font-weight: 600;
   transition: 0.2s;
   border: 1px solid rgba(0, 0, 0, 0);
@@ -149,6 +149,7 @@
   box-shadow: 0px 0px 0px rgb(0 0 0 / 10%);
   display: flex;
   align-items: center;
+  justify-content: center;
   &:hover {
     background-color: #fff;
     border: 1px solid rgba(120, 198, 255, 0.1);
@@ -238,6 +239,20 @@
     text-align: center;
   }
 
+  &__list {
+    &__empty {
+      text-align: center;
+      font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 10px);
+      opacity: 0.3;
+      font-weight: 500;
+      padding: 50px 0 20px;
+
+      span {
+        margin-right: 10px;
+      }
+    }
+  }
+
   &__item {
     position: relative;
     // background: $button-clr;
@@ -302,6 +317,20 @@
     &__result,
     &__condition {
       margin-top: 20px;
+    }
+
+    &__delete {
+      margin-top: 15px;
+      display: inline-block;
+      font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 10px);
+      font-weight: 500;
+      opacity: 0.3;
+      transition: 0.5s;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.6;
+      }
     }
 
     @media (max-width: 560px) {

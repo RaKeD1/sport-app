@@ -37,6 +37,10 @@ export type PostActionParams = {
   team: string;
 };
 
+export type DeleteActionParams = {
+  id_action: number;
+};
+
 export type Players = ITrain[];
 
 export const postNewTrain = createAsyncThunk<
@@ -101,6 +105,22 @@ export const postAction = createAsyncThunk<AxiosResponse<ITrain>, PostActionPara
   },
 );
 
+export const deleteAction = createAsyncThunk<AxiosResponse<ITrain>, DeleteActionParams>(
+  'train/deleteActionParams',
+  async (params, { rejectWithValue }) => {
+    try {
+      const { id_action } = params;
+      const response = await TrainService.deleteTrainAction(id_action);
+      return response;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error.response?.data?.message);
+    }
+  },
+);
+
 export interface Train {
   date: string;
   team: string;
@@ -147,11 +167,13 @@ const trainSlice = createSlice({
       console.log('LOADING');
       state.status = Status.LOADING;
       state.players = initialState.players;
+      state.error = initialState.error;
     });
     builder.addCase(postNewTrain.fulfilled, (state, action) => {
       state.players = action.payload.data;
       console.log('players', state.players);
       state.status = Status.SUCCESS;
+      state.error = initialState.error;
     });
     builder.addCase(postNewTrain.rejected, (state, action) => {
       console.log('REJECTED');
@@ -166,11 +188,13 @@ const trainSlice = createSlice({
       console.log('LOADING');
       state.status = Status.LOADING;
       state.players = initialState.players;
+      state.error = initialState.error;
     });
     builder.addCase(getTeamTrain.fulfilled, (state, action) => {
       state.players = action.payload.data;
       console.log('players', state.players);
       state.status = Status.SUCCESS;
+      state.error = initialState.error;
     });
     builder.addCase(getTeamTrain.rejected, (state, action) => {
       console.log('REJECTED');
@@ -183,9 +207,11 @@ const trainSlice = createSlice({
     builder.addCase(postAction.pending, (state) => {
       console.log('LOADING');
       state.status = Status.LOADING;
+      state.error = initialState.error;
     });
     builder.addCase(postAction.fulfilled, (state, action) => {
       state.status = Status.SUCCESS;
+      state.error = initialState.error;
       const updPlayer = action.payload.data;
       const playersData = state.players.map((item) => {
         if (item.id_train === updPlayer.id_train) {
@@ -196,6 +222,31 @@ const trainSlice = createSlice({
       state.players = playersData;
     });
     builder.addCase(postAction.rejected, (state, action) => {
+      console.log('REJECTED');
+      alert(action.payload);
+      console.log(action.payload);
+      state.status = Status.ERROR;
+    });
+
+    // Кейсы для удаления действия
+    builder.addCase(deleteAction.pending, (state) => {
+      console.log('LOADING');
+      state.status = Status.LOADING;
+      state.error = initialState.error;
+    });
+    builder.addCase(deleteAction.fulfilled, (state, action) => {
+      state.status = Status.SUCCESS;
+      state.error = initialState.error;
+      const updPlayer = action.payload.data;
+      const playersData = state.players.map((item) => {
+        if (item.id_train === updPlayer.id_train) {
+          return updPlayer;
+        }
+        return item;
+      });
+      state.players = playersData;
+    });
+    builder.addCase(deleteAction.rejected, (state, action) => {
       console.log('REJECTED');
       alert(action.payload);
       console.log(action.payload);

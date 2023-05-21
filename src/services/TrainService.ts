@@ -48,12 +48,20 @@ export default class TrainService {
     });
   }
 
+  static async deleteTrainAction(id_action: number): Promise<AxiosResponse<ITrain>> {
+    return $api.delete<ITrain>(`/train-action?id_action=${id_action}`);
+  }
+
   static async checkTeam(team: string): Promise<AxiosResponse<boolean>> {
     return $api.get<boolean>(`/team/${team}`);
   }
 
   static async getTeams(): Promise<AxiosResponse<string[]>> {
     return $api.get<string[]>(`/teams`);
+  }
+
+  static async getTeamDates(day_team: string): Promise<AxiosResponse<string[]>> {
+    return $api.get<string[]>(`/team-dates?day_team=${day_team}`);
   }
 
   static async getActionsTypes(): Promise<AxiosResponse<ActionType[]>> {

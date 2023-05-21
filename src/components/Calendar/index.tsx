@@ -7,9 +7,19 @@ type MyCalendarProps = {
   onChange: (value: string) => void;
 };
 
-const MyCalendar = ({ onChange, value }) => {
+const MyCalendar = ({ onChange, value, dates }) => {
+  function tileDisabled({ date, view }) {
+    // Проверяем дату на возможность выбора
+    return !dates.includes(date.toISOString());
+  }
+
   return (
-    <Calendar maxDate={new Date()} onChange={(value, event) => onChange(value)} value={value} />
+    <Calendar
+      maxDate={new Date()}
+      tileDisabled={tileDisabled}
+      onChange={(value, event) => onChange(value)}
+      value={value}
+    />
   );
 };
 

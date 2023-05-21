@@ -16,6 +16,7 @@ import {
   setTeam,
   TrainParams,
   setTrainParams,
+  deleteAction,
 } from '../../redux/slices/trainSlice';
 import { useAppDispatch } from '../../redux/store';
 import ActionModal, { Option } from '../../components/ActionModal';
@@ -34,6 +35,7 @@ import {
   getTrainActions,
 } from '../../redux/slices/actionsSlice';
 import DataSkeleton from '../../components/DataSkeleton';
+import TrainService from '../../services/TrainService';
 
 interface Cols {
   fio: string;
@@ -72,6 +74,7 @@ export const Statistics: React.FC = () => {
   const [activeDate, setActiveDate] = useState(null);
   const [isValidModal, setIsValidModal] = useState(false);
   const [activeTeam, setActiveTeam] = useState<Option>(null);
+  const [dates, setDates] = useState<string[]>([]);
   const [width, setWidth] = React.useState<number>(window.innerWidth);
   const isSearch = React.useRef(false);
   const isMounted = useRef(false);
@@ -150,6 +153,31 @@ export const Statistics: React.FC = () => {
     }
   }, [isChangeTrain]);
 
+  const fetchDates = async (day_team: string) => {
+    try {
+      const fetch = await TrainService.getTeamDates(day_team);
+      console.log('fetch', fetch.data);
+      return fetch.data;
+    } catch (error) {
+      console.log(error.response?.data?.message);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    console.log('dates', dates);
+  }, [dates]);
+
+  useEffect(() => {
+    if (activeTeam) {
+      fetchDates(activeTeam.value).then((data) => {
+        setDates(data);
+      });
+    } else {
+      setDates([]);
+    }
+  }, [activeTeam]);
+
   useEffect(() => {
     if (activeDate && activeTeam) {
       setIsValidModal(true);
@@ -176,6 +204,12 @@ export const Statistics: React.FC = () => {
     console.log('id_train in onClickAddAction', id_train);
     setActivePlayer(id_train);
     setIsActive(true);
+  };
+
+  const onDeleteAction = (id_action: number) => {
+    if (window.confirm('Удалить действие?')) {
+      dispatch(deleteAction({ id_action }));
+    }
   };
 
   const changeTrain = () => {
@@ -404,37 +438,46 @@ export const Statistics: React.FC = () => {
                 </div>
               ) : (
                 <div className={styles.actions__list}>
-                  {actions
-                    .map((obj) => (
-                      <div className={styles.actions__item}>
-                        <div className={styles.actions__item__time}>
-                          {obj.time.split('').splice(0, 8).join('')}
-                        </div>
-                        <div
-                          className={classNames(styles.actions__item__status, {
-                            [styles.actions__item__status_win]: obj.score === 1,
-                            [styles.actions__item__status_loss]: obj.score === -1,
-                            [styles.actions__item__status_null]: obj.score === 0,
-                          })}></div>
-                        <div className={styles.actions__item__content}>
-                          <div className={styles.actions__item__header}>
-                            <div className={styles.actions__item__player}>{obj.fio}</div>
-                            <div className={styles.actions__item__actionName}>
-                              <span>{obj.name_action}</span>
+                  {actions.length === 0 ? (
+                    <div className={styles.actions__list__empty}>Действий пока нет</div>
+                  ) : (
+                    actions
+                      .map((obj) => (
+                        <div className={styles.actions__item}>
+                          <div className={styles.actions__item__time}>
+                            {obj.time.split('').splice(0, 8).join('')}
+                          </div>
+                          <div
+                            className={classNames(styles.actions__item__status, {
+                              [styles.actions__item__status_win]: obj.score === 1,
+                              [styles.actions__item__status_loss]: obj.score === -1,
+                              [styles.actions__item__status_null]: obj.score === 0,
+                            })}></div>
+                          <div className={styles.actions__item__content}>
+                            <div className={styles.actions__item__header}>
+                              <div className={styles.actions__item__player}>{obj.fio}</div>
+                              <div className={styles.actions__item__actionName}>
+                                <span>{obj.name_action}</span>
+                              </div>
+                            </div>
+                            <div className={styles.actions__item__result}>
+                              Результат:<span>{obj.result}</span>
+                            </div>
+                            {obj.condition && (
+                              <div className={styles.actions__item__condition}>
+                                Условие:<span>{obj.condition}</span>
+                              </div>
+                            )}
+                            <div
+                              className={styles.actions__item__delete}
+                              onClick={() => onDeleteAction(obj.id_action)}>
+                              Удалить
                             </div>
                           </div>
-                          <div className={styles.actions__item__result}>
-                            Результат:<span>{obj.result}</span>
-                          </div>
-                          {obj.condition && (
-                            <div className={styles.actions__item__condition}>
-                              Условие:<span>{obj.condition}</span>
-                            </div>
-                          )}
                         </div>
-                      </div>
-                    ))
-                    .reverse()}
+                      ))
+                      .reverse()
+                  )}
                 </div>
               )}
             </div>
@@ -455,7 +498,7 @@ export const Statistics: React.FC = () => {
           </div>
           <div className={styles.changeModal__date}>
             {/* <p>Дата:</p> */}
-            <MyCalendar onChange={onChangeDate} value={activeDate} />
+            <MyCalendar onChange={onChangeDate} value={activeDate} dates={dates} />
           </div>
           <button
             disabled={!isValidModal}

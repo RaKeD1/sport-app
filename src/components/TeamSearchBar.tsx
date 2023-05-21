@@ -49,7 +49,7 @@ const TeamSearchBar: FC<Props> = ({ setTeam }) => {
         placeholder='Выберите команду'
         noOptionsMessage={() => 'Команда не найдена'}
         defaultOptions
-        isClearable={true}
+        isClearable={false}
         components={animatedComponents}
         getOptionLabel={(e: Option) => e.label}
         getOptionValue={(e: Option) => e.value}

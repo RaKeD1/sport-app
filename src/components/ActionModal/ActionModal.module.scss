@@ -234,13 +234,16 @@
       padding: 30px 20px;
     }
 
-    &__result {
-      flex-direction: column;
-    }
-
     &__resultItem {
+      width: calc((90vw - 40px) / 3);
+      padding: 12px calc(100vw / 50);
+
       span {
-        width: 50vw;
+        width: 100%;
+
+        @media (max-width: 550px) {
+          font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 14px);
+        }
       }
     }
 

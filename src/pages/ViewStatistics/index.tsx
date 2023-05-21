@@ -16,6 +16,7 @@ import {
   setTeam,
   TrainParams,
   setTrainParams,
+  deleteAction,
 } from '../../redux/slices/trainSlice';
 import { useAppDispatch } from '../../redux/store';
 import ActionModal, { Option } from '../../components/ActionModal';
@@ -27,6 +28,14 @@ import classNames from 'classnames';
 import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai';
 import Accordion from '../../components/AccordionTrain';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import {
+  SelectTrainActions,
+  SelectTrainActionsError,
+  SelectTrainActionsStatus,
+  getTrainActions,
+} from '../../redux/slices/actionsSlice';
+import DataSkeleton from '../../components/DataSkeleton';
+import TrainService from '../../services/TrainService';
 
 interface Cols {
   fio: string;
@@ -50,19 +59,22 @@ export const columnNames = {
   id_train: 'ID',
 };
 
-export const ViewStatistics: React.FC = () => {
+export const Statistics: React.FC = () => {
   const playersStats = useSelector(SelectTrainPlayers);
+  const actions = useSelector(SelectTrainActions);
+  const actionsStatus = useSelector(SelectTrainActionsStatus);
+  const actionsError = useSelector(SelectTrainActionsError);
   const account_id = useSelector(SelectAccountID);
   const status = useSelector(SelectTrainStatus);
   const error = useSelector(SelectTrainError);
   const { team, date } = useSelector(SelectTrain);
-  const [toggle, setToggle] = useState<boolean>(false);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [isChangeTrain, setIsChangeTrain] = useState<boolean>(false);
   const [activePlayer, setActivePlayer] = useState<number>(null);
   const [activeDate, setActiveDate] = useState(null);
   const [isValidModal, setIsValidModal] = useState(false);
   const [activeTeam, setActiveTeam] = useState<Option>(null);
+  const [dates, setDates] = useState<string[]>([]);
   const [width, setWidth] = React.useState<number>(window.innerWidth);
   const isSearch = React.useRef(false);
   const isMounted = useRef(false);
@@ -85,7 +97,7 @@ export const ViewStatistics: React.FC = () => {
   }, []);
 
   // Если был первый рендер, то проверяем URL-параметры и сохраняем в редуксе
-  React.useEffect(() => {
+  useEffect(() => {
     if (window.location.search) {
       const params = qs.parse(window.location.search.substring(1)) as unknown as TrainParams;
 
@@ -100,8 +112,8 @@ export const ViewStatistics: React.FC = () => {
   }, []);
 
   // Если изменили параметры и был первый рендер
-  React.useEffect(() => {
-    if (isMounted.current) {
+  useEffect(() => {
+    if (isMounted.current && team && date) {
       const queryString = qs.stringify({
         team: team,
         date: date,
@@ -113,7 +125,7 @@ export const ViewStatistics: React.FC = () => {
   }, [team, date]);
 
   // Если был первый рендер, то запрашиваем тренировку
-  React.useEffect(() => {
+  useEffect(() => {
     window.scrollTo(0, 0);
     console.log('useEffect [team, date], isSearch.current=', isSearch.current);
 
@@ -121,6 +133,12 @@ export const ViewStatistics: React.FC = () => {
       dispatch(
         getTeamTrain({
           account_id,
+          team,
+          date,
+        }),
+      );
+      dispatch(
+        getTrainActions({
           team,
           date,
         }),
@@ -135,6 +153,31 @@ export const ViewStatistics: React.FC = () => {
     }
   }, [isChangeTrain]);
 
+  const fetchDates = async (day_team: string) => {
+    try {
+      const fetch = await TrainService.getTeamDates(day_team);
+      console.log('fetch', fetch.data);
+      return fetch.data;
+    } catch (error) {
+      console.log(error.response?.data?.message);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    console.log('dates', dates);
+  }, [dates]);
+
+  useEffect(() => {
+    if (activeTeam) {
+      fetchDates(activeTeam.value).then((data) => {
+        setDates(data);
+      });
+    } else {
+      setDates([]);
+    }
+  }, [activeTeam]);
+
   useEffect(() => {
     if (activeDate && activeTeam) {
       setIsValidModal(true);
@@ -142,6 +185,15 @@ export const ViewStatistics: React.FC = () => {
       setIsValidModal(false);
     }
   }, [activeDate, activeTeam]);
+
+  useEffect(() => {
+    dispatch(
+      getTrainActions({
+        team,
+        date,
+      }),
+    );
+  }, [playersStats]);
 
   const onChangeDate = (value) => {
     setActiveDate(value);
@@ -152,6 +204,12 @@ export const ViewStatistics: React.FC = () => {
     console.log('id_train in onClickAddAction', id_train);
     setActivePlayer(id_train);
     setIsActive(true);
+  };
+
+  const onDeleteAction = (id_action: number) => {
+    if (window.confirm('Удалить действие?')) {
+      dispatch(deleteAction({ id_action }));
+    }
   };
 
   const changeTrain = () => {
@@ -171,9 +229,32 @@ export const ViewStatistics: React.FC = () => {
         date: formattedDate,
       }),
     );
+    dispatch(
+      getTrainActions({
+        team: activeTeam.value,
+        date: formattedDate,
+      }),
+    );
   };
 
-  // const playersStatsData = useMemo(() => [...playersStats], [playersStats]);
+  const updateTrain = () => {
+    console.log('team:', team);
+    console.log('date:', date);
+    dispatch(
+      getTeamTrain({
+        account_id,
+        team,
+        date,
+      }),
+    );
+    dispatch(
+      getTrainActions({
+        team: team,
+        date: date,
+      }),
+    );
+  };
+
   const playersStatsData = useMemo(
     () =>
       playersStats.map((obj) => {
@@ -181,8 +262,10 @@ export const ViewStatistics: React.FC = () => {
         for (var key in newObj) {
           if (newObj.hasOwnProperty(key)) {
             if (key !== 'fio' && key !== 'id_train') {
-              const num = String(newObj[key]).replace('0.', '');
-              newObj[key] = num + (num.length === 1 && num !== '0' ? '0%' : '%');
+              // const num = String(newObj[key]).replace('0.', '');
+              // newObj[key] = num + (num.length === 1 && num !== '0' ? '0%' : '%');
+              console.log(typeof newObj[key]);
+              newObj[key] = Number(newObj[key] * 100).toFixed() + '%';
             }
           }
         }
@@ -223,82 +306,109 @@ export const ViewStatistics: React.FC = () => {
       <div className={styles.train}>
         <div className={styles.train__date}>
           <p>Дата:</p>
-          <span>{date.split('-').reverse().join('.')}</span>
+          {date ? (
+            <span>{date.split('-').reverse().join('.')}</span>
+          ) : (
+            <DataSkeleton width={110} height={27} />
+          )}
         </div>
         <div className={styles.train__group}>
           <p>Группа:</p>
-          <span>{team}</span>
+          {team ? <span>{team}</span> : <DataSkeleton width={70} height={27} />}
         </div>
         <button
-          className={classNames(styles.train__btnChange)}
+          className={classNames(styles.train__btnChange, {
+            [styles.pulse]: playersStats.length === 0 && status !== Status.ERROR && !isChangeTrain,
+          })}
           onClick={() => setIsChangeTrain(true)}>
           Сменить тренировку
         </button>
-        {status === Status.ERROR || (playersStats.length === 0 && status !== Status.LOADING) ? (
+        {playersStats.length === 0 && status !== Status.ERROR ? (
+          <div className={styles.train__error}>
+            <span>😕</span>
+            Выберите промежуток дат и группу.
+          </div>
+        ) : status === Status.ERROR || (playersStats.length === 0 && status !== Status.LOADING) ? (
           <div className={styles.train__error}>
             <span>😕</span>
             {error ? error : 'Произошла ошибка'}
+            <p>Введите данные еще раз или повторите попытку позже.</p>
           </div>
         ) : status === Status.LOADING ? (
           <>
             <LoadingSpinner />
           </>
-        ) : width < breakpoint ? (
-          <>
-            <Accordion playersStats={playersStats} onClickAddAction={onClickAddAction} />
-          </>
         ) : (
-          <table className='table' {...getTableProps()} style={{ borderRadius: '5px !important' }}>
-            <thead className='backgroud_table2'>
-              {headerGroups.map((headerGroup, index) => (
-                <tr key={index} {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column, index) => (
-                    <th
-                      key={index}
-                      className={classNames(styles.table__header__column)}
-                      {...column.getHeaderProps(column.getSortByToggleProps({ title: undefined }))}>
-                      {column.render('Header')}
-                      {/* Add a sort direction indicator */}
-                      <span>
-                        {column.isSorted ? (
-                          column.isSortedDesc ? (
-                            <AiOutlineCaretDown title='По убыванию' className={styles.sortIcon} />
-                          ) : (
-                            <AiOutlineCaretUp title='По возрастанию' className={styles.sortIcon} />
-                          )
-                        ) : (
-                          ''
-                        )}
-                      </span>
-                    </th>
+          <>
+            {width < breakpoint ? (
+              <>
+                <Accordion playersStats={playersStats} onClickAddAction={onClickAddAction} />
+              </>
+            ) : (
+              <table
+                className='table'
+                {...getTableProps()}
+                style={{ borderRadius: '5px !important' }}>
+                <thead className='backgroud_table2'>
+                  {headerGroups.map((headerGroup, index) => (
+                    <tr key={index} {...headerGroup.getHeaderGroupProps()}>
+                      {headerGroup.headers.map((column, index) => (
+                        <th
+                          key={index}
+                          className={classNames(styles.table__header__column)}
+                          {...column.getHeaderProps(
+                            column.getSortByToggleProps({ title: undefined }),
+                          )}>
+                          {column.render('Header')}
+                          {/* Add a sort direction indicator */}
+                          <span>
+                            {column.isSorted ? (
+                              column.isSortedDesc ? (
+                                <AiOutlineCaretDown
+                                  title='По убыванию'
+                                  className={styles.sortIcon}
+                                />
+                              ) : (
+                                <AiOutlineCaretUp
+                                  title='По возрастанию'
+                                  className={styles.sortIcon}
+                                />
+                              )
+                            ) : (
+                              ''
+                            )}
+                          </span>
+                        </th>
+                      ))}
+                    </tr>
                   ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
-              {rows.map((row, idx) => {
-                prepareRow(row);
+                </thead>
+                <tbody {...getTableBodyProps()}>
+                  {rows.map((row, idx) => {
+                    prepareRow(row);
 
-                return (
-                  <tr
-                    key={idx}
-                    {...row.getRowProps()}
-                    className={
-                      isEven(idx) ? 'backgroud_table' : isOdd(idx) ? 'backgroud_table2' : ''
-                    }>
-                    {row.cells.map((cell, index) => (
-                      <td
-                        key={index}
-                        className={index === row.cells.length - 1 ? 'btn_cell' : ''}
-                        {...row.getRowProps()}>
-                        {cell.render('Cell')}
-                      </td>
-                    ))}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                    return (
+                      <tr
+                        key={idx}
+                        {...row.getRowProps()}
+                        className={
+                          isEven(idx) ? 'backgroud_table' : isOdd(idx) ? 'backgroud_table2' : ''
+                        }>
+                        {row.cells.map((cell, index) => (
+                          <td
+                            key={index}
+                            className={index === row.cells.length - 1 ? 'btn_cell' : ''}
+                            {...row.getRowProps()}>
+                            {cell.render('Cell')}
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            )}
+          </>
         )}
       </div>
       <Modal isActive={isChangeTrain} setIsActive={setIsChangeTrain}>
@@ -309,7 +419,7 @@ export const ViewStatistics: React.FC = () => {
           </div>
           <div className={styles.changeModal__date}>
             {/* <p>Дата:</p> */}
-            <MyCalendar onChange={onChangeDate} value={activeDate} />
+            <MyCalendar onChange={onChangeDate} value={activeDate} dates={dates} />
           </div>
           <button
             disabled={!isValidModal}
@@ -325,4 +435,4 @@ export const ViewStatistics: React.FC = () => {
   );
 };
 
-export default ViewStatistics;
+export default Statistics;

@@ -8,5 +8,6 @@ export interface IAction {
   day_team: string;
   date: string;
   id_train: number;
+  score: number;
   fio: string;
 }

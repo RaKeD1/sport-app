@@ -27,7 +27,13 @@ import classNames from 'classnames';
 import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai';
 import Accordion from '../../components/AccordionTrain';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
-import { SelectTrainActions, getTrainActions } from '../../redux/slices/actionsSlice';
+import {
+  SelectTrainActions,
+  SelectTrainActionsError,
+  SelectTrainActionsStatus,
+  getTrainActions,
+} from '../../redux/slices/actionsSlice';
+import DataSkeleton from '../../components/DataSkeleton';
 
 interface Cols {
   fio: string;
@@ -54,11 +60,12 @@ export const columnNames = {
 export const Statistics: React.FC = () => {
   const playersStats = useSelector(SelectTrainPlayers);
   const actions = useSelector(SelectTrainActions);
+  const actionsStatus = useSelector(SelectTrainActionsStatus);
+  const actionsError = useSelector(SelectTrainActionsError);
   const account_id = useSelector(SelectAccountID);
   const status = useSelector(SelectTrainStatus);
   const error = useSelector(SelectTrainError);
   const { team, date } = useSelector(SelectTrain);
-  const [toggle, setToggle] = useState<boolean>(false);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [isChangeTrain, setIsChangeTrain] = useState<boolean>(false);
   const [activePlayer, setActivePlayer] = useState<number>(null);
@@ -87,7 +94,7 @@ export const Statistics: React.FC = () => {
   }, []);
 
   // Если был первый рендер, то проверяем URL-параметры и сохраняем в редуксе
-  React.useEffect(() => {
+  useEffect(() => {
     if (window.location.search) {
       const params = qs.parse(window.location.search.substring(1)) as unknown as TrainParams;
 
@@ -102,8 +109,8 @@ export const Statistics: React.FC = () => {
   }, []);
 
   // Если изменили параметры и был первый рендер
-  React.useEffect(() => {
-    if (isMounted.current) {
+  useEffect(() => {
+    if (isMounted.current && team && date) {
       const queryString = qs.stringify({
         team: team,
         date: date,
@@ -115,7 +122,7 @@ export const Statistics: React.FC = () => {
   }, [team, date]);
 
   // Если был первый рендер, то запрашиваем тренировку
-  React.useEffect(() => {
+  useEffect(() => {
     window.scrollTo(0, 0);
     console.log('useEffect [team, date], isSearch.current=', isSearch.current);
 
@@ -214,7 +221,6 @@ export const Statistics: React.FC = () => {
     );
   };
 
-  // const playersStatsData = useMemo(() => [...playersStats], [playersStats]);
   const playersStatsData = useMemo(
     () =>
       playersStats.map((obj) => {
@@ -222,8 +228,10 @@ export const Statistics: React.FC = () => {
         for (var key in newObj) {
           if (newObj.hasOwnProperty(key)) {
             if (key !== 'fio' && key !== 'id_train') {
-              const num = String(newObj[key]).replace('0.', '');
-              newObj[key] = num + (num.length === 1 && num !== '0' ? '0%' : '%');
+              // const num = String(newObj[key]).replace('0.', '');
+              // newObj[key] = num + (num.length === 1 && num !== '0' ? '0%' : '%');
+              console.log(typeof newObj[key]);
+              newObj[key] = Number(newObj[key] * 100).toFixed() + '%';
             }
           }
         }
@@ -256,7 +264,7 @@ export const Statistics: React.FC = () => {
         Header: '',
         Cell: ({ row, value }) => (
           <button
-            className='select--button'
+            className={styles.selectButton}
             onClick={() => onClickAddAction(+JSON.stringify(row.values.id_train))}>
             Добавить
           </button>
@@ -282,111 +290,156 @@ export const Statistics: React.FC = () => {
       <div className={styles.train}>
         <div className={styles.train__date}>
           <p>Дата:</p>
-          <span>{date.split('-').reverse().join('.')}</span>
+          {date ? (
+            <span>{date.split('-').reverse().join('.')}</span>
+          ) : (
+            <DataSkeleton width={110} height={27} />
+          )}
         </div>
         <div className={styles.train__group}>
           <p>Группа:</p>
-          <span>{team}</span>
+          {team ? <span>{team}</span> : <DataSkeleton width={70} height={27} />}
         </div>
         <button
-          className={classNames(styles.train__btnChange)}
+          className={classNames(styles.train__btnChange, {
+            [styles.pulse]: playersStats.length === 0 && status !== Status.ERROR && !isChangeTrain,
+          })}
           onClick={() => setIsChangeTrain(true)}>
           Сменить тренировку
         </button>
-        {status === Status.ERROR || (playersStats.length === 0 && status !== Status.LOADING) ? (
+        {playersStats.length === 0 && status !== Status.ERROR ? (
+          <div className={styles.train__error}>
+            <span>😕</span>
+            Выберите дату тренировки и группу.
+          </div>
+        ) : status === Status.ERROR || (playersStats.length === 0 && status !== Status.LOADING) ? (
           <div className={styles.train__error}>
             <span>😕</span>
             {error ? error : 'Произошла ошибка'}
+            <p>Введите данные еще раз или повторите попытку позже.</p>
           </div>
         ) : status === Status.LOADING ? (
           <>
             <LoadingSpinner />
           </>
-        ) : width < breakpoint ? (
-          <>
-            <Accordion playersStats={playersStats} onClickAddAction={onClickAddAction} />
-          </>
         ) : (
-          <table className='table' {...getTableProps()} style={{ borderRadius: '5px !important' }}>
-            <thead className='backgroud_table2'>
-              {headerGroups.map((headerGroup, index) => (
-                <tr key={index} {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column, index) => (
-                    <th
-                      key={index}
-                      className={classNames(styles.table__header__column)}
-                      {...column.getHeaderProps(column.getSortByToggleProps({ title: undefined }))}>
-                      {column.render('Header')}
-                      {/* Add a sort direction indicator */}
-                      <span>
-                        {column.isSorted ? (
-                          column.isSortedDesc ? (
-                            <AiOutlineCaretDown title='По убыванию' className={styles.sortIcon} />
-                          ) : (
-                            <AiOutlineCaretUp title='По возрастанию' className={styles.sortIcon} />
-                          )
-                        ) : (
-                          ''
-                        )}
-                      </span>
-                    </th>
+          <>
+            {width < breakpoint ? (
+              <>
+                <Accordion playersStats={playersStats} onClickAddAction={onClickAddAction} />
+              </>
+            ) : (
+              <table
+                className='table'
+                {...getTableProps()}
+                style={{ borderRadius: '5px !important' }}>
+                <thead className='backgroud_table2'>
+                  {headerGroups.map((headerGroup, index) => (
+                    <tr key={index} {...headerGroup.getHeaderGroupProps()}>
+                      {headerGroup.headers.map((column, index) => (
+                        <th
+                          key={index}
+                          className={classNames(styles.table__header__column)}
+                          {...column.getHeaderProps(
+                            column.getSortByToggleProps({ title: undefined }),
+                          )}>
+                          {column.render('Header')}
+                          {/* Add a sort direction indicator */}
+                          <span>
+                            {column.isSorted ? (
+                              column.isSortedDesc ? (
+                                <AiOutlineCaretDown
+                                  title='По убыванию'
+                                  className={styles.sortIcon}
+                                />
+                              ) : (
+                                <AiOutlineCaretUp
+                                  title='По возрастанию'
+                                  className={styles.sortIcon}
+                                />
+                              )
+                            ) : (
+                              ''
+                            )}
+                          </span>
+                        </th>
+                      ))}
+                    </tr>
                   ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
-              {rows.map((row, idx) => {
-                prepareRow(row);
+                </thead>
+                <tbody {...getTableBodyProps()}>
+                  {rows.map((row, idx) => {
+                    prepareRow(row);
 
-                return (
-                  <tr
-                    key={idx}
-                    {...row.getRowProps()}
-                    className={
-                      isEven(idx) ? 'backgroud_table' : isOdd(idx) ? 'backgroud_table2' : ''
-                    }>
-                    {row.cells.map((cell, index) => (
-                      <td
-                        key={index}
-                        className={index === row.cells.length - 1 ? 'btn_cell' : ''}
-                        {...row.getRowProps()}>
-                        {cell.render('Cell')}
-                      </td>
-                    ))}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        )}
-        <div className={styles.actions}>
-          <h3 className={styles.actions__title}>Последние действия</h3>
-          <div className={styles.actions__list}>
-            {actions
-              .map((obj) => (
-                <div className={styles.actions__item}>
-                  <div className={styles.actions__item__time}>
-                    {obj.time.split('').splice(0, 8).join('')}
-                  </div>
-                  <div className={styles.actions__item__header}>
-                    <div className={styles.actions__item__player}>{obj.fio}</div>
-                    <div className={styles.actions__item__actionName}>
-                      <span>{obj.name_action}</span>
-                    </div>
-                  </div>
-                  <div className={styles.actions__item__result}>
-                    Результат:<span>{obj.result}</span>
-                  </div>
-                  {obj.condition && (
-                    <div className={styles.actions__item__condition}>
-                      Условие:<span>{obj.condition}</span>
-                    </div>
-                  )}
+                    return (
+                      <tr
+                        key={idx}
+                        {...row.getRowProps()}
+                        className={
+                          isEven(idx) ? 'backgroud_table' : isOdd(idx) ? 'backgroud_table2' : ''
+                        }>
+                        {row.cells.map((cell, index) => (
+                          <td
+                            key={index}
+                            className={index === row.cells.length - 1 ? 'btn_cell' : ''}
+                            {...row.getRowProps()}>
+                            {cell.render('Cell')}
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            )}
+
+            <div className={styles.actions}>
+              <h3 className={styles.actions__title}>Последние действия</h3>
+              {actionsStatus === Status.LOADING ? (
+                <LoadingSpinner />
+              ) : actionsStatus === Status.ERROR ? (
+                <div className={styles.train__error}>
+                  <span>😕</span>
+                  {actionsError ? actionsError : 'Произошла ошибка'}
                 </div>
-              ))
-              .reverse()}
-          </div>
-        </div>
+              ) : (
+                <div className={styles.actions__list}>
+                  {actions
+                    .map((obj) => (
+                      <div className={styles.actions__item}>
+                        <div className={styles.actions__item__time}>
+                          {obj.time.split('').splice(0, 8).join('')}
+                        </div>
+                        <div
+                          className={classNames(styles.actions__item__status, {
+                            [styles.actions__item__status_win]: obj.score === 1,
+                            [styles.actions__item__status_loss]: obj.score === -1,
+                            [styles.actions__item__status_null]: obj.score === 0,
+                          })}></div>
+                        <div className={styles.actions__item__content}>
+                          <div className={styles.actions__item__header}>
+                            <div className={styles.actions__item__player}>{obj.fio}</div>
+                            <div className={styles.actions__item__actionName}>
+                              <span>{obj.name_action}</span>
+                            </div>
+                          </div>
+                          <div className={styles.actions__item__result}>
+                            Результат:<span>{obj.result}</span>
+                          </div>
+                          {obj.condition && (
+                            <div className={styles.actions__item__condition}>
+                              Условие:<span>{obj.condition}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))
+                    .reverse()}
+                </div>
+              )}
+            </div>
+          </>
+        )}
       </div>
       <ActionModal
         isActive={isActive}

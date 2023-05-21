@@ -72,10 +72,9 @@ const actionsSlice = createSlice({
   },
 });
 
-export const SelectTrainStatus = (state: RootState) => state.train.status;
-export const SelectTrainError = (state: RootState) => state.train.error;
+export const SelectTrainActionsStatus = (state: RootState) => state.actions.status;
+export const SelectTrainActionsError = (state: RootState) => state.actions.error;
 export const SelectTrainActions = (state: RootState) => state.actions.data;
-export const SelectTrain = (state: RootState) => state.train;
 export const {} = actionsSlice.actions;
 
 export default actionsSlice.reducer;

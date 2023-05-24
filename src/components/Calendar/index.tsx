@@ -4,19 +4,24 @@ import './calendar.scss';
 
 type MyCalendarProps = {
   value: string;
-  onChange: (value: string) => void;
+  dates?: string[];
+  disableTiles: boolean;
+  selectRange: boolean;
+  onChange: (value) => void;
 };
 
-const MyCalendar = ({ onChange, value, dates }) => {
+const MyCalendar = ({ value, dates, disableTiles, selectRange, onChange }) => {
   function tileDisabled({ date, view }) {
     // Проверяем дату на возможность выбора
-    return !dates.includes(date.toISOString());
+    if (disableTiles) return !dates.includes(date.toISOString());
+    else return false;
   }
 
   return (
     <Calendar
       maxDate={new Date()}
       tileDisabled={tileDisabled}
+      selectRange={selectRange}
       onChange={(value, event) => onChange(value)}
       value={value}
     />

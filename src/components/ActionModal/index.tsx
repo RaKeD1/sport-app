@@ -1,7 +1,6 @@
 import { FC, useEffect, useState, useRef } from 'react';
-import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
-import styles from './ActionModal.module.scss';
 import { AnimatePresence, motion } from 'framer-motion';
+import styles from './ActionModal.module.scss';
 import classNames from 'classnames';
 import { useAppDispatch } from '../../redux/store';
 import { SelectActionTypes, getActionsTypes } from '../../redux/slices/actionTypesSlice';
@@ -240,7 +239,29 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
                   [styles.menu__active]: currentAction.id_action_type === obj.id_action_type,
                 })}
                 onClick={() => changeAction(obj.id_action_type)}>
-                {obj.name_type}
+                <span>{obj.name_type}</span>
+                {obj.id_action_type === currentAction.id_action_type ? (
+                  <motion.div
+                    transition={{
+                      layout: {
+                        duration: 0.1,
+                        ease: 'easeOut',
+                      },
+                    }}
+                    style={{
+                      position: 'absolute',
+                      left: '0px',
+                      top: '0px',
+                      height: '100%',
+                      width: '100%',
+                      background: '#78c6ff',
+                      borderRadius: '5px',
+                      zIndex: 0,
+                    }}
+                    layout
+                    layoutId='select'
+                  />
+                ) : null}
               </div>
             ))}
           </div>

@@ -6,5 +6,5 @@ export interface ITrain {
   catch_stat: string;
   defence_stat: string;
   support_stat: string;
-  id_train: number;
+  id_train?: number;
 }

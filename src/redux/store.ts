@@ -7,6 +7,7 @@ import createTrain from './slices/createTrainSlice';
 import actionTypes from './slices/actionTypesSlice';
 import actions from './slices/actionsSlice';
 import usersReducer from './slices/userSlice';
+import stat from './slices/statSlice';
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     actionTypes,
     actions,
     usersReducer,
+    stat,
   },
 });
 export type RootState = ReturnType<typeof store.getState>;

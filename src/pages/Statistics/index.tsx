@@ -6,20 +6,8 @@ import Calendar from 'react-calendar';
 import styles from './statistics.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import {
-  SelectTrain,
-  SelectTrainError,
-  SelectTrainPlayers,
-  SelectTrainStatus,
-  getTeamTrain,
-  setDate,
-  setTeam,
-  TrainParams,
-  setTrainParams,
-  deleteAction,
-} from '../../redux/slices/trainSlice';
 import { useAppDispatch } from '../../redux/store';
-import ActionModal, { Option } from '../../components/ActionModal';
+import { Option } from '../../components/ActionModal';
 import TeamSearchBar from '../../components/TeamSearchBar';
 import { SelectAccountID, Status } from '../../redux/slices/profileSlice';
 import Modal from '../../components/Modal';
@@ -28,25 +16,18 @@ import classNames from 'classnames';
 import { AiOutlineCaretDown, AiOutlineCaretUp } from 'react-icons/ai';
 import Accordion from '../../components/AccordionTrain';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
-import {
-  SelectTrainActions,
-  SelectTrainActionsError,
-  SelectTrainActionsStatus,
-  getTrainActions,
-} from '../../redux/slices/actionsSlice';
 import DataSkeleton from '../../components/DataSkeleton';
-import TrainService from '../../services/TrainService';
-
-interface Cols {
-  fio: string;
-  inning_stat: string;
-  blocks_stat: string;
-  attacks_stat: string;
-  catch_stat: string;
-  defence_stat: string;
-  support_stat: string;
-  id_train: number;
-}
+import { Cols } from '../TrainingEdit';
+import {
+  SelectTeamStat,
+  SelectTeamStatPlayers,
+  StatParams,
+  getTeamRangeStat,
+  setDateEnd,
+  setDateStart,
+  setStatParams,
+  setTeam,
+} from '../../redux/slices/statSlice';
 
 export const columnNames = {
   fio: 'ФИО',
@@ -56,22 +37,21 @@ export const columnNames = {
   catch_stat: 'Прием',
   defence_stat: 'Защита',
   support_stat: 'Передача',
-  id_train: 'ID',
 };
 
+export interface OptionDate {
+  value: Date;
+  label: Date;
+}
+
 export const Statistics: React.FC = () => {
-  const playersStats = useSelector(SelectTrainPlayers);
-  const actions = useSelector(SelectTrainActions);
-  const actionsStatus = useSelector(SelectTrainActionsStatus);
-  const actionsError = useSelector(SelectTrainActionsError);
+  const playersStats = useSelector(SelectTeamStatPlayers);
+  const { status, error, team, date_start, date_end } = useSelector(SelectTeamStat);
   const account_id = useSelector(SelectAccountID);
-  const status = useSelector(SelectTrainStatus);
-  const error = useSelector(SelectTrainError);
-  const { team, date } = useSelector(SelectTrain);
-  const [isActive, setIsActive] = useState<boolean>(false);
   const [isChangeTrain, setIsChangeTrain] = useState<boolean>(false);
-  const [activePlayer, setActivePlayer] = useState<number>(null);
-  const [activeDate, setActiveDate] = useState(null);
+  const [activeDateRange, setActiveDateRange] = useState(null);
+  const [activeStartDate, setActiveStartDate] = useState('');
+  const [activeEndDate, setActiveEndDate] = useState(null);
   const [isValidModal, setIsValidModal] = useState(false);
   const [activeTeam, setActiveTeam] = useState<Option>(null);
   const [dates, setDates] = useState<string[]>([]);
@@ -99,12 +79,13 @@ export const Statistics: React.FC = () => {
   // Если был первый рендер, то проверяем URL-параметры и сохраняем в редуксе
   useEffect(() => {
     if (window.location.search) {
-      const params = qs.parse(window.location.search.substring(1)) as unknown as TrainParams;
+      const params = qs.parse(window.location.search.substring(1)) as unknown as StatParams;
 
       dispatch(
-        setTrainParams({
+        setStatParams({
           team: params.team,
-          date: params.date,
+          date_start: params.date_start,
+          date_end: params.date_end,
         }),
       );
       isSearch.current = true;
@@ -113,16 +94,17 @@ export const Statistics: React.FC = () => {
 
   // Если изменили параметры и был первый рендер
   useEffect(() => {
-    if (isMounted.current && team && date) {
+    if (isMounted.current && team) {
       const queryString = qs.stringify({
         team: team,
-        date: date,
+        date_start: date_start,
+        date_end: date_end,
       });
 
       navigate(`?${queryString}`);
     }
     isMounted.current = true;
-  }, [team, date]);
+  }, [team, date_start, date_end]);
 
   // Если был первый рендер, то запрашиваем тренировку
   useEffect(() => {
@@ -131,127 +113,54 @@ export const Statistics: React.FC = () => {
 
     if (isSearch.current && isMounted.current) {
       dispatch(
-        getTeamTrain({
+        getTeamRangeStat({
           account_id,
           team,
-          date,
-        }),
-      );
-      dispatch(
-        getTrainActions({
-          team,
-          date,
+          date_start,
+          date_end,
         }),
       );
     }
     isSearch.current = false;
-  }, [team, date]);
+  }, [team, date_start, date_end]);
 
   useEffect(() => {
     if (isChangeTrain) {
-      setActiveDate(null);
+      setActiveStartDate(null);
+      setActiveEndDate(null);
     }
   }, [isChangeTrain]);
 
-  const fetchDates = async (day_team: string) => {
-    try {
-      const fetch = await TrainService.getTeamDates(day_team);
-      console.log('fetch', fetch.data);
-      return fetch.data;
-    } catch (error) {
-      console.log(error.response?.data?.message);
-      return [];
-    }
-  };
-
   useEffect(() => {
-    console.log('dates', dates);
-  }, [dates]);
-
-  useEffect(() => {
-    setActiveDate(null);
-    if (activeTeam) {
-      fetchDates(activeTeam.value).then((data) => {
-        setDates(data);
-      });
-    } else {
-      setDates([]);
-    }
-  }, [activeTeam]);
-
-  useEffect(() => {
-    if (activeDate && activeTeam) {
+    if (activeStartDate && activeTeam) {
       setIsValidModal(true);
     } else {
       setIsValidModal(false);
     }
-  }, [activeDate, activeTeam]);
+  }, [activeStartDate, activeTeam]);
 
-  useEffect(() => {
-    dispatch(
-      getTrainActions({
-        team,
-        date,
-      }),
-    );
-  }, [playersStats]);
-
-  const onChangeDate = (value) => {
-    setActiveDate(value);
-    console.log('Date', activeDate);
-  };
-
-  const onClickAddAction = (id_train: number) => {
-    console.log('id_train in onClickAddAction', id_train);
-    setActivePlayer(id_train);
-    setIsActive(true);
-  };
-
-  const onDeleteAction = (id_action: number) => {
-    if (window.confirm('Удалить действие?')) {
-      dispatch(deleteAction({ id_action }));
-    }
+  const onChangeDate = async (value) => {
+    console.log('value', value);
+    setActiveDateRange(value);
+    setActiveStartDate(value[0].toISOString());
+    setActiveEndDate(value[1].toISOString());
+    console.log('Date Range', activeDateRange);
+    console.log('Start Date', activeStartDate);
+    console.log('End Date', activeEndDate);
   };
 
   const changeTrain = () => {
     setIsChangeTrain(false);
     console.log('team:', team);
-    console.log('date:', date);
-    const formattedDate = `${activeDate.getFullYear()}-${
-      activeDate.getMonth() + 1
-    }-${activeDate.getDate()}`;
-    console.log('Formatted Date', formattedDate);
     dispatch(setTeam(activeTeam.value));
-    dispatch(setDate(formattedDate));
+    dispatch(setDateStart(activeStartDate));
+    dispatch(setDateEnd(activeEndDate));
     dispatch(
-      getTeamTrain({
+      getTeamRangeStat({
         account_id,
         team: activeTeam.value,
-        date: formattedDate,
-      }),
-    );
-    dispatch(
-      getTrainActions({
-        team: activeTeam.value,
-        date: formattedDate,
-      }),
-    );
-  };
-
-  const updateTrain = () => {
-    console.log('team:', team);
-    console.log('date:', date);
-    dispatch(
-      getTeamTrain({
-        account_id,
-        team,
-        date,
-      }),
-    );
-    dispatch(
-      getTrainActions({
-        team: team,
-        date: date,
+        date_start: activeStartDate,
+        date_end: activeEndDate,
       }),
     );
   };
@@ -291,23 +200,6 @@ export const Statistics: React.FC = () => {
     [playersStats],
   );
 
-  const tableHooks = (hooks) => {
-    hooks.visibleColumns.push((columns: Column<Cols>[]) => [
-      ...columns,
-      {
-        id: 'Select',
-        Header: '',
-        Cell: ({ row, value }) => (
-          <button
-            className={styles.selectButton}
-            onClick={() => onClickAddAction(+JSON.stringify(row.values.id_train))}>
-            Добавить
-          </button>
-        ),
-      },
-    ]);
-  };
-
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable<Cols>(
     {
       columns: playersStatsColumns,
@@ -316,7 +208,6 @@ export const Statistics: React.FC = () => {
         hiddenColumns: ['id_train'],
       },
     },
-    tableHooks,
     useSortBy,
   );
 
@@ -325,8 +216,16 @@ export const Statistics: React.FC = () => {
       <div className={styles.train}>
         <div className={styles.train__date}>
           <p>Дата:</p>
-          {date ? (
-            <span>{date.split('-').reverse().join('.')}</span>
+
+          {date_start || date_end ? (
+            <>
+              <span>{date_start.slice(0, 10).split('-').reverse().join('.')}</span> -
+              <span>
+                {date_end
+                  ? date_end.slice(0, 10).split('-').reverse().join('.')
+                  : new Date().toISOString().slice(0, 10).split('-').reverse().join('.')}
+              </span>
+            </>
           ) : (
             <DataSkeleton width={110} height={27} />
           )}
@@ -345,7 +244,7 @@ export const Statistics: React.FC = () => {
         {playersStats.length === 0 && status !== Status.ERROR ? (
           <div className={styles.train__error}>
             <span>😕</span>
-            Выберите дату тренировки и группу.
+            Выберите промежуток дат и группу.
           </div>
         ) : status === Status.ERROR || (playersStats.length === 0 && status !== Status.LOADING) ? (
           <div className={styles.train__error}>
@@ -361,7 +260,7 @@ export const Statistics: React.FC = () => {
           <>
             {width < breakpoint ? (
               <>
-                <Accordion playersStats={playersStats} onClickAddAction={onClickAddAction} />
+                {/* <Accordion playersStats={playersStats} onClickAddAction={onClickAddAction} /> */}
               </>
             ) : (
               <table
@@ -427,70 +326,9 @@ export const Statistics: React.FC = () => {
                 </tbody>
               </table>
             )}
-
-            <div className={styles.actions}>
-              <h3 className={styles.actions__title}>Последние действия</h3>
-              {actionsStatus === Status.LOADING ? (
-                <LoadingSpinner />
-              ) : actionsStatus === Status.ERROR ? (
-                <div className={styles.train__error}>
-                  <span>😕</span>
-                  {actionsError ? actionsError : 'Произошла ошибка'}
-                </div>
-              ) : (
-                <div className={styles.actions__list}>
-                  {actions.length === 0 ? (
-                    <div className={styles.actions__list__empty}>Действий пока нет</div>
-                  ) : (
-                    actions
-                      .map((obj) => (
-                        <div className={styles.actions__item}>
-                          <div className={styles.actions__item__time}>
-                            {obj.time.split('').splice(0, 8).join('')}
-                          </div>
-                          <div
-                            className={classNames(styles.actions__item__status, {
-                              [styles.actions__item__status_win]: obj.score === 1,
-                              [styles.actions__item__status_loss]: obj.score === -1,
-                              [styles.actions__item__status_null]: obj.score === 0,
-                            })}></div>
-                          <div className={styles.actions__item__content}>
-                            <div className={styles.actions__item__header}>
-                              <div className={styles.actions__item__player}>{obj.fio}</div>
-                              <div className={styles.actions__item__actionName}>
-                                <span>{obj.name_action}</span>
-                              </div>
-                            </div>
-                            <div className={styles.actions__item__result}>
-                              Результат:<span>{obj.result}</span>
-                            </div>
-                            {obj.condition && (
-                              <div className={styles.actions__item__condition}>
-                                Условие:<span>{obj.condition}</span>
-                              </div>
-                            )}
-                            <div
-                              className={styles.actions__item__delete}
-                              onClick={() => onDeleteAction(obj.id_action)}>
-                              Удалить
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                      .reverse()
-                  )}
-                </div>
-              )}
-            </div>
           </>
         )}
       </div>
-      <ActionModal
-        isActive={isActive}
-        setIsActive={setIsActive}
-        id_train={activePlayer}
-        updateTrain={updateTrain}
-      />
       <Modal isActive={isChangeTrain} setIsActive={setIsChangeTrain}>
         <div className={styles.changeModal}>
           <div className={styles.changeModal__group}>
@@ -499,7 +337,13 @@ export const Statistics: React.FC = () => {
           </div>
           <div className={styles.changeModal__date}>
             {/* <p>Дата:</p> */}
-            <MyCalendar onChange={onChangeDate} value={activeDate} dates={dates} />
+            <MyCalendar
+              onChange={onChangeDate}
+              selectRange={true}
+              dates={[]}
+              value={activeDateRange}
+              disableTiles={false}
+            />
           </div>
           <button
             disabled={!isValidModal}

@@ -78,48 +78,49 @@ export const getTeamTrain = createAsyncThunk<
   }
 });
 
-export const postAction = createAsyncThunk<AxiosResponse<ITrain>, PostActionParams>(
-  'train/postActionParams',
-  async (params, { rejectWithValue }) => {
-    try {
-      const { id_train, id_action_type, name_action, result, condition, score, date, team } =
-        params;
-      console.log('id_train in redux', id_train);
-      const response = await TrainService.addAction(
-        id_train,
-        id_action_type,
-        name_action,
-        result,
-        condition,
-        score,
-        date,
-        team,
-      );
-      return response;
-    } catch (error) {
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response?.data?.message);
+export const postAction = createAsyncThunk<
+  AxiosResponse<ITrain>,
+  PostActionParams,
+  { rejectValue: FetchError }
+>('train/postActionParams', async (params, { rejectWithValue }) => {
+  try {
+    const { id_train, id_action_type, name_action, result, condition, score, date, team } = params;
+    console.log('id_train in redux', id_train);
+    const response = await TrainService.addAction(
+      id_train,
+      id_action_type,
+      name_action,
+      result,
+      condition,
+      score,
+      date,
+      team,
+    );
+    return response;
+  } catch (error) {
+    if (!error.response) {
+      throw error;
     }
-  },
-);
+    return rejectWithValue(error.response?.data);
+  }
+});
 
-export const deleteAction = createAsyncThunk<AxiosResponse<ITrain>, DeleteActionParams>(
-  'train/deleteActionParams',
-  async (params, { rejectWithValue }) => {
-    try {
-      const { id_action } = params;
-      const response = await TrainService.deleteTrainAction(id_action);
-      return response;
-    } catch (error) {
-      if (!error.response) {
-        throw error;
-      }
-      return rejectWithValue(error.response?.data?.message);
+export const deleteAction = createAsyncThunk<
+  AxiosResponse<ITrain>,
+  DeleteActionParams,
+  { rejectValue: FetchError }
+>('train/deleteActionParams', async (params, { rejectWithValue }) => {
+  try {
+    const { id_action } = params;
+    const response = await TrainService.deleteTrainAction(id_action);
+    return response;
+  } catch (error) {
+    if (!error.response) {
+      throw error;
     }
-  },
-);
+    return rejectWithValue(error.response?.data);
+  }
+});
 
 export interface Train {
   date: string;
@@ -223,9 +224,9 @@ const trainSlice = createSlice({
     });
     builder.addCase(postAction.rejected, (state, action) => {
       console.log('REJECTED');
-      alert(action.payload);
       console.log(action.payload);
       state.status = Status.ERROR;
+      state.error = action.payload.message;
     });
 
     // Кейсы для удаления действия
@@ -248,8 +249,8 @@ const trainSlice = createSlice({
     });
     builder.addCase(deleteAction.rejected, (state, action) => {
       console.log('REJECTED');
-      alert(action.payload);
       console.log(action.payload);
+      state.error = action.payload.message;
       state.status = Status.ERROR;
     });
   },

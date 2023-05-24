@@ -1,6 +1,7 @@
 import { FC, useEffect, useState, useRef } from 'react';
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion';
 import styles from './ActionModal.module.scss';
+import { AnimatePresence, motion } from 'framer-motion';
 import classNames from 'classnames';
 import { useAppDispatch } from '../../redux/store';
 import { SelectActionTypes, getActionsTypes } from '../../redux/slices/actionTypesSlice';
@@ -143,11 +144,19 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
           <h2 className={styles.action__title}>
             <span ref={infoRef}>
               <BsInfoCircle onClick={() => setShowInfo(!showInfo)} />
-              {showInfo && (
-                <div className={classNames(styles.action__info)}>
-                  <p>{currentAction.description}</p>
-                </div>
-              )}
+              <AnimatePresence>
+                {showInfo && (
+                  <motion.div
+                    variants={container}
+                    initial='hidden'
+                    animate='show'
+                    transition={{ duration: 0.2 }}
+                    exit='hidden'
+                    className={classNames(styles.action__info)}>
+                    <p>{currentAction.description}</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </span>
             {currentAction.name_type}
           </h2>

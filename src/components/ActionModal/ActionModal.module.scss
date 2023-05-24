@@ -142,16 +142,25 @@
     }
 
     &__item {
+      position: relative;
       font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 13px);
       padding: 5px 10px;
       cursor: pointer;
+
+      span {
+        z-index: 999;
+        position: relative;
+      }
     }
 
     &__active {
-      background: #78c6ff;
-      border-radius: 5px;
-      color: #fff;
-      font-weight: 500;
+      // background: #78c6ff;
+      // border-radius: 5px;
+      span {
+        color: #fff;
+        font-weight: 500;
+        transition: 0.1s;
+      }
     }
 
     &:before {

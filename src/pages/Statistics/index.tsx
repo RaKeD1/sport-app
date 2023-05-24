@@ -169,6 +169,7 @@ export const Statistics: React.FC = () => {
   }, [dates]);
 
   useEffect(() => {
+    setActiveDate(null);
     if (activeTeam) {
       fetchDates(activeTeam.value).then((data) => {
         setDates(data);

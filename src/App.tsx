@@ -5,7 +5,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Registr from './pages/Registr';
 import Profile from './pages/Profile';
-import Statistics from './pages/Statistics';
+import TrainingEdit from './pages/TrainingEdit';
 import React from 'react';
 import { RootState, useAppDispatch } from './redux/store';
 import { checkAuth } from './redux/slices/profileSlice';
@@ -17,6 +17,7 @@ import Players from './pages/Players';
 import UpdateUser from './components/UpdateDataUser';
 import NotFound from './pages/NotFound/NotFound';
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
+import Statistics from './pages/Statistics';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -82,6 +83,7 @@ function App() {
             <Route path='/' element={<Profile />}></Route>
             <Route path='/profile' element={<Profile />}></Route>
             <Route path='/createtraining' element={<CreateTrain />}></Route>
+            <Route path='/training' element={<TrainingEdit />}></Route>
             <Route path='/statistics' element={<Statistics />}></Route>
             <Route path='/players' element={<Players />}></Route>
             <Route path='/updateuser' element={<UpdateUser />}></Route>

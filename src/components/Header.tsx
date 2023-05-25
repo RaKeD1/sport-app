@@ -18,8 +18,12 @@ const Header: React.FC = () => {
       label: 'Создать тренировку',
     },
     {
+      path: '/training',
+      label: 'Редактировать тренировку',
+    },
+    {
       path: '/statistics',
-      label: 'Статистика',
+      label: 'Посмотреть статистику',
     },
     {
       path: '/players',

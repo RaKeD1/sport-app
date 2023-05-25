@@ -1,7 +1,7 @@
 import { FC, useState } from 'react';
 import { ITrain } from '../../models/ITrain';
 import styles from './AccordionItem.module.scss';
-import { columnNames } from '../../pages/Statistics';
+import { columnNames } from '../../pages/TrainingEdit';
 
 type AccordionItemProps = ITrain & {
   onClickAddAction: (id_train: number) => void;

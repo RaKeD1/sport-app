@@ -1,4 +1,5 @@
 import { FC, useEffect, useState, useRef } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import styles from './ActionModal.module.scss';
 import classNames from 'classnames';
 import { useAppDispatch } from '../../redux/store';
@@ -49,6 +50,12 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
   const infoRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   console.log('id_train in modal', id_train);
+
+  const spring = {
+    type: 'spring',
+    stiffness: 700,
+    damping: 30,
+  };
 
   useEffect(() => {
     dispatch(getActionsTypes());
@@ -117,6 +124,16 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
     );
   };
 
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        delayChildren: 0.5,
+      },
+    },
+  };
+
   return (
     <div className={classNames(styles.action, { [styles.active]: isActive })}>
       <div
@@ -126,43 +143,83 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
           <h2 className={styles.action__title}>
             <span ref={infoRef}>
               <BsInfoCircle onClick={() => setShowInfo(!showInfo)} />
-              {showInfo && (
-                <div className={classNames(styles.action__info)}>
-                  <p>{currentAction.description}</p>
-                </div>
-              )}
+              <AnimatePresence>
+                {showInfo && (
+                  <motion.div
+                    variants={container}
+                    initial='hidden'
+                    animate='show'
+                    transition={{ duration: 0.2 }}
+                    exit='hidden'
+                    className={classNames(styles.action__info)}>
+                    <p>{currentAction.description}</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </span>
             {currentAction.name_type}
           </h2>
-          <div className={styles.action__result}>
-            {currentAction.result.map((item, index) => (
-              <div
-                onClick={() => setActiveResult(index)}
-                className={classNames(styles.action__resultItem, {
-                  [styles.action__active]: index === activeResult,
-                })}>
-                <span>{item}</span>
-              </div>
-            ))}
-          </div>
-          {activeResult === 0 && (
-            <div className={styles.action__condition}>
-              <SelectBar
-                data={currentAction.win_condition}
-                selected={selectedCondition}
-                setSelected={setSelectedCondition}
-              />
-            </div>
-          )}
-          {activeResult === 1 && (
-            <div className={styles.action__condition}>
-              <SelectBar
-                data={currentAction.loss_condition}
-                selected={selectedCondition}
-                setSelected={setSelectedCondition}
-              />
-            </div>
-          )}
+          <AnimatePresence mode='wait'>
+            <ul className={styles.action__result}>
+              {currentAction.result.map((item, index) => (
+                <li
+                  onClick={() => setActiveResult(index)}
+                  className={classNames(styles.action__resultItem, {
+                    [styles.action__active]: index === activeResult,
+                  })}>
+                  <span>{item}</span>
+                  {index === activeResult ? (
+                    <motion.div
+                      transition={{
+                        delay: -2,
+                        layout: {
+                          duration: 0.2,
+                          ease: 'easeOut',
+                        },
+                      }}
+                      style={{
+                        position: 'absolute',
+                        bottom: '0px',
+                        left: '0px',
+                        right: 0,
+                        height: '100%',
+                        background: '#78c6ff',
+                        borderRadius: '10px',
+                        zIndex: 0,
+                      }}
+                      layoutId='highlight'
+                    />
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+            {activeResult === 0 && (
+              <motion.div
+                variants={container}
+                initial='hidden'
+                animate='show'
+                className={styles.action__condition}>
+                <SelectBar
+                  data={currentAction.win_condition}
+                  selected={selectedCondition}
+                  setSelected={setSelectedCondition}
+                />
+              </motion.div>
+            )}
+            {activeResult === 1 && (
+              <motion.div
+                variants={container}
+                initial='hidden'
+                animate='show'
+                className={styles.action__condition}>
+                <SelectBar
+                  data={currentAction.loss_condition}
+                  selected={selectedCondition}
+                  setSelected={setSelectedCondition}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
           <button
             disabled={!isValid}
             className={classNames(styles.action__addBtn, {
@@ -182,7 +239,29 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
                   [styles.menu__active]: currentAction.id_action_type === obj.id_action_type,
                 })}
                 onClick={() => changeAction(obj.id_action_type)}>
-                {obj.name_type}
+                <span>{obj.name_type}</span>
+                {obj.id_action_type === currentAction.id_action_type ? (
+                  <motion.div
+                    transition={{
+                      layout: {
+                        duration: 0.1,
+                        ease: 'easeOut',
+                      },
+                    }}
+                    style={{
+                      position: 'absolute',
+                      left: '0px',
+                      top: '0px',
+                      height: '100%',
+                      width: '100%',
+                      background: '#78c6ff',
+                      borderRadius: '5px',
+                      zIndex: 0,
+                    }}
+                    layout
+                    layoutId='select'
+                  />
+                ) : null}
               </div>
             ))}
           </div>

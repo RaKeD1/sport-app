@@ -87,10 +87,11 @@
   }
 
   &__active {
-    background: #78c6ff;
-    border-radius: 10px;
+    // background: #78c6ff;
+    // border-radius: 10px;
     color: #fff;
     font-weight: 500;
+    transition: 0.1s;
 
     span {
       text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
@@ -98,6 +99,7 @@
   }
 
   &__resultItem {
+    position: relative;
     padding: 12px 50px;
     text-align: center;
     cursor: pointer;
@@ -108,6 +110,7 @@
       display: inline-block;
       color: inherit;
       margin: auto;
+      z-index: 999;
     }
   }
 
@@ -139,16 +142,25 @@
     }
 
     &__item {
+      position: relative;
       font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 13px);
       padding: 5px 10px;
       cursor: pointer;
+
+      span {
+        z-index: 999;
+        position: relative;
+      }
     }
 
     &__active {
-      background: #78c6ff;
-      border-radius: 5px;
-      color: #fff;
-      font-weight: 500;
+      // background: #78c6ff;
+      // border-radius: 5px;
+      span {
+        color: #fff;
+        font-weight: 500;
+        transition: 0.1s;
+      }
     }
 
     &:before {

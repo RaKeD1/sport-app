@@ -26,6 +26,17 @@ export default class TrainService {
     );
   }
 
+  static async getTeamRangeStat(
+    account_id: number,
+    day_team: string,
+    date_start: string,
+    date_end: string,
+  ): Promise<AxiosResponse<ITrain[]>> {
+    return $api.get<ITrain[]>(
+      `/team-stat?account_id=${account_id}&date_start=${date_start}&date_end=${date_end}&day_team=${day_team}`,
+    );
+  }
+
   static async addAction(
     id_train: number,
     id_action_type: number,

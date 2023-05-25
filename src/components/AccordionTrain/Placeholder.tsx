@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { columnNames } from '../../pages/Statistics';
+import { columnNames } from '../../pages/TrainingEdit';
 
 const generateParagraphLength = () => Math.round((Math.random() % 10) * 2);
 const generateWordLength = () => Math.random() % 10;

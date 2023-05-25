@@ -37,7 +37,7 @@ import {
 import DataSkeleton from '../../components/DataSkeleton';
 import TrainService from '../../services/TrainService';
 
-interface Cols {
+export interface Cols {
   fio: string;
   inning_stat: string;
   blocks_stat: string;
@@ -45,7 +45,7 @@ interface Cols {
   catch_stat: string;
   defence_stat: string;
   support_stat: string;
-  id_train: number;
+  id_train?: number;
 }
 
 export const columnNames = {
@@ -59,8 +59,8 @@ export const columnNames = {
   id_train: 'ID',
 };
 
-export const Statistics: React.FC = () => {
-  const playersStats = useSelector(SelectTrainPlayers);
+export const TrainingEdit: React.FC = () => {
+  const players = useSelector(SelectTrainPlayers);
   const actions = useSelector(SelectTrainActions);
   const actionsStatus = useSelector(SelectTrainActionsStatus);
   const actionsError = useSelector(SelectTrainActionsError);
@@ -79,7 +79,7 @@ export const Statistics: React.FC = () => {
   const isSearch = React.useRef(false);
   const isMounted = useRef(false);
 
-  console.log('playersStats', playersStats);
+  console.log('playersStats', players);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -169,6 +169,7 @@ export const Statistics: React.FC = () => {
   }, [dates]);
 
   useEffect(() => {
+    setActiveDate(null);
     if (activeTeam) {
       fetchDates(activeTeam.value).then((data) => {
         setDates(data);
@@ -193,7 +194,7 @@ export const Statistics: React.FC = () => {
         date,
       }),
     );
-  }, [playersStats]);
+  }, [players]);
 
   const onChangeDate = (value) => {
     setActiveDate(value);
@@ -257,13 +258,11 @@ export const Statistics: React.FC = () => {
 
   const playersStatsData = useMemo(
     () =>
-      playersStats.map((obj) => {
+      players.map((obj) => {
         const newObj = { ...obj };
         for (var key in newObj) {
           if (newObj.hasOwnProperty(key)) {
             if (key !== 'fio' && key !== 'id_train') {
-              // const num = String(newObj[key]).replace('0.', '');
-              // newObj[key] = num + (num.length === 1 && num !== '0' ? '0%' : '%');
               console.log(typeof newObj[key]);
               newObj[key] = Number(newObj[key] * 100).toFixed() + '%';
             }
@@ -271,15 +270,15 @@ export const Statistics: React.FC = () => {
         }
         return newObj;
       }),
-    [playersStats],
+    [players],
   );
 
   console.log(playersStatsData);
 
   const playersStatsColumns = useMemo<Column<Cols>[]>(
     () =>
-      playersStats[0]
-        ? Object.keys(playersStats[0]).map((key) => {
+      players[0]
+        ? Object.keys(players[0]).map((key) => {
             return {
               Header: () => <div title='Сортировать'>{columnNames[key]}</div>,
               accessor: key as keyof Cols,
@@ -287,8 +286,25 @@ export const Statistics: React.FC = () => {
             };
           })
         : [],
-    [playersStats],
+    [players],
   );
+
+  const tableHooks = (hooks) => {
+    hooks.visibleColumns.push((columns: Column<Cols>[]) => [
+      ...columns,
+      {
+        id: 'Select',
+        Header: '',
+        Cell: ({ row, value }) => (
+          <button
+            className={styles.selectButton}
+            onClick={() => onClickAddAction(+JSON.stringify(row.values.id_train))}>
+            Добавить
+          </button>
+        ),
+      },
+    ]);
+  };
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable<Cols>(
     {
@@ -298,6 +314,7 @@ export const Statistics: React.FC = () => {
         hiddenColumns: ['id_train'],
       },
     },
+    tableHooks,
     useSortBy,
   );
 
@@ -318,17 +335,17 @@ export const Statistics: React.FC = () => {
         </div>
         <button
           className={classNames(styles.train__btnChange, {
-            [styles.pulse]: playersStats.length === 0 && status !== Status.ERROR && !isChangeTrain,
+            [styles.pulse]: players.length === 0 && status !== Status.ERROR && !isChangeTrain,
           })}
           onClick={() => setIsChangeTrain(true)}>
           Сменить тренировку
         </button>
-        {playersStats.length === 0 && status !== Status.ERROR ? (
+        {players.length === 0 && status !== Status.ERROR ? (
           <div className={styles.train__error}>
             <span>😕</span>
-            Выберите промежуток дат и группу.
+            Выберите дату тренировки и группу.
           </div>
-        ) : status === Status.ERROR || (playersStats.length === 0 && status !== Status.LOADING) ? (
+        ) : status === Status.ERROR || (players.length === 0 && status !== Status.LOADING) ? (
           <div className={styles.train__error}>
             <span>😕</span>
             {error ? error : 'Произошла ошибка'}
@@ -342,7 +359,7 @@ export const Statistics: React.FC = () => {
           <>
             {width < breakpoint ? (
               <>
-                <Accordion playersStats={playersStats} onClickAddAction={onClickAddAction} />
+                <Accordion playersStats={players} onClickAddAction={onClickAddAction} />
               </>
             ) : (
               <table
@@ -408,9 +425,70 @@ export const Statistics: React.FC = () => {
                 </tbody>
               </table>
             )}
+
+            <div className={styles.actions}>
+              <h3 className={styles.actions__title}>Последние действия</h3>
+              {actionsStatus === Status.LOADING ? (
+                <LoadingSpinner />
+              ) : actionsStatus === Status.ERROR ? (
+                <div className={styles.train__error}>
+                  <span>😕</span>
+                  {actionsError ? actionsError : 'Произошла ошибка'}
+                </div>
+              ) : (
+                <div className={styles.actions__list}>
+                  {actions.length === 0 ? (
+                    <div className={styles.actions__list__empty}>Действий пока нет</div>
+                  ) : (
+                    actions
+                      .map((obj) => (
+                        <div className={styles.actions__item}>
+                          <div className={styles.actions__item__time}>
+                            {obj.time.split('').splice(0, 8).join('')}
+                          </div>
+                          <div
+                            className={classNames(styles.actions__item__status, {
+                              [styles.actions__item__status_win]: obj.score === 1,
+                              [styles.actions__item__status_loss]: obj.score === -1,
+                              [styles.actions__item__status_null]: obj.score === 0,
+                            })}></div>
+                          <div className={styles.actions__item__content}>
+                            <div className={styles.actions__item__header}>
+                              <div className={styles.actions__item__player}>{obj.fio}</div>
+                              <div className={styles.actions__item__actionName}>
+                                <span>{obj.name_action}</span>
+                              </div>
+                            </div>
+                            <div className={styles.actions__item__result}>
+                              Результат:<span>{obj.result}</span>
+                            </div>
+                            {obj.condition && (
+                              <div className={styles.actions__item__condition}>
+                                Условие:<span>{obj.condition}</span>
+                              </div>
+                            )}
+                            <div
+                              className={styles.actions__item__delete}
+                              onClick={() => onDeleteAction(obj.id_action)}>
+                              Удалить
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                      .reverse()
+                  )}
+                </div>
+              )}
+            </div>
           </>
         )}
       </div>
+      <ActionModal
+        isActive={isActive}
+        setIsActive={setIsActive}
+        id_train={activePlayer}
+        updateTrain={updateTrain}
+      />
       <Modal isActive={isChangeTrain} setIsActive={setIsChangeTrain}>
         <div className={styles.changeModal}>
           <div className={styles.changeModal__group}>
@@ -419,7 +497,13 @@ export const Statistics: React.FC = () => {
           </div>
           <div className={styles.changeModal__date}>
             {/* <p>Дата:</p> */}
-            <MyCalendar onChange={onChangeDate} value={activeDate} dates={dates} />
+            <MyCalendar
+              onChange={onChangeDate}
+              value={activeDate}
+              selectRange={false}
+              dates={dates}
+              disableTiles={true}
+            />
           </div>
           <button
             disabled={!isValidModal}
@@ -435,4 +519,4 @@ export const Statistics: React.FC = () => {
   );
 };
 
-export default Statistics;
+export default TrainingEdit;

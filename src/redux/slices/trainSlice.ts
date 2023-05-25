@@ -193,7 +193,7 @@ const trainSlice = createSlice({
     });
     builder.addCase(getTeamTrain.fulfilled, (state, action) => {
       state.players = action.payload.data;
-      console.log('players', state.players);
+      console.log('players in trainSlice', state.players);
       state.status = Status.SUCCESS;
       state.error = initialState.error;
     });

@@ -266,7 +266,7 @@ const profileSlice = createSlice({
     builder.addCase(updateUser.fulfilled, (state, action) => {
       state.updateUserStatus = Status.SUCCESS; // Устанавливаем статус SUCCESS при успешном обновлении данных пользователя
       state.user = action.payload.data; // Обновляем данные пользователя в стейте
-      console.log('Данные пользователя', action.payload);
+      console.log('Данные пользователя', action.payload.data.name);
     });
 
     builder.addCase(updateUser.rejected, (state) => {
@@ -302,6 +302,7 @@ const profileSlice = createSlice({
       state.user.email = action.payload.data.email;
       state.user.team = action.payload.data.team;
       state.user.login = action.payload.data.login;
+      console.log('login', action.payload.data.login);
     });
     builder.addCase(fetchUser.rejected, (state) => {
       console.log('ERROR');

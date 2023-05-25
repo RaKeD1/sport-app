@@ -116,8 +116,8 @@
   grid-column-gap: 10px;
   grid-row-gap: 10px;
   display: grid;
-  grid-template-columns: repeat(22, 1fr);
-  grid-template-rows: repeat(4, 80px);
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(2, 200px);
   margin: 30px 0;
   padding: 30px;
   background-color: #fff;
@@ -133,50 +133,51 @@
   background-color: #fff;
   box-shadow: 0px 0px 10px rgba(57, 57, 57, 0.1);
   transition: 0.5s;
-
+  &__email {
+    font-size: calc((100vw - 480px) / (1280 - 480) * (25 - 15) + 15px);
+  }
+  &__fio {
+    font-size: calc((100vw - 480px) / (1280 - 480) * (25 - 15) + 15px);
+  }
+  &__phone {
+    font-size: calc((100vw - 480px) / (1280 - 480) * (25 - 15) + 15px);
+  }
   &:hover {
     box-shadow: 0px 0px 10px rgba(0, 161, 230, 0.3);
     transform: scale(1.01);
   }
 }
-.box1 {
+.box_phone {
   padding: 20px 40px;
   align-items: center;
+  grid-column-start: 3;
+  grid-column-end: 5;
+  grid-row-start: 1;
+  grid-row-end: 2;
+}
+
+.box_email {
   grid-column-start: 1;
-  grid-column-end: 8;
+  grid-column-end: 5;
+  grid-row-start: 2;
+  grid-row-end: 2;
+}
+.box_fio {
+  grid-column-start: 1;
+  grid-column-end: 3;
   grid-row-start: 1;
-  grid-row-end: 5;
-  font-size: calc((100vw - 480px) / (1280 - 480) * (40 - 15) + 15px);
+  grid-row-end: 2;
 }
-.box2 {
-  grid-column-start: 8;
-  grid-column-end: 15;
+.box_change {
+  padding: 0px;
+  grid-column-start: 5;
+  grid-column-end: 9;
   grid-row-start: 1;
-  grid-row-end: 3;
-  justify-content: start;
-  padding: 20px;
+  grid-row-end: 2;
 }
-.box3 {
-  grid-column-start: 8;
-  grid-column-end: 23;
-  grid-row-start: 1;
-  grid-row-end: 3;
-}
-.box4 {
-  grid-column-start: 8;
-  grid-column-end: 16;
-  grid-row-start: 3;
-  grid-row-end: 5;
-}
-.box5 {
-  align-items: center;
-  grid-column-start: 16;
-  grid-column-end: 23;
-  grid-row-start: 3;
-  grid-row-end: 5;
-}
+
 .box__title {
-  font-size: calc((100vw - 480px) / (1280 - 480) * (35 - 15) + 15px);
+  font-size: calc((100vw - 480px) / (1280 - 480) * (30 - 15) + 15px);
   color: $button-clr;
   margin-bottom: 10px;
 }

@@ -4,7 +4,7 @@ import qs from 'qs';
 import { Column, SortByFn, useSortBy, useTable } from 'react-table';
 import Calendar from 'react-calendar';
 import styles from './statistics.module.scss';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
   SelectTrain,
@@ -36,6 +36,7 @@ import {
 } from '../../redux/slices/actionsSlice';
 import DataSkeleton from '../../components/DataSkeleton';
 import TrainService from '../../services/TrainService';
+import { useIsSmall } from '../../hooks/utils';
 
 export interface Cols {
   fio: string;
@@ -75,29 +76,29 @@ export const TrainingEdit: React.FC = () => {
   const [isValidModal, setIsValidModal] = useState(false);
   const [activeTeam, setActiveTeam] = useState<Option>(null);
   const [dates, setDates] = useState<string[]>([]);
-  const [width, setWidth] = React.useState<number>(window.innerWidth);
   const isSearch = React.useRef(false);
   const isMounted = useRef(false);
+
+  const [matches, setMatches] = useState(window.matchMedia('(min-width: 860px)').matches);
+
+  useEffect(() => {
+    window
+      .matchMedia('(min-width: 860px)')
+      .addEventListener('change', (e) => setMatches(e.matches));
+  }, []);
 
   console.log('playersStats', players);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const isEven = (idx: number) => idx % 2 === 0;
   const isOdd = (idx: number) => idx % 2 === 1;
-  const breakpoint = 860;
-
-  useEffect(() => {
-    const handleResizeWindow = () => setWidth(window.innerWidth);
-    window.addEventListener('resize', handleResizeWindow);
-    return () => {
-      window.removeEventListener('resize', handleResizeWindow);
-    };
-  }, []);
 
   // Если был первый рендер, то проверяем URL-параметры и сохраняем в редуксе
   useEffect(() => {
+    console.log('useEffect [] /training');
     if (window.location.search) {
       const params = qs.parse(window.location.search.substring(1)) as unknown as TrainParams;
 
@@ -113,6 +114,7 @@ export const TrainingEdit: React.FC = () => {
 
   // Если изменили параметры и был первый рендер
   useEffect(() => {
+    console.log('useEffect [team, date] /training');
     if (isMounted.current && team && date) {
       const queryString = qs.stringify({
         team: team,
@@ -148,6 +150,7 @@ export const TrainingEdit: React.FC = () => {
   }, [team, date]);
 
   useEffect(() => {
+    console.log('useEffect [isChangeTrain] /training');
     if (isChangeTrain) {
       setActiveDate(null);
     }
@@ -165,10 +168,12 @@ export const TrainingEdit: React.FC = () => {
   };
 
   useEffect(() => {
+    console.log('useEffect [dates] /training');
     console.log('dates', dates);
   }, [dates]);
 
   useEffect(() => {
+    console.log('useEffect [activeTeam] /training');
     setActiveDate(null);
     if (activeTeam) {
       fetchDates(activeTeam.value).then((data) => {
@@ -180,6 +185,7 @@ export const TrainingEdit: React.FC = () => {
   }, [activeTeam]);
 
   useEffect(() => {
+    console.log('useEffect [activeDate, activeTeam] /training');
     if (activeDate && activeTeam) {
       setIsValidModal(true);
     } else {
@@ -188,6 +194,7 @@ export const TrainingEdit: React.FC = () => {
   }, [activeDate, activeTeam]);
 
   useEffect(() => {
+    console.log('useEffect [players] /training');
     dispatch(
       getTrainActions({
         team,
@@ -197,6 +204,7 @@ export const TrainingEdit: React.FC = () => {
   }, [players]);
 
   const onChangeDate = (value) => {
+    console.log('onChangeDate /training');
     setActiveDate(value);
     console.log('Date', activeDate);
   };
@@ -214,6 +222,7 @@ export const TrainingEdit: React.FC = () => {
   };
 
   const changeTrain = () => {
+    console.log('changeTrain /training');
     setIsChangeTrain(false);
     console.log('team:', team);
     console.log('date:', date);
@@ -239,6 +248,7 @@ export const TrainingEdit: React.FC = () => {
   };
 
   const updateTrain = () => {
+    console.log('updateTrain /training');
     console.log('team:', team);
     console.log('date:', date);
     dispatch(
@@ -273,7 +283,7 @@ export const TrainingEdit: React.FC = () => {
     [players],
   );
 
-  console.log(playersStatsData);
+  console.log('playersStatsData', playersStatsData);
 
   const playersStatsColumns = useMemo<Column<Cols>[]>(
     () =>
@@ -357,9 +367,13 @@ export const TrainingEdit: React.FC = () => {
           </>
         ) : (
           <>
-            {width < breakpoint ? (
+            {!matches ? (
               <>
-                <Accordion playersStats={players} onClickAddAction={onClickAddAction} />
+                <Accordion
+                  playersStats={players}
+                  buttonEnabled={true}
+                  onClickAddAction={onClickAddAction}
+                />
               </>
             ) : (
               <table

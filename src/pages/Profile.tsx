@@ -9,11 +9,11 @@ import {
 import { useAppDispatch } from '../redux/store';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../hooks/redux';
+import UpdateUser from '../components/UpdateDataUser';
 
 export const Profile: FC = () => {
-  const { id_user, id_account, name, surname, patronimyc, email, phone, team, login } =
+  const { id_user, id_account, name, surname, patronimyc, email, phone } =
     useAppSelector(SelectUser);
-  console.log('Профиль', login);
   const dispatch = useAppDispatch();
   const isMounted = useRef(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -24,42 +24,40 @@ export const Profile: FC = () => {
       }
     }
     isMounted.current = true;
-  }, [id_user, id_account, name, surname, patronimyc, email, phone, team, login]);
+  }, [id_user, id_account, name, surname, patronimyc, email, phone]);
 
   useEffect(() => {
     // Получение данных
+
     setIsLoading(false);
   }, []);
 
   return (
     <>
       <div className='track'>
-        <div className='box1 box'>
-          <div className='box__title'>ФИО</div>
-          <div className='box__fio '>
-            {surname}
-            <br />
-            {name}
-            <br />
-            {patronimyc}
-          </div>
+        <div className='box_phone box'>
+          <div className='box__title'>Телефон</div>
+          <div className='box__phone '>{phone}</div>
         </div>
-        <div className='box3 box'>
+        <div className='box_email box'>
           <div className='box__title'>Почта</div>
           <div className='box__email'>{email}</div>
         </div>
-        <div className='box4 box'>
-          <div className='box__title'>Телефон</div>
-          <div className='box__email'>{phone}</div>
+        <div className='box_fio box'>
+          <div className='box__title'>ФИО</div>
+          <div className='box__fio'>
+            {surname + ' '}
+            {name + ' '}
+            {patronimyc}
+          </div>
         </div>
-        <div className='box5 box'>
-          <div className='box__title'>Логин</div>
-          <div className='box__login'>{login}</div>
+        <div className='box_change'>
+          <UpdateUser />
         </div>
       </div>
       <div className='buttons__user'>
         <button onClick={() => dispatch(logoutAccount())}>Выйти</button>
-        <Link to='/updateuser'> Изменить данные</Link>
+        {/* <Link to='/updateuser'> Изменить данные</Link> */}
       </div>
     </>
   );

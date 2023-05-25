@@ -4,14 +4,9 @@ import { Link } from 'react-router-dom';
 
 import logo from '../assets/img/ball.svg';
 import { FaUserAlt } from 'react-icons/fa';
-import { MdExitToApp } from 'react-icons/md';
-
-import { useAppDispatch } from '../hooks/redux';
-import { logoutAccount } from '../redux/slices/profileSlice';
 
 const Header: React.FC = () => {
   const location = useLocation();
-  const dispatch = useAppDispatch();
   const pages = [
     {
       path: '/createtraining',

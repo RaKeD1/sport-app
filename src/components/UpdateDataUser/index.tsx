@@ -1,11 +1,6 @@
 import { FC, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import {
-  SelectUser,
-  Status,
-  setUpdateUserStatus,
-  updateUser,
-} from '../../redux/slices/profileSlice';
+import { SelectUser, setUpdateUserStatus, updateUser } from '../../redux/slices/profileSlice';
 import { useSelector } from 'react-redux';
 import styles from './UpdateDataUser.module.scss';
 
@@ -38,7 +33,12 @@ const UpdateUser: FC = () => {
           <div>
             <label>
               Имя:
-              <input type='text' value={nameState} onChange={(e) => setNameState(e.target.value)} />
+              <input
+                type='text'
+                value={nameState}
+                onChange={(e) => setNameState(e.target.value)}
+                autoComplete='off'
+              />
             </label>
           </div>
           <div>
@@ -48,6 +48,7 @@ const UpdateUser: FC = () => {
                 type='text'
                 value={surnameState}
                 onChange={(e) => setSurnameState(e.target.value)}
+                autoComplete='off'
               />
             </label>
           </div>
@@ -58,6 +59,7 @@ const UpdateUser: FC = () => {
                 type='text'
                 value={patronimycState}
                 onChange={(e) => setPatronimycState(e.target.value)}
+                autoComplete='off'
               />
             </label>
           </div>
@@ -70,6 +72,7 @@ const UpdateUser: FC = () => {
                 type='email'
                 value={emailState}
                 onChange={(e) => setEmailState(e.target.value)}
+                autoComplete='off'
               />
             </label>
           </div>
@@ -80,6 +83,7 @@ const UpdateUser: FC = () => {
                 type='phone'
                 value={phoneState}
                 onChange={(e) => setPhoneState(e.target.value)}
+                autoComplete='off'
               />
             </label>
           </div>

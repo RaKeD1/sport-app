@@ -49,9 +49,6 @@ const Header: React.FC = () => {
               </Link>
             </li>
           ))}
-          <button onClick={() => dispatch(logoutAccount())}>
-            <MdExitToApp className='profileIconExit' />
-          </button>
         </ul>
       </nav>
     </div>

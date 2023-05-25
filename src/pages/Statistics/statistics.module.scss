@@ -1,5 +1,41 @@
 @import '../../scss/vars';
 
+.pulse {
+  cursor: pointer;
+  box-shadow: 0 0 0 $pulse-vis;
+  animation: pulse 2s infinite;
+
+  &:hover {
+    animation: none;
+  }
+}
+
+@-webkit-keyframes pulse {
+  0% {
+    -webkit-box-shadow: 0 0 0 0 $pulse-vis;
+  }
+  70% {
+    -webkit-box-shadow: 0 0 0 10px $pulse-invis;
+  }
+  100% {
+    -webkit-box-shadow: 0 0 0 0 $pulse-invis;
+  }
+}
+@keyframes pulse {
+  0% {
+    -moz-box-shadow: 0 0 0 0 $pulse-vis;
+    box-shadow: 0 0 0 0 $pulse-vis;
+  }
+  70% {
+    -moz-box-shadow: 0 0 0 20px $pulse-invis;
+    box-shadow: 0 0 0 20px $pulse-invis;
+  }
+  100% {
+    -moz-box-shadow: 0 0 0 0 $pulse-invis;
+    box-shadow: 0 0 0 0 $pulse-invis;
+  }
+}
+
 //---Аккордеон--//
 
 .accordion {

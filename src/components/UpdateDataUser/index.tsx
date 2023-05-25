@@ -11,7 +11,7 @@ import styles from './UpdateDataUser.module.scss';
 
 const UpdateUser: FC = () => {
   const dispatch = useAppDispatch();
-  const { phone, email, name, surname, patronimyc, id_user } = useAppSelector(SelectUser);
+  const { phone, email, name, surname, login, patronimyc, id_user } = useAppSelector(SelectUser);
   const updateUserStatus = useSelector(setUpdateUserStatus);
   const [nameState, setNameState] = useState<string>(name);
   const [surnameState, setSurnameState] = useState<string>(surname);
@@ -20,11 +20,12 @@ const UpdateUser: FC = () => {
   const [phoneState, setPhoneState] = useState<string>(phone);
   const handleUpdateUser = () => {
     const updatedUserData = {
-      name,
-      surname,
-      patronimyc,
-      email,
-      phone,
+      name: nameState,
+      surname: surnameState,
+      patronimyc: patronimycState,
+      email: emailState,
+      phone: phoneState,
+      login: login,
     };
     dispatch(updateUser({ id_user: id_user, userData: updatedUserData }));
   };
@@ -37,7 +38,7 @@ const UpdateUser: FC = () => {
           <div>
             <label>
               Имя:
-              <input type='text' value={name} onChange={(e) => setNameState(e.target.value)} />
+              <input type='text' value={nameState} onChange={(e) => setNameState(e.target.value)} />
             </label>
           </div>
           <div>
@@ -45,7 +46,7 @@ const UpdateUser: FC = () => {
               Фамилия:
               <input
                 type='text'
-                value={surname}
+                value={surnameState}
                 onChange={(e) => setSurnameState(e.target.value)}
               />
             </label>
@@ -55,7 +56,7 @@ const UpdateUser: FC = () => {
               Отчество (если имеется):
               <input
                 type='text'
-                value={patronimyc}
+                value={patronimycState}
                 onChange={(e) => setPatronimycState(e.target.value)}
               />
             </label>
@@ -65,13 +66,21 @@ const UpdateUser: FC = () => {
           <div>
             <label>
               Почта:
-              <input type='email' value={email} onChange={(e) => setEmailState(e.target.value)} />
+              <input
+                type='email'
+                value={emailState}
+                onChange={(e) => setEmailState(e.target.value)}
+              />
             </label>
           </div>
           <div>
             <label className={styles.label}>
               Телефон:
-              <input type='phone' value={phone} onChange={(e) => setPhoneState(e.target.value)} />
+              <input
+                type='phone'
+                value={phoneState}
+                onChange={(e) => setPhoneState(e.target.value)}
+              />
             </label>
           </div>
         </div>

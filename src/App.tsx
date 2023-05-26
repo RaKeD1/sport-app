@@ -1,7 +1,6 @@
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import './scss/app.scss';
 import Header from './components/Header';
-import Home from './pages/Home';
 import Login from './pages/Login';
 import Registr from './pages/Registr';
 import Profile from './pages/Profile';
@@ -11,7 +10,6 @@ import { RootState, useAppDispatch } from './redux/store';
 import { checkAuth } from './redux/slices/profileSlice';
 import { useSelector } from 'react-redux';
 import { Status } from './redux/slices/profileSlice';
-import Loading from './components/Loading';
 import CreateTrain from './components/CreateTrain';
 import Players from './pages/Players';
 import UpdateUser from './components/UpdateDataUser';
@@ -26,7 +24,6 @@ function App() {
   console.log('isAuth', isAuth);
   const status = useSelector((state: RootState) => state.profile.status);
   console.log('status', status);
-  let location = useLocation();
 
   React.useEffect(() => {
     if (localStorage.getItem('token')) {

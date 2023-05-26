@@ -2,22 +2,9 @@ import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { IUser } from '../../models/IUser';
 import {} from 'axios';
 import { Status } from './profileSlice';
-import $api from '../../http';
-import { AppDispatch, RootState } from '../store';
+import { RootState } from '../store';
 import UserService from '../../services/UserService';
 
-// export const fetchUsers = async (dispatch: AppDispatch) => {
-//   try {
-//     dispatch(userSlice.actions.usersFetching());
-//     const fetch = await $api.get<IUser[]>('/users');
-//     console.log('fetch', fetch.data);
-//     dispatch(userSlice.actions.usersFetchingSuccess(fetch.data));
-//     return fetch.data;
-//   } catch (error) {
-//     console.log(error.response?.data?.message);
-//     return [];
-//   }
-// };
 export const fetchUsers = createAsyncThunk('user/fetchAll', async (_, thunkApi) => {
   try {
     const response = await UserService.fetchUsers();

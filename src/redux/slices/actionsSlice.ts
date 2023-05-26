@@ -1,8 +1,6 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../store';
-import axios, { AxiosResponse } from 'axios';
-import { ITrain } from '../../models/ITrain';
-import TrainService from '../../services/TrainService';
+import { AxiosResponse } from 'axios';
 import { Status } from './profileSlice';
 import { IAction } from '../../models/IAction';
 import ActionService from '../../services/ActionService';

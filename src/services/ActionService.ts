@@ -1,6 +1,5 @@
 import $api from '../http';
 import { AxiosResponse } from 'axios';
-import { ITrain } from '../models/ITrain';
 import { IAction } from '../models/IAction';
 
 export default class ActionService {

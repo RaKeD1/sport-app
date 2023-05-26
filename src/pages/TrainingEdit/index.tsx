@@ -1,10 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import '../../scss/statistics.scss';
 import qs from 'qs';
-import { Column, SortByFn, useSortBy, useTable } from 'react-table';
-import Calendar from 'react-calendar';
+import { Column, useSortBy, useTable } from 'react-table';
 import styles from './statistics.module.scss';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
   SelectTrain,
@@ -36,7 +35,6 @@ import {
 } from '../../redux/slices/actionsSlice';
 import DataSkeleton from '../../components/DataSkeleton';
 import TrainService from '../../services/TrainService';
-import { useIsSmall } from '../../hooks/utils';
 
 export interface Cols {
   fio: string;
@@ -91,7 +89,6 @@ export const TrainingEdit: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const isEven = (idx: number) => idx % 2 === 0;
   const isOdd = (idx: number) => idx % 2 === 1;

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import '../../scss/statistics.scss';
 import qs from 'qs';
-import { Column, SortByFn, useSortBy, useTable } from 'react-table';
+import { Column, useSortBy, useTable } from 'react-table';
 import styles from './statistics.module.scss';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -21,7 +21,6 @@ import {
   SelectTeamStat,
   SelectTeamStatPlayers,
   StatParams,
-  clearStat,
   getTeamRangeStat,
   setDateEnd,
   setDateStart,
@@ -352,7 +351,7 @@ export const Statistics: React.FC = () => {
             )}
           </>
         )}
-        {/* {playersStats.map((obj) => {
+        {playersStats.map((obj) => {
           const newObj = { ...obj };
           for (var key in newObj) {
             if (newObj.hasOwnProperty(key)) {
@@ -372,7 +371,7 @@ export const Statistics: React.FC = () => {
             </>
           );
         })}
-        <ProgressCircle progress={50} /> */}
+        <ProgressCircle progress={50} />
       </div>
       <Modal isActive={isChangeTrain} setIsActive={setIsChangeTrain}>
         <div className={styles.changeModal}>

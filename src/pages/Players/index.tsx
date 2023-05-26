@@ -1,16 +1,16 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useAppDispatch } from '../../redux/store';
 import { useAppSelector } from '../../hooks/redux';
-import { fetchUsers } from '../../redux/slices/userSlice';
+import { SelectUsers, fetchUsers } from '../../redux/slices/userSlice';
 
 import styles from './players.module.scss';
 import AccordionPlayers from '../../components/AccardionPlayers';
-import { FaSearch } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 
 export const Players: FC = () => {
   const dispatch = useAppDispatch();
 
-  const { users } = useAppSelector((state) => state.usersReducer);
+  const users = useSelector(SelectUsers);
   React.useEffect(() => {
     dispatch(fetchUsers());
   }, []);
@@ -47,9 +47,10 @@ export const Players: FC = () => {
           onChange={(event) => setValue(event.target.value)}
         />
       </form>
-      {filtredPlayers.map((obj) => (
+      <AccordionPlayers players={filtredPlayers} />
+      {/* {filtredPlayers.map((obj) => (
         <AccordionPlayers key={obj.id_user} {...obj} />
-      ))}
+      ))} */}
     </div>
   );
 };

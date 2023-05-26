@@ -1,0 +1,24 @@
+@import '../../scss/vars';
+.accordion {
+  &__content_list {
+    align-items: center;
+    margin-bottom: 12px;
+    &_text {
+      width: 100%;
+    }
+  }
+  &__content_rez {
+    border-radius: 20px;
+    text-align: center;
+    background-color: #fff;
+    color: #78c6ff;
+    // border-radius: 20px;
+    font-size: calc((100vw - 480px) / (1280 - 480) * (30 - 15) + 15px);
+    padding: 6px 23px 6px 23px;
+    transition: all ease 0.2s;
+    &:hover {
+      box-shadow: 0px 0px 10px rgba(0, 161, 230, 0.3);
+    }
+    // box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+}

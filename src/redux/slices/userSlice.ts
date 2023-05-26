@@ -3,7 +3,7 @@ import { IUser } from '../../models/IUser';
 import {} from 'axios';
 import { Status } from './profileSlice';
 import $api from '../../http';
-import { AppDispatch } from '../store';
+import { AppDispatch, RootState } from '../store';
 import UserService from '../../services/UserService';
 
 // export const fetchUsers = async (dispatch: AppDispatch) => {
@@ -71,5 +71,6 @@ export const userSlice = createSlice({
     },
   },
 });
+export const SelectUsers = (state: RootState) => state.usersReducer.users;
 
 export default userSlice.reducer;

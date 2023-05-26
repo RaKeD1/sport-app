@@ -23,6 +23,15 @@
   }
 }
 .accordion {
+  &__header {
+    font-size: calc((100vw - 480px) / (1280 - 480) * (30 - 16) + 16px);
+    background: $button-clr;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 20px;
+    padding: 20px;
+  }
   &__item {
     font-size: 30px;
     margin-bottom: 20px;

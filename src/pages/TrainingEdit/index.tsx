@@ -35,6 +35,7 @@ import {
 } from '../../redux/slices/actionsSlice';
 import DataSkeleton from '../../components/DataSkeleton';
 import TrainService from '../../services/TrainService';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export interface Cols {
   fio: string;
@@ -263,6 +264,24 @@ export const TrainingEdit: React.FC = () => {
     );
   };
 
+  const actionVariants = {
+    hidden: {
+      opacity: 0,
+      y: 70,
+      transition: {
+        y: { stiffness: 1000 },
+      },
+    },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.7,
+        y: { stiffness: 1000, velocity: -100 },
+      },
+    },
+  };
+
   const playersStatsData = useMemo(
     () =>
       players.map((obj) => {
@@ -437,60 +456,67 @@ export const TrainingEdit: React.FC = () => {
               </table>
             )}
 
-            <div className={styles.actions}>
-              <h3 className={styles.actions__title}>Последние действия</h3>
-              {actionsStatus === Status.LOADING ? (
-                <LoadingSpinner />
-              ) : actionsStatus === Status.ERROR ? (
-                <div className={styles.train__error}>
-                  <span>😕</span>
-                  {actionsError ? actionsError : 'Произошла ошибка'}
-                </div>
-              ) : (
-                <div className={styles.actions__list}>
-                  {actions.length === 0 ? (
-                    <div className={styles.actions__list__empty}>Действий пока нет</div>
-                  ) : (
-                    actions
-                      .map((obj) => (
-                        <div className={styles.actions__item}>
-                          <div className={styles.actions__item__time}>
-                            {obj.time.split('').splice(0, 8).join('')}
-                          </div>
-                          <div
-                            className={classNames(styles.actions__item__status, {
-                              [styles.actions__item__status_win]: obj.score === 1,
-                              [styles.actions__item__status_loss]: obj.score === -1,
-                              [styles.actions__item__status_null]: obj.score === 0,
-                            })}></div>
-                          <div className={styles.actions__item__content}>
-                            <div className={styles.actions__item__header}>
-                              <div className={styles.actions__item__player}>{obj.fio}</div>
-                              <div className={styles.actions__item__actionName}>
-                                <span>{obj.name_action}</span>
-                              </div>
+            <AnimatePresence>
+              <div className={styles.actions}>
+                <h3 className={styles.actions__title}>Последние действия</h3>
+                {actionsStatus === Status.LOADING ? (
+                  <LoadingSpinner />
+                ) : actionsStatus === Status.ERROR ? (
+                  <div className={styles.train__error}>
+                    <span>😕</span>
+                    {actionsError ? actionsError : 'Произошла ошибка'}
+                  </div>
+                ) : (
+                  <motion.div transition={{ delayChildren: 0.5 }} className={styles.actions__list}>
+                    {actions.length === 0 ? (
+                      <div className={styles.actions__list__empty}>Действий пока нет</div>
+                    ) : (
+                      actions
+                        .map((obj) => (
+                          <motion.div
+                            variants={actionVariants}
+                            initial='hidden'
+                            animate='show'
+                            exit='hidden'
+                            className={styles.actions__item}>
+                            <div className={styles.actions__item__time}>
+                              {obj.time.split('').splice(0, 8).join('')}
                             </div>
-                            <div className={styles.actions__item__result}>
-                              Результат:<span>{obj.result}</span>
-                            </div>
-                            {obj.condition && (
-                              <div className={styles.actions__item__condition}>
-                                Условие:<span>{obj.condition}</span>
-                              </div>
-                            )}
                             <div
-                              className={styles.actions__item__delete}
-                              onClick={() => onDeleteAction(obj.id_action)}>
-                              Удалить
+                              className={classNames(styles.actions__item__status, {
+                                [styles.actions__item__status_win]: obj.score === 1,
+                                [styles.actions__item__status_loss]: obj.score === -1,
+                                [styles.actions__item__status_null]: obj.score === 0,
+                              })}></div>
+                            <div className={styles.actions__item__content}>
+                              <div className={styles.actions__item__header}>
+                                <div className={styles.actions__item__player}>{obj.fio}</div>
+                                <div className={styles.actions__item__actionName}>
+                                  <span>{obj.name_action}</span>
+                                </div>
+                              </div>
+                              <div className={styles.actions__item__result}>
+                                Результат:<span>{obj.result}</span>
+                              </div>
+                              {obj.condition && (
+                                <div className={styles.actions__item__condition}>
+                                  Условие:<span>{obj.condition}</span>
+                                </div>
+                              )}
+                              <div
+                                className={styles.actions__item__delete}
+                                onClick={() => onDeleteAction(obj.id_action)}>
+                                Удалить
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                      ))
-                      .reverse()
-                  )}
-                </div>
-              )}
-            </div>
+                          </motion.div>
+                        ))
+                        .reverse()
+                    )}
+                  </motion.div>
+                )}
+              </div>
+            </AnimatePresence>
           </>
         )}
       </div>

@@ -9,7 +9,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: $back-clr;
   color: #000;
-  overflow: hidden;
 }
 
 h2 {
@@ -58,9 +57,13 @@ button {
 #root {
 }
 .container {
-  width: calc(100vw - 100px);
+  width: calc(100vw - 250px);
   margin: 0 auto;
   max-width: 1400px;
+
+  @media (max-width: 1000px) {
+    width: calc(100vw - 100px);
+  }
 
   @media (max-width: 860px) {
     width: calc(100vw - 25px);

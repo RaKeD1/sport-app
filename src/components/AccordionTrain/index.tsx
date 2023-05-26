@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ContentPlaceholder } from './Placeholder';
 import './accordion.scss';
 
-const AccordionItem = ({ data, expanded, setExpanded, onClickAddAction }) => {
+const AccordionItem = ({ data, expanded, setExpanded, onClickAddAction, buttonEnabled }) => {
   const isOpen = data === expanded;
 
   return (
@@ -29,7 +29,11 @@ const AccordionItem = ({ data, expanded, setExpanded, onClickAddAction }) => {
               collapsed: { opacity: 0, height: 0 },
             }}
             transition={{ duration: 0.5, ease: [0.04, 0.62, 0.23, 0.98] }}>
-            <ContentPlaceholder data={data} onClickAddAction={onClickAddAction} />
+            <ContentPlaceholder
+              data={data}
+              buttonEnabled={buttonEnabled}
+              onClickAddAction={onClickAddAction}
+            />
           </motion.section>
         )}
       </AnimatePresence>
@@ -47,6 +51,7 @@ export const Accordion = (props) => {
       {props.playersStats.map((item) => (
         <AccordionItem
           data={item}
+          buttonEnabled={props.buttonEnabled}
           expanded={expanded}
           setExpanded={setExpanded}
           onClickAddAction={props.onClickAddAction}

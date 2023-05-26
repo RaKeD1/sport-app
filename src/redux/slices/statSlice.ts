@@ -28,7 +28,7 @@ export const getTeamRangeStat = createAsyncThunk<
   AxiosResponse<Players>,
   GetTeamRangeStatParams,
   { rejectValue: FetchError }
->('train/getTeamTrain', async (params, { rejectWithValue }) => {
+>('stat/getTeamTrain', async (params, { rejectWithValue }) => {
   try {
     const { account_id, team, date_start, date_end } = params;
     const response = await TrainService.getTeamRangeStat(account_id, team, date_start, date_end);
@@ -45,7 +45,7 @@ export interface Stat {
   date_start: string;
   date_end: string;
   team: string;
-  players: Players;
+  playersRangeStat: Players;
   status: Status;
   error: string | null;
 }
@@ -54,7 +54,7 @@ const initialState: Stat = {
   date_start: '',
   date_end: '',
   team: '',
-  players: [],
+  playersRangeStat: [],
   status: Status.LOADING,
   error: null,
 };
@@ -63,7 +63,7 @@ const statSlice = createSlice({
   name: 'Statistics',
   initialState,
   reducers: {
-    setTeam(state, action: PayloadAction<string>) {
+    setStatTeam(state, action: PayloadAction<string>) {
       state.team = action.payload;
     },
     setStatParams(state, action: PayloadAction<StatParams>) {
@@ -77,18 +77,21 @@ const statSlice = createSlice({
     setDateEnd(state, action: PayloadAction<string>) {
       state.date_end = action.payload;
     },
+    clearStat(state) {
+      state.playersRangeStat = initialState.playersRangeStat;
+    },
   },
   extraReducers: (builder) => {
     // Кейсы для получения тренировки
     builder.addCase(getTeamRangeStat.pending, (state) => {
-      console.log('LOADING');
+      console.log('getTeamRangeStat LOADING');
       state.status = Status.LOADING;
-      state.players = initialState.players;
+      state.playersRangeStat = initialState.playersRangeStat;
       state.error = initialState.error;
     });
     builder.addCase(getTeamRangeStat.fulfilled, (state, action) => {
-      state.players = action.payload.data;
-      console.log('players', state.players);
+      state.playersRangeStat = action.payload.data;
+      console.log('playersRangeStat in slice', state.playersRangeStat);
       state.status = Status.SUCCESS;
       state.error = initialState.error;
     });
@@ -96,16 +99,17 @@ const statSlice = createSlice({
       console.log('REJECTED');
       state.status = Status.ERROR;
       state.error = action.payload.message;
-      state.players = initialState.players;
+      state.playersRangeStat = initialState.playersRangeStat;
     });
   },
 });
 
 export const SelectTeamStatStatus = (state: RootState) => state.stat.status;
 export const SelectTeamStatError = (state: RootState) => state.stat.error;
-export const SelectTeamStatPlayers = (state: RootState) => state.stat.players;
+export const SelectTeamStatPlayers = (state: RootState) => state.stat.playersRangeStat;
 export const SelectTeamStatTeam = (state: RootState) => state.stat.team;
 export const SelectTeamStat = (state: RootState) => state.stat;
-export const { setTeam, setStatParams, setDateStart, setDateEnd } = statSlice.actions;
+export const { setStatTeam, setStatParams, setDateStart, setDateEnd, clearStat } =
+  statSlice.actions;
 
 export default statSlice.reducer;

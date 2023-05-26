@@ -72,7 +72,7 @@ const CreateTrain: FC = () => {
       team: team,
       date: formattedDate,
     });
-    navigate(`/statistics?${queryString}`);
+    navigate(`/training?${queryString}`);
   };
 
   return (

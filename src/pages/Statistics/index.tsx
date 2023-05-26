@@ -2,9 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import '../../scss/statistics.scss';
 import qs from 'qs';
 import { Column, SortByFn, useSortBy, useTable } from 'react-table';
-import Calendar from 'react-calendar';
 import styles from './statistics.module.scss';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../redux/store';
 import { Option } from '../../components/ActionModal';
@@ -22,12 +21,14 @@ import {
   SelectTeamStat,
   SelectTeamStatPlayers,
   StatParams,
+  clearStat,
   getTeamRangeStat,
   setDateEnd,
   setDateStart,
   setStatParams,
-  setTeam,
+  setStatTeam,
 } from '../../redux/slices/statSlice';
+import ProgressCircle from '../../components/ProgressCircle';
 
 export const columnNames = {
   fio: 'ФИО',
@@ -45,7 +46,7 @@ export interface OptionDate {
 }
 
 export const Statistics: React.FC = () => {
-  const playersStats = useSelector(SelectTeamStatPlayers);
+  const playersRangeStat = useSelector(SelectTeamStatPlayers);
   const { status, error, team, date_start, date_end } = useSelector(SelectTeamStat);
   const account_id = useSelector(SelectAccountID);
   const [isChangeTrain, setIsChangeTrain] = useState<boolean>(false);
@@ -54,30 +55,31 @@ export const Statistics: React.FC = () => {
   const [activeEndDate, setActiveEndDate] = useState(null);
   const [isValidModal, setIsValidModal] = useState(false);
   const [activeTeam, setActiveTeam] = useState<Option>(null);
-  const [dates, setDates] = useState<string[]>([]);
+  const [playersStats, setPlayersStats] = useState(playersRangeStat);
   const [width, setWidth] = React.useState<number>(window.innerWidth);
   const isSearch = React.useRef(false);
   const isMounted = useRef(false);
 
-  console.log('playersStats', playersStats);
+  console.log('playersRangeStat in statistics', playersRangeStat);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const isEven = (idx: number) => idx % 2 === 0;
   const isOdd = (idx: number) => idx % 2 === 1;
-  const breakpoint = 860;
+
+  const [matches, setMatches] = useState(window.matchMedia('(min-width: 860px)').matches);
 
   useEffect(() => {
-    const handleResizeWindow = () => setWidth(window.innerWidth);
-    window.addEventListener('resize', handleResizeWindow);
-    return () => {
-      window.removeEventListener('resize', handleResizeWindow);
-    };
+    window
+      .matchMedia('(min-width: 860px)')
+      .addEventListener('change', (e) => setMatches(e.matches));
   }, []);
 
   // Если был первый рендер, то проверяем URL-параметры и сохраняем в редуксе
   useEffect(() => {
+    console.log('useEffect [] /statistics');
     if (window.location.search) {
       const params = qs.parse(window.location.search.substring(1)) as unknown as StatParams;
 
@@ -94,6 +96,7 @@ export const Statistics: React.FC = () => {
 
   // Если изменили параметры и был первый рендер
   useEffect(() => {
+    console.log('useEffect [team, date_start, date_end] /statistics');
     if (isMounted.current && team) {
       const queryString = qs.stringify({
         team: team,
@@ -109,7 +112,7 @@ export const Statistics: React.FC = () => {
   // Если был первый рендер, то запрашиваем тренировку
   useEffect(() => {
     window.scrollTo(0, 0);
-    console.log('useEffect [team, date], isSearch.current=', isSearch.current);
+    console.log('useEffect [team, date_start, date_end], isSearch.current=', isSearch.current);
 
     if (isSearch.current && isMounted.current) {
       dispatch(
@@ -125,6 +128,7 @@ export const Statistics: React.FC = () => {
   }, [team, date_start, date_end]);
 
   useEffect(() => {
+    console.log('useEffect [isChangeTrain] /statistics');
     if (isChangeTrain) {
       setActiveStartDate(null);
       setActiveEndDate(null);
@@ -132,6 +136,7 @@ export const Statistics: React.FC = () => {
   }, [isChangeTrain]);
 
   useEffect(() => {
+    console.log('useEffect [activeStartDate, activeTeam] /statistics');
     if (activeStartDate && activeTeam) {
       setIsValidModal(true);
     } else {
@@ -139,20 +144,39 @@ export const Statistics: React.FC = () => {
     }
   }, [activeStartDate, activeTeam]);
 
+  useEffect(() => {
+    console.log('useEffect [playersRangeStat] /statistics');
+    console.log('playersRangeStat in statistics useEffect', playersRangeStat);
+    setPlayersStats(playersRangeStat);
+  }, [playersRangeStat]);
+
+  const dateConvertToIso = (date) => {
+    console.log('in dateCionvert');
+    let z = date.getTimezoneOffset() * 60 * 1000;
+    let tLocal: any = date - z;
+    tLocal = new Date(tLocal);
+    let iso = tLocal.toISOString();
+    iso = iso.split('.')[0];
+    iso = iso.replace('T', ' ').split(' ')[0];
+    return iso;
+  };
+
   const onChangeDate = async (value) => {
+    console.log('onChangeDate /statistics');
     console.log('value', value);
     setActiveDateRange(value);
-    setActiveStartDate(value[0].toISOString());
-    setActiveEndDate(value[1].toISOString());
+    setActiveStartDate(dateConvertToIso(value[0]));
+    setActiveEndDate(dateConvertToIso(value[1]));
     console.log('Date Range', activeDateRange);
     console.log('Start Date', activeStartDate);
     console.log('End Date', activeEndDate);
   };
 
   const changeTrain = () => {
+    console.log('changeTrain /statistics');
     setIsChangeTrain(false);
     console.log('team:', team);
-    dispatch(setTeam(activeTeam.value));
+    dispatch(setStatTeam(activeTeam.value));
     dispatch(setDateStart(activeStartDate));
     dispatch(setDateEnd(activeEndDate));
     dispatch(
@@ -197,7 +221,7 @@ export const Statistics: React.FC = () => {
             };
           })
         : [],
-    [playersStats],
+    [playersStats, location],
   );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable<Cols>(
@@ -219,8 +243,8 @@ export const Statistics: React.FC = () => {
 
           {date_start || date_end ? (
             <>
-              <span>{date_start.slice(0, 10).split('-').reverse().join('.')}</span> -
               <span>
+                {date_start.slice(0, 10).split('-').reverse().join('.')} —{' '}
                 {date_end
                   ? date_end.slice(0, 10).split('-').reverse().join('.')
                   : new Date().toISOString().slice(0, 10).split('-').reverse().join('.')}
@@ -258,9 +282,9 @@ export const Statistics: React.FC = () => {
           </>
         ) : (
           <>
-            {width < breakpoint ? (
+            {!matches ? (
               <>
-                {/* <Accordion playersStats={playersStats} onClickAddAction={onClickAddAction} /> */}
+                <Accordion playersStats={playersStats} buttonEnabled={false} />
               </>
             ) : (
               <table
@@ -328,6 +352,27 @@ export const Statistics: React.FC = () => {
             )}
           </>
         )}
+        {/* {playersStats.map((obj) => {
+          const newObj = { ...obj };
+          for (var key in newObj) {
+            if (newObj.hasOwnProperty(key)) {
+              if (key !== 'fio' && key !== 'id_train') {
+                console.log(typeof newObj[key]);
+                newObj[key] = Number(Number(newObj[key] * 100).toFixed());
+              }
+            }
+          }
+          return (
+            <>
+              {Object.keys(newObj).map((key, index) => {
+                if (key !== 'fio' && key !== 'id_train') {
+                  return <ProgressCircle progress={newObj[key]} key={index} />;
+                }
+              })}
+            </>
+          );
+        })}
+        <ProgressCircle progress={50} /> */}
       </div>
       <Modal isActive={isChangeTrain} setIsActive={setIsChangeTrain}>
         <div className={styles.changeModal}>

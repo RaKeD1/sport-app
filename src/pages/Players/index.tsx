@@ -7,6 +7,28 @@ import styles from './players.module.scss';
 import AccordionPlayers from '../../components/AccardionPlayers';
 import { useSelector } from 'react-redux';
 
+export interface PlayersInf {
+  email: string;
+  id_account: string;
+  login: string;
+  name: string;
+  surname: string;
+  patronimyc: string;
+  phone: string;
+  player: string;
+}
+
+export const columnUser = {
+  email: 'Почта',
+  id_account: 'ID_ACC',
+  login: 'Логин',
+  name: 'Имя',
+  surname: 'Фамилия',
+  patronimyc: 'Отчество',
+  phone: 'Телефон',
+  player: 'ФИО',
+};
+
 export const Players: FC = () => {
   const dispatch = useAppDispatch();
 

@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import '../../scss/statistics.scss';
 import qs from 'qs';
 import { Column, useSortBy, useTable } from 'react-table';
-import styles from './statistics.module.scss';
+import styles from './trainingEdit.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
@@ -29,6 +29,7 @@ import Accordion from '../../components/AccordionTrain';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import {
   SelectTrainActions,
+  SelectTrainActionsCount,
   SelectTrainActionsError,
   SelectTrainActionsStatus,
   getTrainActions,
@@ -36,6 +37,7 @@ import {
 import DataSkeleton from '../../components/DataSkeleton';
 import TrainService from '../../services/TrainService';
 import { AnimatePresence, motion } from 'framer-motion';
+import Pagination from '../../components/Pagination';
 
 export interface Cols {
   fio: string;
@@ -59,9 +61,12 @@ export const columnNames = {
   id_train: 'ID',
 };
 
+export const limitVariants = [5, 10, 15];
+
 export const TrainingEdit: React.FC = () => {
   const players = useSelector(SelectTrainPlayers);
   const actions = useSelector(SelectTrainActions);
+  const count = useSelector(SelectTrainActionsCount);
   const actionsStatus = useSelector(SelectTrainActionsStatus);
   const actionsError = useSelector(SelectTrainActionsError);
   const account_id = useSelector(SelectAccountID);
@@ -75,6 +80,8 @@ export const TrainingEdit: React.FC = () => {
   const [isValidModal, setIsValidModal] = useState(false);
   const [activeTeam, setActiveTeam] = useState<Option>(null);
   const [dates, setDates] = useState<string[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(5);
   const isSearch = React.useRef(false);
   const isMounted = useRef(false);
 
@@ -141,6 +148,8 @@ export const TrainingEdit: React.FC = () => {
         getTrainActions({
           team,
           date,
+          limit,
+          page,
         }),
       );
     }
@@ -197,6 +206,8 @@ export const TrainingEdit: React.FC = () => {
       getTrainActions({
         team,
         date,
+        limit,
+        page,
       }),
     );
   }, [players]);
@@ -241,6 +252,8 @@ export const TrainingEdit: React.FC = () => {
       getTrainActions({
         team: activeTeam.value,
         date: formattedDate,
+        limit,
+        page,
       }),
     );
   };
@@ -260,9 +273,26 @@ export const TrainingEdit: React.FC = () => {
       getTrainActions({
         team: team,
         date: date,
+        limit,
+        page,
       }),
     );
   };
+
+  const handlePageClick = (selected: number) => {
+    setPage(selected);
+  };
+
+  useEffect(() => {
+    dispatch(
+      getTrainActions({
+        team: team,
+        date: date,
+        limit,
+        page,
+      }),
+    );
+  }, [page, limit]);
 
   const actionVariants = {
     hidden: {
@@ -471,14 +501,24 @@ export const TrainingEdit: React.FC = () => {
                     {actions.length === 0 ? (
                       <div className={styles.actions__list__empty}>Действий пока нет</div>
                     ) : (
-                      actions
-                        .map((obj) => (
-                          <motion.div
-                            variants={actionVariants}
-                            initial='hidden'
-                            animate='show'
-                            exit='hidden'
-                            className={styles.actions__item}>
+                      <>
+                        <div className={styles.actions__list__showNum}>
+                          <p>Показывать на странице:</p>
+                          {limitVariants.map((item) => (
+                            <span
+                              className={classNames(styles.actions__list__showNum__item, {
+                                [styles.actions__list__showNum__item_active]: item === limit,
+                              })}
+                              onClick={() => {
+                                setPage(1);
+                                setLimit(item);
+                              }}>
+                              {item}
+                            </span>
+                          ))}
+                        </div>
+                        {actions.map((obj) => (
+                          <motion.div className={styles.actions__item}>
                             <div className={styles.actions__item__time}>
                               {obj.time.split('').splice(0, 8).join('')}
                             </div>
@@ -510,10 +550,27 @@ export const TrainingEdit: React.FC = () => {
                               </div>
                             </div>
                           </motion.div>
-                        ))
-                        .reverse()
+                        ))}
+                      </>
                     )}
                   </motion.div>
+                )}
+                {limit !== count && limit < count && (
+                  <>
+                    <div
+                      className={styles.actions__showAll}
+                      onClick={() => {
+                        setLimit(count);
+                        setPage(1);
+                      }}>
+                      Показать все
+                    </div>{' '}
+                    <Pagination
+                      page={page}
+                      pageCount={Math.ceil(count / limit)}
+                      handlePageClick={handlePageClick}
+                    />
+                  </>
                 )}
               </div>
             </AnimatePresence>

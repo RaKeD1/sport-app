@@ -4,6 +4,7 @@ import { AxiosResponse } from 'axios';
 import { Status } from './profileSlice';
 import { IAction } from '../../models/IAction';
 import ActionService from '../../services/ActionService';
+import { IActionsPage } from '../../models/IActionsPage';
 
 type FetchError = {
   message: string;
@@ -12,18 +13,20 @@ type FetchError = {
 export type GetActionsParams = {
   date: string;
   team: string;
+  limit: number;
+  page: number;
 };
 
-type Actions = IAction[];
+type Actions = IActionsPage;
 
 export const getTrainActions = createAsyncThunk<
   AxiosResponse<Actions>,
   GetActionsParams,
   { rejectValue: FetchError }
->('train/getTrainActions', async (params, { rejectWithValue }) => {
+>('actions/getTrainActions', async (params, { rejectWithValue }) => {
   try {
-    const { team, date } = params;
-    const response = await ActionService.getTrainActions(team, date);
+    const { team, date, limit, page } = params;
+    const response = await ActionService.getTrainActions(team, date, limit, page);
     return response;
   } catch (error) {
     if (!error.response) {
@@ -40,7 +43,10 @@ export interface TrainActions {
 }
 
 const initialState: TrainActions = {
-  data: [],
+  data: {
+    count: 0,
+    actions: [],
+  },
   status: Status.LOADING,
   error: null,
 };
@@ -72,7 +78,8 @@ const actionsSlice = createSlice({
 
 export const SelectTrainActionsStatus = (state: RootState) => state.actions.status;
 export const SelectTrainActionsError = (state: RootState) => state.actions.error;
-export const SelectTrainActions = (state: RootState) => state.actions.data;
+export const SelectTrainActions = (state: RootState) => state.actions.data.actions;
+export const SelectTrainActionsCount = (state: RootState) => state.actions.data.count;
 export const {} = actionsSlice.actions;
 
 export default actionsSlice.reducer;

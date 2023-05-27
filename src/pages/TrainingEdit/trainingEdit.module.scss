@@ -251,6 +251,24 @@
         margin-right: 10px;
       }
     }
+
+    &__showNum {
+      display: flex;
+      justify-content: right;
+
+      &__item {
+        margin-left: 10px;
+        text-decoration: underline;
+        color: $button-clr;
+        cursor: pointer;
+
+        &_active {
+          text-decoration: none;
+          color: #000;
+          pointer-events: none;
+        }
+      }
+    }
   }
 
   &__item {
@@ -359,6 +377,14 @@
         }
       }
     }
+  }
+
+  &__showAll {
+    display: block;
+    text-align: center;
+    margin: auto;
+    margin-top: 10px;
+    color: $button-clr;
   }
 }
 

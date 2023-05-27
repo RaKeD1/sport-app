@@ -81,7 +81,6 @@ function App() {
         <Route path='/training' element={<TrainingEdit />}></Route>
         <Route path='/statistics' element={<Statistics />}></Route>
         <Route path='/players' element={<Players />}></Route>
-        <Route path='/updateuser' element={<UpdateUser />}></Route>
         <Route path='*' element={<NotFound />}></Route>
       </Routes>
     </div>

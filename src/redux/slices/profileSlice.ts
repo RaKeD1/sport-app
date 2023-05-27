@@ -147,6 +147,7 @@ export const updateUser = createAsyncThunk<
   try {
     const { id_user, userData } = params;
     const response = await UserService.updateUser(id_user, userData);
+    console.log('response', response);
     return response;
   } catch (error) {
     if (!error.response) {
@@ -183,6 +184,7 @@ const initialState: Profile = {
     team: '',
     role: '',
     login: '',
+    img: '',
   },
   status: Status.SUCCESS,
   isAuth: localStorage.isAuth ? localAuth(localStorage.isAuth) : false,
@@ -295,13 +297,7 @@ const profileSlice = createSlice({
     });
     builder.addCase(fetchUser.fulfilled, (state, action) => {
       state.status = Status.SUCCESS;
-      state.user.name = action.payload.data.name;
-      state.user.surname = action.payload.data.surname;
-      state.user.patronimyc = action.payload.data.patronimyc;
-      state.user.phone = action.payload.data.phone;
-      state.user.email = action.payload.data.email;
-      state.user.team = action.payload.data.team;
-      state.user.login = action.payload.data.login;
+      state.user = action.payload.data;
       console.log('login', action.payload.data.login);
     });
     builder.addCase(fetchUser.rejected, (state) => {

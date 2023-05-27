@@ -3,7 +3,7 @@ import styles from './ProfileInfo.module.scss';
 import { SERVER_URL } from '../../http';
 import { columnUser } from '../../pages/Players';
 
-const ProfileInfo = ({ data }) => {
+const ProfileInfo = ({ data, onClickEdit }) => {
   console.log(data);
   return (
     <section className={styles.root}>
@@ -27,7 +27,9 @@ const ProfileInfo = ({ data }) => {
               <p className={styles.root__info__text}>{String(item[1])}</p>
             </div>
           ))}
-        <button className={styles.root__editBtn}>Редактировать</button>
+        <button className={styles.root__editBtn} onClick={() => onClickEdit(true)}>
+          Редактировать
+        </button>
       </div>
     </section>
   );

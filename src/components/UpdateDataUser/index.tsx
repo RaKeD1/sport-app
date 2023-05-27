@@ -4,7 +4,7 @@ import { SelectUser, setUpdateUserStatus, updateUser } from '../../redux/slices/
 import { useSelector } from 'react-redux';
 import styles from './UpdateDataUser.module.scss';
 
-const UpdateUser: FC = () => {
+const UpdateUser = ({ setIsActive }) => {
   const dispatch = useAppDispatch();
   const { phone, email, name, surname, login, patronimyc, id_user } = useAppSelector(SelectUser);
   const updateUserStatus = useSelector(setUpdateUserStatus);
@@ -14,15 +14,18 @@ const UpdateUser: FC = () => {
   const [emailState, setEmailState] = useState<string>(email);
   const [phoneState, setPhoneState] = useState<string>(phone);
   const handleUpdateUser = () => {
-    const updatedUserData = {
-      name: nameState,
-      surname: surnameState,
-      patronimyc: patronimycState,
-      email: emailState,
-      phone: phoneState,
-      login: login,
-    };
-    dispatch(updateUser({ id_user: id_user, userData: updatedUserData }));
+    if (window.confirm('Обновить данные?')) {
+      const updatedUserData = {
+        name: nameState,
+        surname: surnameState,
+        patronimyc: patronimycState,
+        email: emailState,
+        phone: phoneState,
+        login: login,
+      };
+      dispatch(updateUser({ id_user: id_user, userData: updatedUserData }));
+      setIsActive(false);
+    }
   };
 
   return (

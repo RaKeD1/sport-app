@@ -9,4 +9,5 @@ export interface IUser {
   team: string;
   login: string;
   role: string;
+  img: string;
 }

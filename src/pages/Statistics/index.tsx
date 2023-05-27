@@ -371,7 +371,7 @@ export const Statistics: React.FC = () => {
             </>
           );
         })}
-        <ProgressCircle progress={50} />
+        <ProgressCircle progress={10} />
       </div>
       <Modal isActive={isChangeTrain} setIsActive={setIsChangeTrain}>
         <div className={styles.changeModal}>

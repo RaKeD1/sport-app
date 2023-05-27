@@ -27,6 +27,7 @@ export const columnUser = {
   patronimyc: 'Отчество',
   phone: 'Телефон',
   player: 'ФИО',
+  team: 'Группа',
 };
 
 export const Players: FC = () => {

@@ -10,8 +10,29 @@ const ProgressCircle = ({ progress }) => {
     animate: { strokeDashoffset: offset },
   };
 
+  const getColor = () => {
+    if (progress < 30) {
+      return '#ff6464'; // Красный цвет
+    } else if (progress < 70) {
+      return '#ffd95d'; // Желтый цвет
+    } else {
+      return '#8ff160'; // Зеленый цвет
+    }
+  };
+
   const circleStyle = {
-    stroke: '#78c6ff',
+    stroke: getColor(),
+    strokeWidth: 10,
+    fill: 'transparent',
+    strokeLinecap: useMotionValue('round'),
+    strokeDasharray: circumference,
+    transformOrigin: '50% 50%',
+    transform: 'rotate(-90deg)',
+    zIndex: 999,
+  };
+
+  const remainingCircleStyle = {
+    stroke: '#e8e8e8',
     strokeWidth: 10,
     fill: 'transparent',
     strokeLinecap: useMotionValue('round'),
@@ -57,6 +78,7 @@ const ProgressCircle = ({ progress }) => {
 
   return (
     <svg width='100' height='100'>
+      <motion.circle cx='50' cy='50' r='45' style={remainingCircleStyle} />
       <motion.circle
         cx='50'
         cy='50'

@@ -203,6 +203,9 @@ const profileSlice = createSlice({
     setUpdateUserStatus(state) {
       state.updateUserStatus = Status.ERROR;
     },
+    setImg(state, action: PayloadAction<string>) {
+      state.user.img = action.payload;
+    },
   },
   extraReducers: (builder) => {
     // Кейсы для логина
@@ -307,7 +310,7 @@ const profileSlice = createSlice({
   },
 });
 
-export const { setUser, setError, setUpdateUserStatus } = profileSlice.actions;
+export const { setUser, setError, setUpdateUserStatus, setImg } = profileSlice.actions;
 export const SelectProfile = (state: RootState) => state.profile;
 export const SelectUser = (state: RootState) => state.profile.user;
 export const SelectAccountID = (state: RootState) => state.profile.user.id_account;

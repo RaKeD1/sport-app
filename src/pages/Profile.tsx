@@ -7,28 +7,37 @@ import {
   logoutAccount,
 } from '../redux/slices/profileSlice';
 import { useAppDispatch } from '../redux/store';
-import { Link } from 'react-router-dom';
 import { useAppSelector } from '../hooks/redux';
 import UpdateUser from '../components/UpdateDataUser';
 import ProfileInfo from '../components/ProfileInfo';
 import Modal from '../components/Modal';
+import UserStatCircles from '../components/UserStatCircles';
+import UploadPhoto from '../components/UploadPhoto';
 
 export const Profile: FC = () => {
-  const { id_user, id_account, name, surname, patronimyc, email, phone } =
-    useAppSelector(SelectUser);
   const user = useAppSelector(SelectUser);
   const dispatch = useAppDispatch();
-  const isMounted = useRef(false);
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [changePhotoModal, setChangePhotoModal] = useState<boolean>(false);
 
   return (
     <>
-      <ProfileInfo data={user} onClickEdit={setShowModal} />
+      <div className='tiles'>
+        <ProfileInfo
+          data={user}
+          onClickEdit={setShowModal}
+          onClickEditPhoto={setChangePhotoModal}
+        />
+        <UserStatCircles user={user.id_account} />
+      </div>
       <div className='buttons__user'>
         <button onClick={() => dispatch(logoutAccount())}>Выйти</button>
       </div>
       <Modal isActive={showModal} setIsActive={setShowModal}>
         <UpdateUser setIsActive={setShowModal} />
+      </Modal>
+      <Modal isActive={changePhotoModal} setIsActive={setChangePhotoModal}>
+        <UploadPhoto onSend={setChangePhotoModal} />
       </Modal>
     </>
   );

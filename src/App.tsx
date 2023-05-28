@@ -17,6 +17,7 @@ import NotFound from './pages/NotFound/NotFound';
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
 import Statistics from './pages/Statistics';
 import Humburger from './components/Humburger';
+import Hamburger from './components/Humburger';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -73,20 +74,23 @@ function App() {
   }
 
   return (
-    <div className='container'>
+    <>
       <Header />
-      <div className='content'>
-        <Routes>
-          <Route path='/' element={<Profile />}></Route>
-          <Route path='/profile' element={<Profile />}></Route>
-          <Route path='/createtraining' element={<CreateTrain />}></Route>
-          <Route path='/training' element={<TrainingEdit />}></Route>
-          <Route path='/statistics' element={<Statistics />}></Route>
-          <Route path='/players' element={<Players />}></Route>
-          <Route path='*' element={<NotFound />}></Route>
-        </Routes>
+      <div className='container'>
+        <Hamburger />
+        <div className='content'>
+          <Routes>
+            <Route path='/' element={<Profile />}></Route>
+            <Route path='/profile' element={<Profile />}></Route>
+            <Route path='/createtraining' element={<CreateTrain />}></Route>
+            <Route path='/training' element={<TrainingEdit />}></Route>
+            <Route path='/statistics' element={<Statistics />}></Route>
+            <Route path='/players' element={<Players />}></Route>
+            <Route path='*' element={<NotFound />}></Route>
+          </Routes>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 export default App;

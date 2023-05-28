@@ -74,6 +74,11 @@ export const Players = () => {
   useEffect(() => {
     setIsLoad(false);
   }, []);
+  const colors = ['#FF008C', '#D309E1', '#9C1AFF', '#7700FF', '#4400FF'];
+
+  const randomIndex = Math.floor(Math.random() * colors.length);
+  const randomColor = colors[randomIndex];
+  const style = { backgroundColor: `${randomColor}` };
   return (
     <>
       <div className={styles.main}>
@@ -91,32 +96,39 @@ export const Players = () => {
           variants={container}
           initial='hidden'
           animate='visible'>
-          {filtredPlayers.map((player) => (
-            <motion.li key={player.id_user} className={styles.item} variants={item}>
-              <div className={styles.item__title}>{player.player}</div>
-              <div className={styles.item__box}>
-                {Object.entries(player)
-                  .filter(
-                    (arr) =>
-                      arr[0] === 'email' ||
-                      arr[0] === 'login' ||
-                      arr[0] === 'name' ||
-                      arr[0] === 'surname' ||
-                      arr[0] === 'patronimyc' ||
-                      arr[0] === 'phone',
-                  )
-                  .map((arr) => {
-                    const num = arr[1].toString();
-                    return (
-                      <div className={styles.item__text}>
-                        <p className={styles.item__text_title}>{columnUser[arr[0]]}:</p>
-                        <p className={styles.item__text_text}>{num}</p>
-                      </div>
-                    );
-                  })}
-              </div>
-            </motion.li>
-          ))}
+          {filtredPlayers.map((player) => {
+            const randomIndex = Math.floor(Math.random() * colors.length);
+            const randomColor = colors[randomIndex];
+            const style = { backgroundColor: randomColor };
+            return (
+              <motion.li key={player.id_user} className={styles.item} variants={item}>
+                <div style={style} className={styles.item__title}>
+                  {player.player}
+                </div>
+                <div className={styles.item__box}>
+                  {Object.entries(player)
+                    .filter(
+                      (arr) =>
+                        arr[0] === 'email' ||
+                        arr[0] === 'login' ||
+                        arr[0] === 'name' ||
+                        arr[0] === 'surname' ||
+                        arr[0] === 'patronimyc' ||
+                        arr[0] === 'phone',
+                    )
+                    .map((arr) => {
+                      const num = arr[1].toString();
+                      return (
+                        <div className={styles.item__text}>
+                          <p className={styles.item__text_title}>{columnUser[arr[0]]}:</p>
+                          <p className={styles.item__text_text}>{num}</p>
+                        </div>
+                      );
+                    })}
+                </div>
+              </motion.li>
+            );
+          })}
         </motion.ul>
       </div>
     </>

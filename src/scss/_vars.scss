@@ -10,3 +10,10 @@ $bx-sh: 4px 4px 10px rgba(255, 255, 255, 0.1);
 $mh-auto: 0 auto;
 $pulse-vis: rgba(61, 155, 255, 0.3);
 $pulse-invis: rgba(36, 102, 255, 0);
+
+//$variable1 = Максимальное значение шрифта, $variable2 = минимальное значение шрифта
+@mixin dynamicFontSize($variable1, $variable2) {
+  font-size: calc(
+    (100vw - 480px) / (1280 - 480) * (#{$variable1} - #{$variable2}) + #{$variable2}px
+  );
+}

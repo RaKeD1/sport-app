@@ -16,6 +16,7 @@ import UpdateUser from './components/UpdateDataUser';
 import NotFound from './pages/NotFound/NotFound';
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
 import Statistics from './pages/Statistics';
+import Humburger from './components/Humburger';
 
 function App() {
   const dispatch = useAppDispatch();

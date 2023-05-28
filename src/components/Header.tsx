@@ -1,7 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
-
 import logo from '../assets/img/ball.svg';
 import { FaUserAlt } from 'react-icons/fa';
 
@@ -32,7 +31,7 @@ const Header: React.FC = () => {
   ];
   return (
     <div className='header'>
-      <nav>
+      <nav className='container'>
         <ul className='header__nav'>
           <div className='header__logo'>
             <img src={logo} alt='logo' width='44px' />
@@ -41,13 +40,6 @@ const Header: React.FC = () => {
               <br /> Ball
             </div>
           </div>
-          {pages.map((page) => (
-            <li key={page.path}>
-              <Link to={page.path} className={location.pathname === page.path ? 'activePage' : ''}>
-                {page.label} {page.fa}
-              </Link>
-            </li>
-          ))}
         </ul>
       </nav>
     </div>

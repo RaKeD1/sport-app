@@ -2,11 +2,8 @@
 @import './libs/normalize';
 
 .header {
-  margin-top: 30px;
   background-color: #fff;
   width: 100%;
-  border-radius: 20px;
-
   &__button,
   &__nav {
     background-color: #fff;
@@ -102,16 +99,7 @@
     color: $button-clr;
   }
 }
-@media (min-width: 500px) {
-  .header {
-    padding: 5px 30px;
-  }
-}
-@media (min-width: 1000px) {
-  .header {
-    padding: 5px 50px;
-  }
-}
+
 .track {
   grid-column-gap: 10px;
   grid-row-gap: 10px;

@@ -351,27 +351,6 @@ export const Statistics: React.FC = () => {
             )}
           </>
         )}
-        {playersStats.map((obj) => {
-          const newObj = { ...obj };
-          for (var key in newObj) {
-            if (newObj.hasOwnProperty(key)) {
-              if (key !== 'fio' && key !== 'id_train') {
-                console.log(typeof newObj[key]);
-                newObj[key] = Number(Number(newObj[key] * 100).toFixed());
-              }
-            }
-          }
-          return (
-            <>
-              {Object.keys(newObj).map((key, index) => {
-                if (key !== 'fio' && key !== 'id_train') {
-                  return <ProgressCircle progress={newObj[key]} key={index} />;
-                }
-              })}
-            </>
-          );
-        })}
-        <ProgressCircle progress={10} />
       </div>
       <Modal isActive={isChangeTrain} setIsActive={setIsChangeTrain}>
         <div className={styles.changeModal}>

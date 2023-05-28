@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion, useAnimation, useMotionValue } from 'framer-motion';
 
 const ProgressCircle = ({ progress }) => {
-  const circumference = 2 * Math.PI * 45;
+  const circumference = 2 * Math.PI * 35;
   const offset = ((100 - progress) / 100) * circumference;
 
   const circleVariants = {
@@ -78,11 +78,11 @@ const ProgressCircle = ({ progress }) => {
 
   return (
     <svg width='100' height='100'>
-      <motion.circle cx='50' cy='50' r='45' style={remainingCircleStyle} />
+      <motion.circle cx='50' cy='50' r='35' style={remainingCircleStyle} />
       <motion.circle
         cx='50'
         cy='50'
-        r='45'
+        r='35'
         style={circleStyle}
         variants={circleVariants}
         transition={{ duration: 1.5 }}

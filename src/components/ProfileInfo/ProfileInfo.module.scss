@@ -1,8 +1,10 @@
+@import './../../scss/vars';
+
 .root {
   width: 300px;
   background: #fff;
   border-radius: 25px;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+  box-shadow: $tile-shadow;
 
   &__header {
     padding: 15px;
@@ -13,14 +15,54 @@
     justify-content: center;
     align-items: center;
 
+    &__fio {
+      text-align: center;
+    }
+
     &__img {
       width: 130px; /* Задаем размеры контейнера для изображения */
       height: 130px;
+      position: relative;
+      cursor: pointer;
+
       img {
         width: 100%; /* Растягиваем изображение на всю ширину контейнера */
         height: 100%; /* Автоматически вычисляем высоту, чтобы сохранить пропорции */
         border-radius: 50%; /* Применяем радиус границы к изображению */
         object-fit: cover; /* Растягиваем изображение, чтобы оно полностью заполнило круг */
+
+        &:hover {
+          transition: 0.3s;
+          filter: brightness(80%);
+        }
+      }
+
+      &__editIcon {
+        position: absolute;
+        opacity: 0;
+        bottom: 10px;
+        right: 10px;
+        background: #fff;
+        border-radius: 50%;
+        font-size: 20px;
+        padding: 3px;
+        transition: 0.3s;
+      }
+
+      &__editMenu {
+        background: #fff;
+        padding: 8px 0;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+
+        &__item {
+          padding: 10px;
+          transition: 0.5s;
+
+          &:hover {
+            background: #e0e0e0;
+          }
+        }
       }
     }
 
@@ -55,5 +97,10 @@
     font-size: 15px;
     padding-top: 7px;
     padding-bottom: 7px;
+
+    &:hover {
+      color: #3389c7;
+      border: 1px solid #3389c7;
+    }
   }
 }

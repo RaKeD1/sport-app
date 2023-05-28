@@ -24,9 +24,6 @@ export const Profile: FC = () => {
   return (
     <>
       <ProfileInfo data={user} onClickEdit={setShowModal} />
-      <div className='buttons__user'>
-        <button onClick={() => dispatch(logoutAccount())}>Выйти</button>
-      </div>
       <Modal isActive={showModal} setIsActive={setShowModal}>
         <UpdateUser setIsActive={setShowModal} />
       </Modal>

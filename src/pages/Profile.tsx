@@ -1,11 +1,6 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import '../scss/profile.scss';
-import {
-  FetchUserParams,
-  SelectUser,
-  fetchUser,
-  logoutAccount,
-} from '../redux/slices/profileSlice';
+import { SelectUser, logoutAccount } from '../redux/slices/profileSlice';
 import { useAppDispatch } from '../redux/store';
 import { useAppSelector } from '../hooks/redux';
 import UpdateUser from '../components/UpdateDataUser';

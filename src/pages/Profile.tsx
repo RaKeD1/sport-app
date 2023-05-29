@@ -25,9 +25,6 @@ export const Profile: FC = () => {
         />
         <UserStatCircles user={user.id_account} />
       </div>
-      <div className='buttons__user'>
-        <button onClick={() => dispatch(logoutAccount())}>Выйти</button>
-      </div>
       <Modal isActive={showModal} setIsActive={setShowModal}>
         <UpdateUser setIsActive={setShowModal} />
       </Modal>

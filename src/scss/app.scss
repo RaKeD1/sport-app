@@ -56,6 +56,12 @@ button {
 }
 #root {
 }
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
 .container {
   width: calc(100vw - 250px);
   margin: 0 auto;

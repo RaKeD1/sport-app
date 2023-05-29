@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styles from './UploadPhoto.module.scss';
 import DropzoneComponent from '../DropzoneComponent';
 import { useSelector } from 'react-redux';
-import { SelectAccountID, SelectUser, setImg } from '../../redux/slices/profileSlice';
+import { SelectUser, setImg } from '../../redux/slices/profileSlice';
 import UserService from '../../services/UserService';
 import { useAppDispatch } from '../../hooks/redux';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -23,7 +23,9 @@ const UploadPhoto = ({ onSend }) => {
         dispatch(setImg(res.data));
       })
       .catch((err) => {
-        setError(err.response.data.message ? err.response.data.message : 'Произошла ошибка');
+        setError(
+          err.response.data.message ? err.response.data.message : 'Не удалось отправить фото',
+        );
       });
   };
 
@@ -38,7 +40,7 @@ const UploadPhoto = ({ onSend }) => {
 
   return (
     <div className={styles.root}>
-      <h2 className={styles.root__title}> Загрузка фото</h2>
+      <h2 className={styles.root__title}>Загрузка фото</h2>
       <AnimatePresence>
         {error && (
           <motion.div

@@ -18,6 +18,7 @@ import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
 import Statistics from './pages/Statistics';
 import Humburger from './components/Humburger';
 import Hamburger from './components/Humburger';
+import Footer from './components/Footer';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -61,13 +62,11 @@ function App() {
   if (!isAuth) {
     return (
       <div className='wrapper'>
-        <div className='content'>
-          <div className='container'>
-            <Routes>
-              <Route path='/login' element={<Login />}></Route>
-              <Route path='/registration' element={<Registr />}></Route>
-            </Routes>
-          </div>
+        <div className='container'>
+          <Routes>
+            <Route path='/login' element={<Login />}></Route>
+            <Route path='/registration' element={<Registr />}></Route>
+          </Routes>
         </div>
       </div>
     );
@@ -90,6 +89,7 @@ function App() {
           </Routes>
         </div>
       </div>
+      <Footer/>
     </>
   );
 }

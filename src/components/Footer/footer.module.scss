@@ -1,0 +1,54 @@
+@import '../../scss/vars';
+
+.footer {
+    background: #9cc4ed;
+    //position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	// height: 80px;
+    &__body{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+    &__block {
+        text-align: left;
+        flex-basis: calc(50% - 200px);
+    }
+    &__teacher {
+        flex-basis: 400px;
+        text-align: center;
+        margin: 0 auto;
+    }
+    &__dev{       
+        text-align: right;
+        flex-basis: calc(50% - 200px);
+    }
+    
+    &__h1 {
+        color: #002d4c;
+        font-size: 20px;
+    }
+    &__text {
+        font-size: 15px;
+    }
+}
+
+.container {
+    width: calc(100vw - 250px);
+    margin: 0 auto;
+    max-width: 1400px;
+    justify-content: space-between;
+}
+
+.teams {
+    font-size: 20px;
+    font-weight: 500;
+    color: #002d4c;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}

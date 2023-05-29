@@ -12,6 +12,7 @@ $pulse-vis: rgba(61, 155, 255, 0.3);
 $pulse-invis: rgba(36, 102, 255, 0);
 
 //$variable1 = Максимальное значение шрифта, $variable2 = минимальное значение шрифта
+// dynamicFontSize(20,10);
 @mixin dynamicFontSize($variable1, $variable2) {
   font-size: calc(
     (100vw - 480px) / (1280 - 480) * (#{$variable1} - #{$variable2}) + #{$variable2}px

@@ -3,6 +3,7 @@ import { AxiosResponse } from 'axios';
 import { IUser } from '../models/IUser';
 import { ISelectUser } from '../models/ISelectUser';
 import { ITrain } from '../models/ITrain';
+import { UserTrain } from '../components/UserTrainings';
 
 export default class UserService {
   static fetchUsers(): Promise<AxiosResponse<ISelectUser[]>> {
@@ -15,6 +16,10 @@ export default class UserService {
 
   static fetchUserStat(id_account: number): Promise<AxiosResponse<ITrain>> {
     return $api.get<ITrain>('/stat/' + id_account);
+  }
+
+  static fetchUserTrains(id_account: number): Promise<AxiosResponse<UserTrain[]>> {
+    return $api.get<UserTrain[]>('/trains/' + id_account);
   }
 
   static updateUser(id_account: number, userData: Partial<IUser>): Promise<AxiosResponse<IUser>> {

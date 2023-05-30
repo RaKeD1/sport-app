@@ -4,7 +4,7 @@ import { SelectUser, setUpdateUserStatus, updateUser } from '../../redux/slices/
 import { useSelector } from 'react-redux';
 import styles from './UpdateDataUser.module.scss';
 
-const UpdateUser = ({ setIsActive }) => {
+const UpdateUser = (props) => {
   const dispatch = useAppDispatch();
   const { phone, email, name, surname, login, patronimyc, id_user } = useAppSelector(SelectUser);
   const updateUserStatus = useSelector(setUpdateUserStatus);
@@ -24,7 +24,7 @@ const UpdateUser = ({ setIsActive }) => {
         login: login,
       };
       dispatch(updateUser({ id_user: id_user, userData: updatedUserData }));
-      setIsActive(false);
+      props.setIsActive(false);
     }
   };
 

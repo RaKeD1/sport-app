@@ -22,14 +22,14 @@ const variants2 = {
     y: 0,
     opacity: 1,
     transition: {
-      y: { stiffness: 1000, velocity: -200 },
+      y: { stiffness: 1000, velocity: -500 },
     },
   },
   closed: {
-    y: 50,
+    y: 20,
     opacity: 0,
     transition: {
-      y: { stiffness: 1000 },
+      y: { stiffness: 1000, velocity: -1000 },
     },
   },
 };
@@ -46,18 +46,18 @@ export const pages = [
   { data: 0, path: '/', label: 'Профиль' },
 ];
 
-export const Navigation = () => {
+export const Navigation = ({ setIsOpen }) => {
   const dispatch = useAppDispatch();
   return (
     <motion.ul className={styles.ul} variants={variants}>
       {pages.map((page) => (
-        <MenuItem page={page} key={page.path} />
+        <MenuItem setIsOpen={setIsOpen} page={page} key={page.path} />
       ))}
       <div className='buttons__user'>
         <motion.button
           onClick={() => dispatch(logoutAccount())}
           variants={variants2}
-          whileHover={{ scale: 1.1 }}
+          whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}>
           Выйти
         </motion.button>

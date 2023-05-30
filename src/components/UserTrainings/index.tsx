@@ -8,15 +8,22 @@ import { ITrain } from '../../models/ITrain';
 import Pagination from '../Pagination';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
-export type UserTrain = ITrain & {
+type UserTrain = ITrain & {
   day_team: string;
   date: string;
 };
 
+export interface UserTrains {
+  count: number;
+  rows: UserTrain[];
+}
+
 export const UserTrainings: FC = () => {
   const id = useAppSelector(SelectAccountID);
-  const [trains, setTrains] = useState<UserTrain[]>(null);
+  const [trains, setTrains] = useState<UserTrains>({ count: 0, rows: [] });
   const [error, setError] = useState<string>(null);
+  const [limit, setLimit] = useState<number>(8);
+  const [page, setPage] = useState<number>(1);
 
   const container = {
     hidden: { opacity: 1, scale: 0 },
@@ -39,38 +46,44 @@ export const UserTrainings: FC = () => {
   };
 
   const fetchTrains = async () => {
-    await UserService.fetchUserTrains(id)
-      .then((res) => {
-        setError(null);
-        setTrains(res.data);
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-        setError(
-          err.response.data.message ? err.response.data.message : 'Не удалось получить тренировки',
-        );
-      });
+    if (id) {
+      await UserService.fetchUserTrains(id, page, limit)
+        .then((res) => {
+          setError(null);
+          setTrains(res.data);
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+          setError(
+            err.response.data.message
+              ? err.response.data.message
+              : 'Не удалось получить тренировки',
+          );
+        });
+    }
   };
 
   useEffect(() => {
     fetchTrains();
-  }, []);
+  }, [page, limit]);
 
-  const handlePageClick = () => {};
+  const handlePageClick = (selected: number) => {
+    setPage(selected);
+  };
 
   return (
     <section className={styles.root}>
       <h2 className={styles.root__title}>Мои тренировки</h2>
       <div className={styles.root__content}>
-        {!trains ? (
+        {!trains.count ? (
           <LoadingSpinner />
         ) : error ? (
           <div className={styles.error}>
             <span>😕</span>
             {error}
           </div>
-        ) : trains.length === 0 ? (
+        ) : trains.rows.length === 0 ? (
           <div className={styles.root__content__empty}>У вас пока не было тренировок</div>
         ) : (
           <>
@@ -79,7 +92,7 @@ export const UserTrainings: FC = () => {
               variants={container}
               initial='hidden'
               animate='visible'>
-              {trains.map((train) => {
+              {trains.rows.map((train) => {
                 return (
                   <motion.li key={train.id_train} className={styles.item} variants={item}>
                     <div className={styles.item__content}>
@@ -93,7 +106,13 @@ export const UserTrainings: FC = () => {
                 );
               })}
             </motion.ul>
-            <Pagination page={1} pageCount={3} handlePageClick={handlePageClick} />
+            {limit !== trains.count && limit < trains.count && (
+              <Pagination
+                page={page}
+                pageCount={Math.ceil(trains.count / limit)}
+                handlePageClick={handlePageClick}
+              />
+            )}
           </>
         )}
       </div>

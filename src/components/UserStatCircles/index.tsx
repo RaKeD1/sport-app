@@ -1,11 +1,11 @@
-import React, { useEffect, useState, FC } from 'react';
+import React, { useEffect, useState, FC, useRef } from 'react';
 import styles from './UserStatCircles.module.scss';
 import UserService from '../../services/UserService';
 import { ITrain } from '../../models/ITrain';
-import Loading from '../Loading';
 import { columnNames } from '../../pages/TrainingEdit';
 import ProgressCircle from '../ProgressCircle';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import { AnimatePresence, motion, useAnimation } from 'framer-motion';
 
 interface UserStatCirclesProps {
   user: number;
@@ -36,6 +36,7 @@ const UserStatCircles: FC<UserStatCirclesProps> = ({ user }) => {
   return (
     <section className={styles.root}>
       <h2 className={styles.root__title}>Статистика тренировок</h2>
+
       <div className={styles.root__content}>
         {!stat ? (
           <LoadingSpinner />

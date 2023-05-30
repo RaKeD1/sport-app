@@ -76,7 +76,6 @@ function App() {
     <>
       <Header />
       <div className='container'>
-        <Hamburger />
         <div className='content'>
           <Routes>
             <Route path='/' element={<Profile />}></Route>
@@ -89,7 +88,7 @@ function App() {
           </Routes>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 }

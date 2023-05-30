@@ -4,10 +4,12 @@ import { Link } from 'react-router-dom';
 import logo from '../assets/img/ball.svg';
 import { FaUserAlt } from 'react-icons/fa';
 import Hamburger from './Humburger';
+import classNames from 'classnames';
 
 const Header: React.FC = () => {
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
   return (
-    <div className='header'>
+    <div className={'header'}>
       <nav className='container'>
         <div className='header__logo'>
           <img src={logo} alt='logo' width='44px' />
@@ -17,7 +19,7 @@ const Header: React.FC = () => {
           </div>
         </div>
       </nav>
-      <Hamburger />
+      <Hamburger setIsOpen={setIsOpen} isOpen={isOpen} />
     </div>
   );
 };

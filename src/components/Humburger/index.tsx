@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useRef } from 'react';
-import { motion, sync, useCycle } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { MenuToggle } from './MenuToggle';
 import { Navigation } from './Navigation';
 import { useDimensions } from './use-dimensions';
@@ -26,8 +26,7 @@ const sidebar = {
   },
 };
 
-const Hamburger = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
+const Hamburger = ({ setIsOpen, isOpen }) => {
   const containerRef = useRef(null);
   const { height } = useDimensions(containerRef);
   const toggleOpen = () => {

@@ -43,7 +43,7 @@ export const pages = [
   { data: 4, path: '/training', label: 'Редактировать тренировку' },
   { data: 2, path: '/statistics', label: 'Посмотреть статистику' },
   { data: 1, path: '/players', label: 'Игроки' },
-  { data: 0, path: '/', label: 'Профиль', fa: <FaUserAlt className='profileIcon' /> },
+  { data: 0, path: '/', label: 'Профиль' },
 ];
 
 export const Navigation = () => {

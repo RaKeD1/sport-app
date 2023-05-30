@@ -83,7 +83,7 @@ const ProfileInfo: FC<ProfileInfoProps> = (props) => {
           </AnimatePresence>
         </div>
         <p
-          style={{ margin: props.avatarSmall ? '0 auto' : '15px' }}
+          style={{ margin: props.avatarSmall ? '0 auto' : '15px 0 0 0' }}
           className={styles.root__header__fio}>
           {props.data.surname + ' ' + props.data.name + ' ' + props.data.patronimyc}
         </p>

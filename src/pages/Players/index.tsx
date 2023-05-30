@@ -123,9 +123,6 @@ export const Players = () => {
         <Modal isActive={showModal} setIsActive={setShowModal}>
           <UpdateUser setIsActive={setShowModal} />
         </Modal>
-        <Modal isActive={changePhotoModal} setIsActive={setChangePhotoModal}>
-          <UploadPhoto onSend={setChangePhotoModal} />
-        </Modal>
       </div>
     </>
   );

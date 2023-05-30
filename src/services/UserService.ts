@@ -5,8 +5,8 @@ import { ISelectUser } from '../models/ISelectUser';
 import { ITrain } from '../models/ITrain';
 
 export default class UserService {
-  static fetchUsers(): Promise<AxiosResponse<ISelectUser[]>> {
-    return $api.get<ISelectUser[]>('/users');
+  static fetchUsers(): Promise<AxiosResponse<IUser[]>> {
+    return $api.get<IUser[]>('/users');
   }
 
   static fetchUser(id_account: number): Promise<AxiosResponse<IUser>> {

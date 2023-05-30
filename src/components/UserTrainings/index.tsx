@@ -7,6 +7,7 @@ import { SelectAccountID } from '../../redux/slices/profileSlice';
 import { ITrain } from '../../models/ITrain';
 import Pagination from '../Pagination';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import { FaStar } from 'react-icons/fa';
 
 type UserTrain = ITrain & {
   day_team: string;
@@ -100,6 +101,10 @@ export const UserTrainings: FC = () => {
                       <div className={styles.item__separator}></div>
                       <div className={styles.item__date}>
                         {train.date.split('T')[0].split('-').reverse().join('.')}
+                      </div>
+                      <div className={styles.item__rating}>
+                        {' '}
+                        <FaStar /> 5.0
                       </div>
                     </div>
                   </motion.li>

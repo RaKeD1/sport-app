@@ -8,6 +8,7 @@ import ProfileInfo from '../components/ProfileInfo';
 import Modal from '../components/Modal';
 import UserStatCircles from '../components/UserStatCircles';
 import UploadPhoto from '../components/UploadPhoto';
+import UserTrainings from '../components/UserTrainings';
 
 export const Profile: FC = () => {
   const avatarSmall = false;
@@ -27,6 +28,7 @@ export const Profile: FC = () => {
         />
         <UserStatCircles user={user.id_account} />
       </div>
+      <UserTrainings />
       <Modal isActive={showModal} setIsActive={setShowModal}>
         <UpdateUser setIsActive={setShowModal} />
       </Modal>

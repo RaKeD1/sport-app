@@ -1,0 +1,56 @@
+@import '../../scss/vars';
+
+.footer {
+  background: #466b91;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  &__body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 0;
+  }
+  &__block {
+    text-align: left;
+    flex-basis: calc(50% - 200px);
+  }
+  &__teacher {
+    flex-basis: 400px;
+    text-align: center;
+    margin: 0 auto;
+  }
+  &__dev {
+    text-align: right;
+    flex-basis: calc(50% - 200px);
+  }
+
+  &__title {
+    color: #e3e3e3;
+    font-size: 15px;
+  }
+  &__text {
+    color: #e3e3e3;
+    font-size: 13px;
+
+    a {
+      color: inherit;
+    }
+  }
+}
+
+.container {
+  width: calc(100vw - 250px);
+  margin: 0 auto;
+  max-width: 1400px;
+  justify-content: space-between;
+}
+
+.teams {
+  font-size: 20px;
+  font-weight: 500;
+  color: #002d4c;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}

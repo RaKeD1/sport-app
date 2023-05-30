@@ -40,3 +40,13 @@
     }
   }
 }
+
+.error {
+  text-align: center;
+  font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 20px);
+  padding: 150px 0;
+
+  span {
+    margin-right: 10px;
+  }
+}

@@ -40,7 +40,7 @@ const UserStatCircles: FC<UserStatCirclesProps> = ({ user }) => {
         {!stat ? (
           <LoadingSpinner />
         ) : error ? (
-          <div className={styles.train__error}>
+          <div className={styles.error}>
             <span>😕</span>
             {error}
           </div>

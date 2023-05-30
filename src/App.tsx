@@ -18,6 +18,7 @@ import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
 import Statistics from './pages/Statistics';
 import Humburger from './components/Humburger';
 import Hamburger from './components/Humburger';
+import Footer from './components/Footer';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -88,6 +89,7 @@ function App() {
           </Routes>
         </div>
       </div>
+      <Footer/>
     </>
   );
 }

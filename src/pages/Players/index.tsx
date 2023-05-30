@@ -6,6 +6,10 @@ import { motion } from 'framer-motion';
 
 import styles from './players.module.scss';
 import { useSelector } from 'react-redux';
+import ProfileInfo from '../../components/ProfileInfo';
+import Modal from '../../components/Modal';
+import UpdateUser from '../../components/UpdateDataUser';
+import UploadPhoto from '../../components/UploadPhoto';
 
 export interface PlayersInf {
   email: string;
@@ -17,6 +21,7 @@ export interface PlayersInf {
   phone: string;
   player: string;
   team: string;
+  img: string;
 }
 
 export const columnUser = {
@@ -51,13 +56,17 @@ const item = {
 };
 
 export const Players = () => {
+  const avatarSmall = true;
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [changePhotoModal, setChangePhotoModal] = useState<boolean>(false);
+
   const dispatch = useAppDispatch();
 
   const users = useSelector(SelectUsers);
   useEffect(() => {
     dispatch(fetchUsers());
   }, []);
-
+  console.log('users', users);
   const players = users.map((obj) => {
     const user = {
       ...obj,
@@ -75,14 +84,13 @@ export const Players = () => {
     setIsLoad(false);
   }, []);
   const colors = ['#FF008C', '#D309E1', '#9C1AFF', '#7700FF', '#4400FF'];
-
   const randomIndex = Math.floor(Math.random() * colors.length);
   const randomColor = colors[randomIndex];
   const style = { backgroundColor: `${randomColor}` };
   return (
     <>
       <div className={styles.main}>
-        <form className={styles.form}>
+        <div className={styles.form}>
           <label>Введите ФИО игрока:</label>
           <input
             className={styles.input}
@@ -90,7 +98,7 @@ export const Players = () => {
             value={value}
             onChange={(event) => setValue(event.target.value)}
           />
-        </form>
+        </div>
         <motion.ul
           className={styles.container}
           variants={container}
@@ -101,35 +109,23 @@ export const Players = () => {
             const randomColor = colors[randomIndex];
             const style = { backgroundColor: randomColor };
             return (
-              <motion.li key={player.id_user} className={styles.item} variants={item}>
-                <div style={style} className={styles.item__title}>
-                  {player.player}
-                </div>
-                <div className={styles.item__box}>
-                  {Object.entries(player)
-                    .filter(
-                      (arr) =>
-                        arr[0] === 'email' ||
-                        arr[0] === 'login' ||
-                        arr[0] === 'name' ||
-                        arr[0] === 'surname' ||
-                        arr[0] === 'patronimyc' ||
-                        arr[0] === 'phone',
-                    )
-                    .map((arr) => {
-                      const num = arr[1].toString();
-                      return (
-                        <div className={styles.item__text}>
-                          <p className={styles.item__text_title}>{columnUser[arr[0]]}:</p>
-                          <p className={styles.item__text_text}>{num}</p>
-                        </div>
-                      );
-                    })}
-                </div>
+              <motion.li key={player.id_user} variants={item}>
+                <ProfileInfo
+                  data={player}
+                  avatarSmall={avatarSmall}
+                  onClickEdit={setShowModal}
+                  onClickEditPhoto={setChangePhotoModal}
+                />
               </motion.li>
             );
           })}
         </motion.ul>
+        <Modal isActive={showModal} setIsActive={setShowModal}>
+          <UpdateUser setIsActive={setShowModal} />
+        </Modal>
+        <Modal isActive={changePhotoModal} setIsActive={setChangePhotoModal}>
+          <UploadPhoto onSend={setChangePhotoModal} />
+        </Modal>
       </div>
     </>
   );

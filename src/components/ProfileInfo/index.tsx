@@ -11,11 +11,17 @@ import { useAppDispatch } from '../../hooks/redux';
 
 interface ProfileInfoProps {
   data: IUser;
+  avatarSmall: boolean;
   onClickEdit: (value: boolean) => void;
   onClickEditPhoto: (value: boolean) => void;
 }
 
-const ProfileInfo: FC<ProfileInfoProps> = ({ data, onClickEdit, onClickEditPhoto }) => {
+const ProfileInfo: FC<ProfileInfoProps> = ({
+  data,
+  avatarSmall,
+  onClickEdit,
+  onClickEditPhoto,
+}) => {
   console.log(data);
   const { id_user } = useSelector(SelectUser);
   const [showPhotoMenu, setShowPhotoMenu] = useState<boolean>(false);
@@ -41,12 +47,20 @@ const ProfileInfo: FC<ProfileInfoProps> = ({ data, onClickEdit, onClickEditPhoto
       opacity: 1,
     },
   };
-
+  const small = avatarSmall ? `${styles.root__header__img_small}` : `${styles.root__header__img}`;
+  console.log('avatar', avatarSmall);
   return (
-    <section className={styles.root}>
-      <div className={styles.root__header}>
+    <section
+      style={{
+        width: avatarSmall ? '100%' : '300px',
+        boxShadow: avatarSmall === true && '0 0 30px rgba(0, 0, 0, 0.2)',
+      }}
+      className={styles.root}>
+      <div
+        className={styles.root__header}
+        style={{ flexDirection: avatarSmall ? 'row' : 'column' }}>
         <div
-          className={styles.root__header__img}
+          className={small}
           onMouseEnter={() => setShowPhotoMenu(true)}
           onMouseLeave={() => setShowPhotoMenu(false)}>
           <img src={SERVER_URL + data.img} />
@@ -72,7 +86,7 @@ const ProfileInfo: FC<ProfileInfoProps> = ({ data, onClickEdit, onClickEditPhoto
             )}
           </AnimatePresence>
         </div>
-        <p className={styles.root__header__fio}>
+        <p style={{ margin: avatarSmall ? '0 auto' : '15px' }} className={styles.root__header__fio}>
           {data.surname + ' ' + data.name + ' ' + data.patronimyc}
         </p>
       </div>

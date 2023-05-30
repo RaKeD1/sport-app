@@ -61,7 +61,7 @@ const ProfileInfo: FC<ProfileInfoProps> = (props) => {
           onMouseLeave={() => setShowPhotoMenu(false)}>
           <img src={SERVER_URL + props.data.img} />
           <AnimatePresence>
-            {showPhotoMenu && (
+            {showPhotoMenu && !props.avatarSmall && (
               <motion.ul
                 variants={variants}
                 initial='hidden'

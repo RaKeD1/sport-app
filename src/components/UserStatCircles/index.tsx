@@ -47,7 +47,7 @@ const UserStatCircles: FC<UserStatCirclesProps> = ({ user }) => {
           </div>
         ) : (
           Object.entries(stat).map((arr) => (
-            <div className={styles.root__content__tile}>
+            <div key={arr[0]} className={styles.root__content__tile}>
               <p className={styles.root__content__tile__text}>{columnNames[arr[0]]}</p>
               <ProgressCircle progress={arr[1] * 100} />
             </div>

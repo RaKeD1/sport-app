@@ -150,7 +150,6 @@ export const Statistics: React.FC = () => {
   }, [playersRangeStat]);
 
   const dateConvertToIso = (date) => {
-    console.log('in dateCionvert');
     let z = date.getTimezoneOffset() * 60 * 1000;
     let tLocal: any = date - z;
     tLocal = new Date(tLocal);
@@ -358,7 +357,12 @@ export const Statistics: React.FC = () => {
             <p>Группа:</p>
             <TeamSearchBar setTeam={setActiveTeam} />
           </div>
-          <div className={styles.changeModal__date}>
+          <div
+            className={styles.changeModal__date}
+            style={{
+              pointerEvents: activeTeam ? 'all' : 'none',
+              opacity: activeTeam ? '1' : '0.5',
+            }}>
             {/* <p>Дата:</p> */}
             <MyCalendar
               onChange={onChangeDate}
@@ -367,6 +371,11 @@ export const Statistics: React.FC = () => {
               value={activeDateRange}
               disableTiles={false}
             />
+            <div
+              className={styles.changeModal__date__blind}
+              style={{ display: !activeTeam ? 'flex' : 'none' }}>
+              Выберите команду
+            </div>
           </div>
           <button
             disabled={!isValidModal}

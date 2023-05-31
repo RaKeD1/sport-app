@@ -1,7 +1,7 @@
-import { FC, useState } from 'react';
+import { Dispatch, FC, useState } from 'react';
 import styles from './ProfileInfo.module.scss';
 import { SERVER_URL } from '../../http';
-import { columnUser } from '../../pages/Players';
+import { PlayersInf, columnUser } from '../../pages/Players';
 import { AnimatePresence, motion } from 'framer-motion';
 import { IUser } from '../../models/IUser';
 import UserService from '../../services/UserService';
@@ -16,14 +16,17 @@ interface ProfileInfoProps {
   onClickEdit: (value: boolean) => void;
   onClickEditPhoto: (value: boolean) => void;
 }
-
-const ProfileInfo: FC<ProfileInfoProps> = (props) => {
+const ProfileInfo = ({ data, avatarSmall, onClickEdit, onClickEditPhoto }) => {
+  const handleEditUser = () => {
+    onClickEdit(true); // Передаем сигнал о необходимости открытия компонента редактирования
+    onClickEdit(data); // Передаем данные пользователя в родительский компонент
+  };
   const [showPhotoMenu, setShowPhotoMenu] = useState<boolean>(false);
   const [deleteError, setDeleteError] = useState<string>(null);
   const dispatch = useAppDispatch();
 
   const onClickDeletePhoto = async () => {
-    await UserService.deleteUserPhoto(props.data.id_user)
+    await UserService.deleteUserPhoto(data.id_user)
       .then((res) => {
         setDeleteError(null);
         dispatch(setImg(res.data));
@@ -41,27 +44,25 @@ const ProfileInfo: FC<ProfileInfoProps> = (props) => {
       opacity: 1,
     },
   };
-  const small = props.avatarSmall
-    ? `${styles.root__header__img_small}`
-    : `${styles.root__header__img}`;
-  console.log('avatar', props.avatarSmall);
+  const small = avatarSmall ? `${styles.root__header__img_small}` : `${styles.root__header__img}`;
+  console.log('avatar', avatarSmall);
   return (
     <section
       style={{
-        width: props.avatarSmall ? '100%' : '300px',
-        boxShadow: props.avatarSmall === true && '0 0 30px rgba(0, 0, 0, 0.2)',
+        width: avatarSmall ? '100%' : '300px',
+        boxShadow: avatarSmall === true && '0 0 30px rgba(0, 0, 0, 0.2)',
       }}
       className={styles.root}>
       <div
         className={styles.root__header}
-        style={{ flexDirection: props.avatarSmall ? 'row' : 'column' }}>
+        style={{ flexDirection: avatarSmall ? 'row' : 'column' }}>
         <div
           className={small}
           onMouseEnter={() => setShowPhotoMenu(true)}
           onMouseLeave={() => setShowPhotoMenu(false)}>
-          <img src={SERVER_URL + props.data.img} />
+          <img src={SERVER_URL + data.img} />
           <AnimatePresence>
-            {showPhotoMenu && !props.avatarSmall && (
+            {showPhotoMenu && !avatarSmall && (
               <motion.ul
                 variants={variants}
                 initial='hidden'
@@ -70,7 +71,7 @@ const ProfileInfo: FC<ProfileInfoProps> = (props) => {
                 className={styles.root__header__img__editMenu}>
                 <li
                   className={styles.root__header__img__editMenu__item}
-                  onClick={() => props.onClickEditPhoto(true)}>
+                  onClick={() => onClickEditPhoto(true)}>
                   Изменить
                 </li>
                 <li
@@ -83,13 +84,13 @@ const ProfileInfo: FC<ProfileInfoProps> = (props) => {
           </AnimatePresence>
         </div>
         <p
-          style={{ margin: props.avatarSmall ? '0 auto' : '15px 0 0 0' }}
+          style={{ margin: avatarSmall ? '0 auto' : '15px 0 0 0' }}
           className={styles.root__header__fio}>
-          {props.data.surname + ' ' + props.data.name + ' ' + props.data.patronimyc}
+          {data.surname + ' ' + data.name + ' ' + data.patronimyc}
         </p>
       </div>
       <div className={styles.root__info}>
-        {Object.entries(props.data)
+        {Object.entries(data)
           .filter(
             (arr) =>
               arr[0] === 'login' || arr[0] === 'email' || arr[0] === 'team' || arr[0] === 'phone',
@@ -98,7 +99,7 @@ const ProfileInfo: FC<ProfileInfoProps> = (props) => {
             const style = { opacity: item[1] ? '1' : '0.3' };
 
             return (
-              <div className={styles.root__info__item}>
+              <div key={item[0]} className={styles.root__info__item}>
                 <p className={styles.root__info__title}>{columnUser[item[0]]}</p>
                 <p style={style} className={styles.root__info__text}>
                   {String(item[1] ? item[1] : 'Нет данных')}
@@ -106,7 +107,7 @@ const ProfileInfo: FC<ProfileInfoProps> = (props) => {
               </div>
             );
           })}
-        <button className={styles.root__editBtn} onClick={() => props.onClickEdit(true)}>
+        <button className={styles.root__editBtn} onClick={handleEditUser}>
           Редактировать
         </button>
       </div>

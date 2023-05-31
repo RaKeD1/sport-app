@@ -8,12 +8,13 @@
 
   &__page {
     margin-left: 3px;
+    transition: all;
 
     a {
       display: flex;
-      color: #fff;
+      color: $button-clr;
       font-weight: 500;
-      background: $button-clr;
+      background: transparent;
       cursor: pointer;
       width: 30px;
       height: 30px;
@@ -29,8 +30,9 @@
 
     &_active {
       a {
-        background: $back-clr;
-        color: $button-clr;
+        background: $button-clr;
+        color: #fff;
+        pointer-events: none;
 
         :hover {
           box-shadow: none;

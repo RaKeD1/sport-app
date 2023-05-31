@@ -1,6 +1,6 @@
 import { useState, FC, useEffect } from 'react';
 import styles from './UserTrainings.module.scss';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import UserService from '../../services/UserService';
 import { useAppSelector } from '../../hooks/redux';
 import { SelectAccountID } from '../../redux/slices/profileSlice';
@@ -20,7 +20,7 @@ export interface UserTrains {
   rows: UserTrain[];
 }
 
-export const limitVariants = [8, 12, 16];
+export const limitVariants = [4, 8, 12, 16];
 
 export const UserTrainings: FC = () => {
   const id = useAppSelector(SelectAccountID);
@@ -91,29 +91,31 @@ export const UserTrainings: FC = () => {
           <div className={styles.root__content__empty}>У вас пока не было тренировок</div>
         ) : (
           <>
-            <motion.ul
-              className={styles.container}
-              variants={container}
-              initial='hidden'
-              animate='visible'>
-              {trains.rows.map((train) => {
-                return (
-                  <motion.li key={train.id_train} className={styles.item} variants={item}>
-                    <div className={styles.item__content}>
-                      <div className={styles.item__team}>{train.day_team}</div>
-                      <div className={styles.item__separator}></div>
-                      <div className={styles.item__date}>
-                        {train.date.split('T')[0].split('-').reverse().join('.')}
+            <AnimatePresence>
+              <motion.ul
+                className={styles.container}
+                variants={container}
+                initial='hidden'
+                animate='visible'>
+                {trains.rows.map((train) => {
+                  return (
+                    <motion.li key={train.id_train} className={styles.item} variants={item}>
+                      <div className={styles.item__content}>
+                        <div className={styles.item__team}>{train.day_team}</div>
+                        <div className={styles.item__separator}></div>
+                        <div className={styles.item__date}>
+                          {train.date.split('T')[0].split('-').reverse().join('.')}
+                        </div>
+                        <div className={styles.item__rating}>
+                          {' '}
+                          <FaStar /> 5.0
+                        </div>
                       </div>
-                      <div className={styles.item__rating}>
-                        {' '}
-                        <FaStar /> 5.0
-                      </div>
-                    </div>
-                  </motion.li>
-                );
-              })}
-            </motion.ul>
+                    </motion.li>
+                  );
+                })}
+              </motion.ul>
+            </AnimatePresence>
             {limit !== trains.count && limit < trains.count && (
               <>
                 <Pagination

@@ -60,7 +60,6 @@
   justify-content: center;
   flex-direction: column;
   cursor: pointer;
-  z-index: 1;
   transition: 0.5s;
 
   width: 100%;
@@ -82,7 +81,6 @@
     height: 250px;
     top: -203px;
     right: -136px;
-    z-index: 2;
 
     background: linear-gradient(110.4deg, #4ed4ff 5.27%, #83e5eb 96.34%);
     transform: rotate(33deg);
@@ -96,7 +94,6 @@
     bottom: -147px;
     right: -109px;
     right: -86px;
-    z-index: 2;
 
     background: linear-gradient(18.39deg, #4a7fe4 26.78%, #ffffff 99.99%);
     border: 5px solid #ffffff;
@@ -109,7 +106,6 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    z-index: 3;
   }
 
   &__separator {

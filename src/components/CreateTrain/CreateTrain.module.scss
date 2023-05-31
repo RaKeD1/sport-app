@@ -31,7 +31,7 @@
 
   &__checkIcon {
     position: absolute;
-    top: 12px;
+    top: 18px;
     right: -25px;
     font-size: 17px;
     // font-size: calc((100vw - 480px) / (1280 - 480) * (32 - 16) + 5px);
@@ -50,6 +50,10 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 30px;
+
+    p {
+      margin-right: 5px;
+    }
   }
   &__title {
     text-align: center;

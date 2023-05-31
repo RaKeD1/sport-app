@@ -79,7 +79,7 @@ const CreateTrain: FC = () => {
     <div className={styles.train}>
       <h2 className={styles.train__title}>Создание тренировки</h2>
       <div className={styles.train__elem}>
-        <label>Название команды:</label>
+        <p>Название команды:</p>
         <div className={styles.train__team}>
           <input
             className={classNames({ [styles.train__team_notValid]: !teamIsValid && teamValue })}
@@ -101,7 +101,7 @@ const CreateTrain: FC = () => {
         </div>
       </div>
       <div className={styles.train__elem}>
-        <label htmlFor=''>Игроки:</label>
+        <p>Игроки:</p>
         <UserSearchBar setCollabs={setCollabs} />
       </div>
       <button

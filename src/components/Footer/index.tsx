@@ -1,34 +1,42 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useLayoutEffect, useState } from "react";
 import styles from "./footer.module.scss";
 
 const Footer: FC = () => {
-  const [hasScroll, setHasScroll] = useState(false);
+  const [hasScrollbar, setHasScrollbar] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const { scrollHeight, clientHeight } = document.documentElement;
-      setHasScroll(scrollHeight > clientHeight);
+    const handleScrollbar = () => {
+      const hasScrollbar = document.documentElement.scrollHeight > window.innerHeight;
+      setHasScrollbar(hasScrollbar);
     };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScrollbar);
+    handleScrollbar();
+    return () => {
+      window.removeEventListener('resize', handleScrollbar);
+    };
   }, []);
 
-  const containerStyle = {
-    position: hasScroll ? 'relative' : 'fixed',
-    width: '100%',
-    bottom: 0
-    // Другие стили по вашему выбору
-  } as React.CSSProperties;
+const containerStyle = {
+  position: hasScrollbar ? "relative" : "fixed",
+  width: "100%",
+  bottom: 0,
+} as React.CSSProperties;
 
   return (
     <div style={containerStyle}>
       <div className={styles.footer}>
-        <div className={styles.footerCheck}></div>
         <nav className="container">
           <ul className={styles.footer__body}>
             <div className={styles.footer__block}>
-              <h1 className={styles.footer__title}>МИЭТ</h1>
+              <h1 className={styles.footer__title}>
+                <a
+                  href="https://www.miet.ru/"
+                  target="MIET"
+                  className={styles.footer__title}
+                >
+                  МИЭТ
+                </a>
+              </h1>
               <a
                 className={styles.footer__text}
                 href="https://yandex.ru/maps/org/moskovskiy_institut_elektronnoy_tekhniki/1042223652/?ll=37.208453%2C55.983384&z=17.08"

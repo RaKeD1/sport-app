@@ -90,6 +90,8 @@ button {
   flex-direction: column;
   padding: 20px;
   border-radius: 30px;
+  box-shadow: $tile-shadow;
+
   &__forinput {
     margin: 6px auto;
     width: 80%;

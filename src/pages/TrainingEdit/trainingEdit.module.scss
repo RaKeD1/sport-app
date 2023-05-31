@@ -186,10 +186,17 @@
   &__date {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: end;
     margin: auto;
     margin-bottom: 30px;
+
     font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 20px);
+
+    &_notSelected {
+      opacity: 0.3;
+      font-size: calc((100vw - 480px) / (1280 - 480) * (16 - 8) + 8px);
+      margin-bottom: 4px;
+    }
 
     p {
       margin-right: 10px;

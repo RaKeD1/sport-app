@@ -8,6 +8,7 @@ import { ITrain } from '../../models/ITrain';
 import Pagination from '../Pagination';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import { FaStar } from 'react-icons/fa';
+import classNames from 'classnames';
 
 type UserTrain = ITrain & {
   day_team: string;
@@ -18,6 +19,8 @@ export interface UserTrains {
   count: number;
   rows: UserTrain[];
 }
+
+export const limitVariants = [8, 12, 16];
 
 export const UserTrainings: FC = () => {
   const id = useAppSelector(SelectAccountID);
@@ -112,11 +115,28 @@ export const UserTrainings: FC = () => {
               })}
             </motion.ul>
             {limit !== trains.count && limit < trains.count && (
-              <Pagination
-                page={page}
-                pageCount={Math.ceil(trains.count / limit)}
-                handlePageClick={handlePageClick}
-              />
+              <>
+                <Pagination
+                  page={page}
+                  pageCount={Math.ceil(trains.count / limit)}
+                  handlePageClick={handlePageClick}
+                />
+                <div className={styles.showNum}>
+                  <p>Показывать на странице:</p>
+                  {limitVariants.map((item) => (
+                    <span
+                      className={classNames(styles.showNum__item, {
+                        [styles.showNum__item_active]: item === limit,
+                      })}
+                      onClick={() => {
+                        setPage(1);
+                        setLimit(item);
+                      }}>
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </>
             )}
           </>
         )}

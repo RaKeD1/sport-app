@@ -1,18 +1,27 @@
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { SelectUser, setUpdateUserStatus, updateUser } from '../../redux/slices/profileSlice';
+import { setUpdateUserStatus, updateUser } from '../../redux/slices/profileSlice';
 import { useSelector } from 'react-redux';
 import styles from './UpdateDataUser.module.scss';
 
 const UpdateUser = (props) => {
   const dispatch = useAppDispatch();
-  const { phone, email, name, surname, login, patronimyc, id_user } = useAppSelector(SelectUser);
   const updateUserStatus = useSelector(setUpdateUserStatus);
-  const [nameState, setNameState] = useState<string>(name);
-  const [surnameState, setSurnameState] = useState<string>(surname);
-  const [patronimycState, setPatronimycState] = useState<string>(patronimyc);
-  const [emailState, setEmailState] = useState<string>(email);
-  const [phoneState, setPhoneState] = useState<string>(phone);
+  const [nameState, setNameState] = useState<string>('');
+  const [surnameState, setSurnameState] = useState<string>('');
+  const [patronimycState, setPatronimycState] = useState<string>('');
+  const [emailState, setEmailState] = useState<string>('');
+  const [phoneState, setPhoneState] = useState<string>('');
+
+  useEffect(() => {
+    setNameState(props.user.name);
+    setSurnameState(props.user.surname);
+    setPatronimycState(props.user.patronimyc);
+    setEmailState(props.user.email);
+    setPhoneState(props.user.phone);
+  }, [props.user]);
+  useEffect(() => {}, [props.user, emailState]);
+
   const handleUpdateUser = () => {
     if (window.confirm('Обновить данные?')) {
       const updatedUserData = {
@@ -21,10 +30,13 @@ const UpdateUser = (props) => {
         patronimyc: patronimycState,
         email: emailState,
         phone: phoneState,
-        login: login,
+        login: props.user.login,
       };
-      dispatch(updateUser({ id_user: id_user, userData: updatedUserData }));
       props.setIsActive(false);
+      dispatch(updateUser({ id_user: props.user.id_user, userData: updatedUserData }));
+      if (props.isUpdate) {
+        props.isUpdate(true);
+      }
     }
   };
 

@@ -130,6 +130,7 @@ export const fetchUser = createAsyncThunk<AxiosResponse<IUser>, FetchUserParams>
       const { id_user } = params;
       const response = await UserService.fetchUser(id_user);
       return response;
+      console.log('Данные пользователя', response);
     } catch (error) {
       if (!error.response) {
         throw error;
@@ -265,12 +266,12 @@ const profileSlice = createSlice({
 
     // Кейсы для обновления данных пользователя
     builder.addCase(updateUser.pending, (state) => {
-      state.updateUserStatus = Status.LOADING; // Устанавливаем статус LOADING при начале запроса на обновление данных пользователя
+      state.updateUserStatus = Status.LOADING;
     });
 
     builder.addCase(updateUser.fulfilled, (state, action) => {
-      state.updateUserStatus = Status.SUCCESS; // Устанавливаем статус SUCCESS при успешном обновлении данных пользователя
-      state.user = action.payload.data; // Обновляем данные пользователя в стейте
+      state.updateUserStatus = Status.SUCCESS;
+      state.user = action.payload.data; //
       console.log('Данные пользователя', action.payload.data.name);
     });
 

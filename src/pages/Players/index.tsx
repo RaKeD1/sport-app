@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from '../../redux/store';
-import { useAppSelector } from '../../hooks/redux';
 import { SelectUsers, fetchUsers } from '../../redux/slices/userSlice';
 import { motion } from 'framer-motion';
 
@@ -9,11 +8,11 @@ import { useSelector } from 'react-redux';
 import ProfileInfo from '../../components/ProfileInfo';
 import Modal from '../../components/Modal';
 import UpdateUser from '../../components/UpdateDataUser';
-import UploadPhoto from '../../components/UploadPhoto';
 
 export interface PlayersInf {
   email: string;
-  id_account: string;
+  id_account: number;
+  id_user: number;
   login: string;
   name: string;
   surname: string;
@@ -27,6 +26,7 @@ export interface PlayersInf {
 export const columnUser = {
   email: 'Почта',
   id_account: 'ID_ACC',
+  id_user: 'ID_U',
   login: 'Логин',
   name: 'Имя',
   surname: 'Фамилия',
@@ -59,13 +59,14 @@ export const Players = () => {
   const avatarSmall = true;
   const [showModal, setShowModal] = useState<boolean>(false);
   const [changePhotoModal, setChangePhotoModal] = useState<boolean>(false);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState<string>('');
   const [isLoad, setIsLoad] = useState(true);
+  const [isUpdate, setIsUpdate] = useState<boolean>(false);
+  const [selectedUser, setSelectedUser] = useState<PlayersInf | string>('');
 
   const dispatch = useAppDispatch();
 
   const users = useSelector(SelectUsers);
-  console.log('users', users);
 
   const players = users.map((obj) => {
     const user = {
@@ -84,6 +85,16 @@ export const Players = () => {
     setIsLoad(false);
   }, []);
 
+  useEffect(() => {
+    dispatch(fetchUsers());
+    setIsUpdate(false);
+  }, [isUpdate]);
+
+  const handleEditUser = (user: PlayersInf) => {
+    setSelectedUser(user);
+    setShowModal(true);
+  };
+  useEffect(() => {}, [selectedUser]);
   return (
     <>
       <div className={styles.main}>
@@ -103,11 +114,17 @@ export const Players = () => {
           animate='visible'>
           {filtredPlayers.map((player) => {
             return (
-              <motion.li key={player.id_user} variants={item}>
+              <motion.li
+                key={player.id_user}
+                whileHover={{
+                  scale: 1.05,
+                  transition: { duration: 0.2 },
+                }}
+                variants={item}>
                 <ProfileInfo
                   data={player}
                   avatarSmall={avatarSmall}
-                  onClickEdit={setShowModal}
+                  onClickEdit={() => handleEditUser(player)} // Передаем данные пользователя в обработчик
                   onClickEditPhoto={setChangePhotoModal}
                 />
               </motion.li>
@@ -115,7 +132,7 @@ export const Players = () => {
           })}
         </motion.ul>
         <Modal isActive={showModal} setIsActive={setShowModal}>
-          <UpdateUser setIsActive={setShowModal} />
+          <UpdateUser isUpdate={setIsUpdate} user={selectedUser} setIsActive={setShowModal} />
         </Modal>
       </div>
     </>

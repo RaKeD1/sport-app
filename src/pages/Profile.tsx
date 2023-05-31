@@ -30,7 +30,7 @@ export const Profile: FC = () => {
       </div>
       <UserTrainings />
       <Modal isActive={showModal} setIsActive={setShowModal}>
-        <UpdateUser setIsActive={setShowModal} />
+        <UpdateUser user={user} setIsActive={setShowModal} />
       </Modal>
       <Modal isActive={changePhotoModal} setIsActive={setChangePhotoModal}>
         <UploadPhoto onSend={setChangePhotoModal} />

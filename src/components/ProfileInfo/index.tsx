@@ -98,7 +98,7 @@ const ProfileInfo: FC<ProfileInfoProps> = (props) => {
             const style = { opacity: item[1] ? '1' : '0.3' };
 
             return (
-              <div className={styles.root__info__item}>
+              <div key={item[0]} className={styles.root__info__item}>
                 <p className={styles.root__info__title}>{columnUser[item[0]]}</p>
                 <p style={style} className={styles.root__info__text}>
                   {String(item[1] ? item[1] : 'Нет данных')}

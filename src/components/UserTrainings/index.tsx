@@ -123,8 +123,9 @@ export const UserTrainings: FC = () => {
                 />
                 <div className={styles.showNum}>
                   <p>Показывать на странице:</p>
-                  {limitVariants.map((item) => (
+                  {limitVariants.map((item, i) => (
                     <span
+                      key={i}
                       className={classNames(styles.showNum__item, {
                         [styles.showNum__item_active]: item === limit,
                       })}

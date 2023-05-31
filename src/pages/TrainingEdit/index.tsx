@@ -508,8 +508,9 @@ export const TrainingEdit: React.FC = () => {
                       <>
                         <div className={styles.actions__list__showNum}>
                           <p>Показывать на странице:</p>
-                          {limitVariants.map((item) => (
+                          {limitVariants.map((item, i) => (
                             <span
+                              key={i}
                               className={classNames(styles.actions__list__showNum__item, {
                                 [styles.actions__list__showNum__item_active]: item === limit,
                               })}
@@ -522,7 +523,7 @@ export const TrainingEdit: React.FC = () => {
                           ))}
                         </div>
                         {actions.map((obj) => (
-                          <motion.div className={styles.actions__item}>
+                          <motion.div key={obj.id_action} className={styles.actions__item}>
                             <div className={styles.actions__item__time}>
                               {obj.time.split('').splice(0, 8).join('')}
                             </div>

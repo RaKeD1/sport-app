@@ -593,7 +593,12 @@ export const TrainingEdit: React.FC = () => {
             <p>Группа:</p>
             <TeamSearchBar setTeam={setActiveTeam} />
           </div>
-          <div className={styles.changeModal__date}>
+          <div
+            className={styles.changeModal__date}
+            style={{
+              pointerEvents: activeTeam ? 'all' : 'none',
+              opacity: activeTeam ? '1' : '0.5',
+            }}>
             {/* <p>Дата:</p> */}
             <MyCalendar
               onChange={onChangeDate}
@@ -602,6 +607,11 @@ export const TrainingEdit: React.FC = () => {
               dates={dates}
               disableTiles={true}
             />
+            <div
+              className={styles.changeModal__date__blind}
+              style={{ display: !activeTeam ? 'flex' : 'none' }}>
+              Выберите команду
+            </div>
           </div>
           <button
             disabled={!isValidModal}

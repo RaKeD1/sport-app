@@ -163,6 +163,7 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
             <ul className={styles.action__result}>
               {currentAction.result.map((item, index) => (
                 <li
+                  key={index}
                   onClick={() => setActiveResult(index)}
                   className={classNames(styles.action__resultItem, {
                     [styles.action__active]: index === activeResult,

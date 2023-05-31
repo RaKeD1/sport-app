@@ -227,6 +227,20 @@
 
   &__date {
     background: #a3a3a3;
+    position: relative;
+
+    &__blind {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.2);
+      font-weight: 500;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+      transition: 0.5s;
+    }
 
     @media (max-width: 860px) {
       width: calc(90vw - 60px);

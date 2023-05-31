@@ -186,10 +186,17 @@
   &__date {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: end;
     margin: auto;
     margin-bottom: 30px;
+
     font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 20px);
+
+    &_notSelected {
+      opacity: 0.3;
+      font-size: calc((100vw - 480px) / (1280 - 480) * (16 - 8) + 8px);
+      margin-bottom: 4px;
+    }
 
     p {
       margin-right: 10px;
@@ -424,6 +431,20 @@
 
   &__date {
     background: #a3a3a3;
+    position: relative;
+
+    &__blind {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.2);
+      font-weight: 500;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+      transition: 0.5s;
+    }
 
     @media (max-width: 860px) {
       width: calc(90vw - 60px);
@@ -437,12 +458,6 @@
       pointer-events: none;
       opacity: 0.6;
     }
-  }
-}
-
-.calendar {
-  .react-calendar__month-view__days__day--weekend {
-    color: #d10000;
   }
 }
 

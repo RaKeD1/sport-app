@@ -382,12 +382,16 @@ export const TrainingEdit: React.FC = () => {
           {date ? (
             <span>{date.split('-').reverse().join('.')}</span>
           ) : (
-            <DataSkeleton width={110} height={27} />
+            <p className={styles.train__group_notSelected}>Не выбрано</p>
           )}
         </div>
         <div className={styles.train__group}>
           <p>Группа:</p>
-          {team ? <span>{team}</span> : <DataSkeleton width={70} height={27} />}
+          {team ? (
+            <span>{team}</span>
+          ) : (
+            <p className={styles.train__group_notSelected}>Не выбрано</p>
+          )}
         </div>
         <button
           className={classNames(styles.train__btnChange, {
@@ -504,8 +508,9 @@ export const TrainingEdit: React.FC = () => {
                       <>
                         <div className={styles.actions__list__showNum}>
                           <p>Показывать на странице:</p>
-                          {limitVariants.map((item) => (
+                          {limitVariants.map((item, i) => (
                             <span
+                              key={i}
                               className={classNames(styles.actions__list__showNum__item, {
                                 [styles.actions__list__showNum__item_active]: item === limit,
                               })}
@@ -518,7 +523,7 @@ export const TrainingEdit: React.FC = () => {
                           ))}
                         </div>
                         {actions.map((obj) => (
-                          <motion.div className={styles.actions__item}>
+                          <motion.div key={obj.id_action} className={styles.actions__item}>
                             <div className={styles.actions__item__time}>
                               {obj.time.split('').splice(0, 8).join('')}
                             </div>
@@ -589,7 +594,12 @@ export const TrainingEdit: React.FC = () => {
             <p>Группа:</p>
             <TeamSearchBar setTeam={setActiveTeam} />
           </div>
-          <div className={styles.changeModal__date}>
+          <div
+            className={styles.changeModal__date}
+            style={{
+              pointerEvents: activeTeam ? 'all' : 'none',
+              opacity: activeTeam ? '1' : '0.5',
+            }}>
             {/* <p>Дата:</p> */}
             <MyCalendar
               onChange={onChangeDate}
@@ -598,6 +608,11 @@ export const TrainingEdit: React.FC = () => {
               dates={dates}
               disableTiles={true}
             />
+            <div
+              className={styles.changeModal__date__blind}
+              style={{ display: !activeTeam ? 'flex' : 'none' }}>
+              Выберите команду
+            </div>
           </div>
           <button
             disabled={!isValidModal}

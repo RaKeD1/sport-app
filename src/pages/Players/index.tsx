@@ -59,14 +59,14 @@ export const Players = () => {
   const avatarSmall = true;
   const [showModal, setShowModal] = useState<boolean>(false);
   const [changePhotoModal, setChangePhotoModal] = useState<boolean>(false);
+  const [value, setValue] = useState('');
+  const [isLoad, setIsLoad] = useState(true);
 
   const dispatch = useAppDispatch();
 
   const users = useSelector(SelectUsers);
-  useEffect(() => {
-    dispatch(fetchUsers());
-  }, []);
   console.log('users', users);
+
   const players = users.map((obj) => {
     const user = {
       ...obj,
@@ -74,19 +74,16 @@ export const Players = () => {
     };
     return user;
   });
-  const [value, setValue] = useState('');
+
   const filtredPlayers = players.filter((user) => {
     return user.player.toLowerCase().includes(value.toLowerCase());
   });
-  const [isLoad, setIsLoad] = useState(true);
 
   useEffect(() => {
+    dispatch(fetchUsers());
     setIsLoad(false);
   }, []);
-  const colors = ['#FF008C', '#D309E1', '#9C1AFF', '#7700FF', '#4400FF'];
-  const randomIndex = Math.floor(Math.random() * colors.length);
-  const randomColor = colors[randomIndex];
-  const style = { backgroundColor: `${randomColor}` };
+
   return (
     <>
       <div className={styles.main}>
@@ -105,9 +102,6 @@ export const Players = () => {
           initial='hidden'
           animate='visible'>
           {filtredPlayers.map((player) => {
-            const randomIndex = Math.floor(Math.random() * colors.length);
-            const randomColor = colors[randomIndex];
-            const style = { backgroundColor: randomColor };
             return (
               <motion.li key={player.id_user} variants={item}>
                 <ProfileInfo

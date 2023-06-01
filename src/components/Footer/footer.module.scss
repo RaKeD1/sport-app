@@ -27,17 +27,45 @@
 
   &__title {
     color: #e3e3e3;
-    font-size: 15px;
+    @include dynamicFontSize(15, 12);
   }
   &__text {
     color: #e3e3e3;
-    font-size: 13px;
-
+    @include dynamicFontSize(13, 11);
     a {
       color: inherit;
     }
   }
+
+  @media (max-width: 768px) {
+    &__block,
+    &__dev {
+      flex-basis: 100%;
+    }
+
+    &__teacher {
+      flex-basis: 100%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    &__body {
+      flex-direction: column;
+      padding: 20px;
+    }
+    &__block, &__teacher, &__dev {
+      text-align: center;
+      padding: 10px;
+    }
+    &__title {
+      font-size: 22px;
+    }
+    &__text {
+      font-size: 18px;
+    }
+  }
 }
+
 
 .container {
   width: calc(100vw - 250px);

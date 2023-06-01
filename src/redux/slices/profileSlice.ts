@@ -220,6 +220,7 @@ const profileSlice = createSlice({
       console.log('USer', state.user);
       state.status = Status.SUCCESS;
       localStorage.setItem('token', action.payload.data.accessToken);
+      localStorage.setItem('role', action.payload.data.user.role);
       state.isAuth = true;
       localStorage.isAuth = true;
     });
@@ -239,6 +240,7 @@ const profileSlice = createSlice({
       state.user = action.payload.data.user;
       state.status = Status.SUCCESS;
       localStorage.setItem('token', action.payload.data.accessToken);
+      localStorage.setItem('role', action.payload.data.user.role);
       state.isAuth = true;
       localStorage.isAuth = true;
     });
@@ -256,6 +258,7 @@ const profileSlice = createSlice({
     builder.addCase(logoutAccount.fulfilled, (state) => {
       state.status = Status.SUCCESS;
       localStorage.removeItem('token');
+      localStorage.removeItem('role');
       state.isAuth = false;
       localStorage.isAuth = false;
       state.user = initialState.user;
@@ -271,7 +274,8 @@ const profileSlice = createSlice({
 
     builder.addCase(updateUser.fulfilled, (state, action) => {
       state.updateUserStatus = Status.SUCCESS;
-      state.user = action.payload.data; //
+      state.user = action.payload.data;
+      localStorage.setItem('role', action.payload.data.role);
       console.log('Данные пользователя', action.payload.data.name);
     });
 
@@ -286,6 +290,7 @@ const profileSlice = createSlice({
     builder.addCase(checkAuth.fulfilled, (state, action) => {
       state.status = Status.SUCCESS;
       localStorage.setItem('token', action.payload.data.accessToken);
+      localStorage.setItem('role', action.payload.data.user.role);
       state.isAuth = true;
       localStorage.isAuth = true;
       state.user = action.payload.data.user;
@@ -302,6 +307,7 @@ const profileSlice = createSlice({
     builder.addCase(fetchUser.fulfilled, (state, action) => {
       state.status = Status.SUCCESS;
       state.user = action.payload.data;
+      localStorage.setItem('role', action.payload.data.role);
       console.log('login', action.payload.data.login);
     });
     builder.addCase(fetchUser.rejected, (state) => {

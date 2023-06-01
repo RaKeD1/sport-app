@@ -124,14 +124,14 @@ function RequireNotAuth({ children, redirectTo }) {
 }
 
 function RequireEditor({ children, redirectTo }) {
-  const role = useSelector(SelectUserRole);
+  const role = localStorage.getItem('role');
   console.log('role', role);
   if (role !== 'EDITOR' && role !== 'ADMIN') alert('Нет прав доступа!');
   return role === 'EDITOR' || role === 'ADMIN' ? children : <Navigate to={redirectTo} />;
 }
 
 function RequireAdmin({ children, redirectTo }) {
-  const role = useSelector(SelectUserRole);
+  const role = localStorage.getItem('role');
   console.log('role', role);
   if (role !== 'ADMIN') alert('Нет прав доступа!');
   return role === 'ADMIN' ? children : <Navigate to={redirectTo} />;

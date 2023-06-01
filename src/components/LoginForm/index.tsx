@@ -8,6 +8,7 @@ import LoginSchema from '../../models/validation/LoginSchema';
 import { loginAccount } from '../../redux/slices/profileSlice';
 import { bindActionCreators } from '@reduxjs/toolkit';
 import { connect } from 'react-redux';
+import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 
 interface FormValues {
   login: string;
@@ -26,10 +27,30 @@ const InnerForm: React.FC = (props: FormikProps<FormValues>) => {
       <div className={styles.auth__inputs}>
         <div className={classnames(styles.auth__forinput)}>
           <Field name='login' type='text' placeholder='Логин' />
+          {!errors.login && touched.login && (
+            <span>
+              <FaCheckCircle className={classnames(styles.checkIcon, styles.checkIcon_true)} />
+            </span>
+          )}
+          {errors.login && touched.login && (
+            <span>
+              <FaTimesCircle className={classnames(styles.checkIcon, styles.checkIcon_false)} />
+            </span>
+          )}
           {errors.login && touched.login && <div>{errors.login}</div>}
         </div>
         <div className={classnames(styles.auth__forinput)}>
           <Field name='password' type='password' placeholder='Пароль' />
+          {!errors.password && touched.password && (
+            <span>
+              <FaCheckCircle className={classnames(styles.checkIcon, styles.checkIcon_true)} />
+            </span>
+          )}
+          {errors.password && touched.password && (
+            <span>
+              <FaTimesCircle className={classnames(styles.checkIcon, styles.checkIcon_false)} />
+            </span>
+          )}
           {errors.password && touched.password && <div>{errors.password}</div>}
         </div>
       </div>

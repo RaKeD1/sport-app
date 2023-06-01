@@ -1,89 +1,20 @@
 @import '../../scss/vars';
 
-// input {
-//   width: 100%;
-//   background-color: $input-clr;
-//   color: #939393;
-//   border-radius: 10px;
-//   padding: 10px 15px;
-//   border: 1px solid rgba(0, 0, 0, 0);
-//   font-weight: 400;
-//   font-size: calc((100vw - 480px) / (1280 - 480) * (22 - 12) + 12px);
+.checkIcon {
+  position: absolute;
+  top: 16px;
+  right: -25px;
+  font-size: 17px;
 
-//   transition: all 1s;
-//   &:focus,
-//   :focus-visible {
-//     color: #000;
-//     background-color: #fff;
-//     border: 1px solid;
-//     border-color: rgba(0, 0, 0, 0.1);
-//     outline: -webkit-focus-ring-color auto 0px !important;
-//   }
-// }
-button {
-  background-color: $button-clr;
-  border: none;
-  border-radius: calc((100vw - 480px) / (1280 - 480) * (16 - 10) + 10px);
-  padding: 10px 30px;
-  color: #fff;
-  font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 10) + 10px);
-  font-weight: 600;
-  transition: 0.5s;
-  border: 1px solid rgba($color: #000, $alpha: 0);
-  cursor: pointer;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  &_false {
+    color: red;
+  }
 
-  &:hover {
-    background-color: transparent;
-    border: 1px solid $button-clr;
-    color: $button-clr;
-    svg {
-      -webkit-filter: invert(100%);
-      filter: invert(100%);
-    }
+  &_true {
+    color: #18e700;
   }
 }
 
-// Добавлять только при условие что значение в input верное
-.input_true {
-  background-color: transparent;
-
-  color: $button-clr;
-  position: relative;
-  &::before {
-    content: '';
-    position: absolute;
-    right: calc((100vw - 480px) / (1280 - 480) * (20 - 13) + 13px);
-    right: calc((100vw - 480px) / (1280 - 480) * (20 - 13) + 13px);
-    bottom: 0;
-    margin-top: calc((100vw - 480px) / (1280 - 480) * (15 - 14) + 14px);
-    margin-bottom: calc((100vw - 480px) / (1280 - 480) * (15 - 14) + 14px);
-    top: 0;
-    width: calc((100vw - 480px) / (1280 - 480) * (18 - 13) + 13px);
-    height: calc((100vw - 480px) / (1280 - 480) * (14 - 10) + 10px);
-    background: url('../../assets/img/checkTrue.svg') no-repeat;
-    background-size: cover;
-  }
-}
-.input_false {
-  background-color: transparent;
-
-  color: $button-clr;
-  position: relative;
-  &::before {
-    content: '';
-    position: absolute;
-    right: calc((100vw - 480px) / (1280 - 480) * (20 - 13) + 13px);
-    bottom: 0;
-    margin-top: calc((100vw - 480px) / (1280 - 480) * (14 - 14) + 14px);
-    margin-bottom: calc((100vw - 480px) / (1280 - 480) * (14 - 14) + 14px);
-    top: 0;
-    width: calc((100vw - 480px) / (1280 - 480) * (16 - 10) + 10px);
-    height: calc((100vw - 480px) / (1280 - 480) * (16 - 10) + 10px);
-    background: url('../../assets/img/checkFalse.svg') no-repeat;
-    background-size: cover;
-  }
-}
 .auth {
   background: #fff;
   display: flex;
@@ -94,6 +25,7 @@ button {
 
   &__forinput {
     margin: 6px auto;
+    position: relative;
     width: 80%;
     color: red;
     div {
@@ -128,6 +60,27 @@ button {
     width: 80%;
     text-align: center;
     justify-content: center;
+    background-color: $button-clr;
+    border: none;
+    border-radius: calc((100vw - 480px) / (1280 - 480) * (16 - 10) + 10px);
+    padding: 10px 30px;
+    color: #fff;
+    font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 10) + 10px);
+    font-weight: 600;
+    transition: 0.5s;
+    border: 1px solid rgba($color: #000, $alpha: 0);
+    cursor: pointer;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      background-color: transparent;
+      border: 1px solid $button-clr;
+      color: $button-clr;
+      svg {
+        -webkit-filter: invert(100%);
+        filter: invert(100%);
+      }
+    }
   }
   &__text {
     font-weight: 400;
@@ -142,6 +95,7 @@ button {
     color: $button-clr;
   }
 }
+
 @media (min-height: 750px) {
   .container {
     margin-top: 70%;
@@ -188,10 +142,23 @@ button {
       &__logo {
         display: none;
       }
-      margin: 10px 400px;
+      margin: 10px 0;
       &__title {
         color: $head-clr;
         margin: 15px auto 15px;
+      }
+    }
+  }
+}
+
+/* Стили, применяемые, когда устройство использует тап */
+@media (hover: none) {
+  .auth {
+    &__button {
+      &:hover {
+        background-color: $button-clr;
+        border: none;
+        color: #fff;
       }
     }
   }

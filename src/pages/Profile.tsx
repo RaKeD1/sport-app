@@ -23,6 +23,7 @@ export const Profile: FC = () => {
         <ProfileInfo
           data={user}
           avatarSmall={avatarSmall}
+          inRow={true}
           onClickEdit={setShowModal}
           onClickEditPhoto={setChangePhotoModal}
         />

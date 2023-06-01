@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import styles from './ProfileInfo.module.scss';
 import { SERVER_URL } from '../../http';
 import { columnUser } from '../../pages/Players';
@@ -7,6 +7,7 @@ import { IUser } from '../../models/IUser';
 import UserService from '../../services/UserService';
 import { setImg } from '../../redux/slices/profileSlice';
 import { useAppDispatch } from '../../hooks/redux';
+import classNames from 'classnames';
 
 interface ProfileInfoProps {
   onClickEditUser?: (value: number) => void;
@@ -15,7 +16,7 @@ interface ProfileInfoProps {
   onClickEdit: (value: boolean) => void;
   onClickEditPhoto: (value: boolean) => void;
 }
-const ProfileInfo = ({ data, avatarSmall, onClickEdit, onClickEditPhoto }) => {
+const ProfileInfo = ({ data, inRow, avatarSmall, onClickEdit, onClickEditPhoto }) => {
   const handleEditUser = () => {
     onClickEdit(true); // Передаем сигнал о необходимости открытия компонента редактирования
     onClickEdit(data); // Передаем данные пользователя в родительский компонент
@@ -23,6 +24,24 @@ const ProfileInfo = ({ data, avatarSmall, onClickEdit, onClickEditPhoto }) => {
   const [showPhotoMenu, setShowPhotoMenu] = useState<boolean>(false);
   const [deleteError, setDeleteError] = useState<string>(null);
   const dispatch = useAppDispatch();
+
+  const [matches, setMatches] = useState(window.matchMedia('(max-width: 760px)').matches);
+
+  useEffect(() => {
+    window
+      .matchMedia('(max-width: 760px)')
+      .addEventListener('change', (e) => setMatches(e.matches));
+  }, []);
+
+  const [mobileMatches, setMobileMatches] = useState(
+    window.matchMedia('(max-width: 530px)').matches,
+  );
+
+  useEffect(() => {
+    window
+      .matchMedia('(max-width: 530px)')
+      .addEventListener('change', (e) => setMobileMatches(e.matches));
+  }, []);
 
   const onClickDeletePhoto = async () => {
     await UserService.deleteUserPhoto(data.id_user)
@@ -48,12 +67,17 @@ const ProfileInfo = ({ data, avatarSmall, onClickEdit, onClickEditPhoto }) => {
   return (
     <section
       style={{
-        width: avatarSmall ? '100%' : '300px',
+        width:
+          avatarSmall || (matches && !mobileMatches && inRow) || (mobileMatches && inRow)
+            ? '100%'
+            : '300px',
         boxShadow: avatarSmall === true && '0 0 30px rgba(0, 0, 0, 0.2)',
       }}
-      className={styles.root}>
+      className={classNames(styles.root, { [styles.row]: matches && !mobileMatches && inRow })}>
       <div
-        className={styles.root__header}
+        className={classNames(styles.root__header, {
+          [styles.row__header]: matches && !mobileMatches && inRow,
+        })}
         style={{ flexDirection: avatarSmall ? 'row' : 'column' }}>
         <div
           className={small}
@@ -88,7 +112,10 @@ const ProfileInfo = ({ data, avatarSmall, onClickEdit, onClickEditPhoto }) => {
           {data.surname + ' ' + data.name + ' ' + data.patronimyc}
         </p>
       </div>
-      <div className={styles.root__info}>
+      <div
+        className={classNames(styles.root__info, {
+          [styles.row__info]: matches && !mobileMatches && inRow,
+        })}>
         {Object.entries(data)
           .filter(
             (arr) =>

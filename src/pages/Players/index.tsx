@@ -123,6 +123,7 @@ export const Players = () => {
                 variants={item}>
                 <ProfileInfo
                   data={player}
+                  inRow={false}
                   avatarSmall={avatarSmall}
                   onClickEdit={() => handleEditUser(player)} // Передаем данные пользователя в обработчик
                   onClickEditPhoto={setChangePhotoModal}

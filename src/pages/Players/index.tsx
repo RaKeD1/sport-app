@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import ProfileInfo from '../../components/ProfileInfo';
 import Modal from '../../components/Modal';
 import UpdateUser from '../../components/UpdateDataUser';
+import pageMotion from '../../components/pageMotion';
 
 export interface PlayersInf {
   email: string;
@@ -96,7 +97,7 @@ export const Players = () => {
   };
   useEffect(() => {}, [selectedUser]);
   return (
-    <>
+    <motion.div variants={pageMotion} initial='hidden' animate='show' exit='exit'>
       <div className={styles.main}>
         <div className={styles.form}>
           <label>Введите ФИО игрока:</label>
@@ -136,7 +137,7 @@ export const Players = () => {
           <UpdateUser isUpdate={setIsUpdate} user={selectedUser} setIsActive={setShowModal} />
         </Modal>
       </div>
-    </>
+    </motion.div>
   );
 };
 

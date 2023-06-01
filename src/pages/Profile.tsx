@@ -9,6 +9,8 @@ import Modal from '../components/Modal';
 import UserStatCircles from '../components/UserStatCircles';
 import UploadPhoto from '../components/UploadPhoto';
 import UserTrainings from '../components/UserTrainings';
+import { motion } from 'framer-motion';
+import pageMotion from '../components/pageMotion';
 
 export const Profile: FC = () => {
   const avatarSmall = false;
@@ -18,7 +20,7 @@ export const Profile: FC = () => {
   const [changePhotoModal, setChangePhotoModal] = useState<boolean>(false);
 
   return (
-    <>
+    <motion.div variants={pageMotion} initial='hidden' animate='show' exit='exit'>
       <div className='tiles'>
         <ProfileInfo
           data={user}
@@ -36,7 +38,7 @@ export const Profile: FC = () => {
       <Modal isActive={changePhotoModal} setIsActive={setChangePhotoModal}>
         <UploadPhoto onSend={setChangePhotoModal} />
       </Modal>
-    </>
+    </motion.div>
   );
 };
 export default Profile;

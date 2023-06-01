@@ -256,12 +256,16 @@ export const Statistics: React.FC = () => {
               </span>
             </>
           ) : (
-            <DataSkeleton width={110} height={27} />
+            <p className={styles.train__group_notSelected}>Не выбрано</p>
           )}
         </div>
         <div className={styles.train__group}>
           <p>Группа:</p>
-          {team ? <span>{team}</span> : <DataSkeleton width={70} height={27} />}
+          {team ? (
+            <span>{team}</span>
+          ) : (
+            <p className={styles.train__group_notSelected}>Не выбрано</p>
+          )}
         </div>
         <button
           className={classNames(styles.train__btnChange, {

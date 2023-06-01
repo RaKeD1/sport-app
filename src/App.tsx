@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import './scss/app.scss';
 import Header from './components/Header';
 import Login from './pages/Login';
@@ -16,11 +16,13 @@ import NotFound from './pages/NotFound/NotFound';
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
 import Statistics from './pages/Statistics';
 import Footer from './components/Footer';
+import { AnimatePresence } from 'framer-motion';
 
 function App() {
   const dispatch = useAppDispatch();
   const status = useSelector((state: RootState) => state.profile.status);
   const isAuth = useSelector((state: RootState) => state.profile.isAuth);
+  const location = useLocation();
 
   React.useEffect(() => {
     if (localStorage.getItem('token')) {
@@ -36,73 +38,75 @@ function App() {
         {isAuth && <Header />}
         <div className='container'>
           <div className='content'>
-            <Routes>
-              <Route
-                path='/login'
-                element={
-                  <RequireNotAuth redirectTo='/'>
-                    <Login />
-                  </RequireNotAuth>
-                }></Route>
-              <Route
-                path='/registration'
-                element={
-                  <RequireNotAuth redirectTo='/'>
-                    <Registr />
-                  </RequireNotAuth>
-                }></Route>
-              <Route
-                path='/'
-                element={
-                  <RequireAuth redirectTo='/login'>
-                    <Profile />
-                  </RequireAuth>
-                }></Route>
-              <Route
-                path='/profile'
-                element={
-                  <RequireAuth redirectTo='/login'>
-                    <Profile />
-                  </RequireAuth>
-                }></Route>
-              <Route
-                path='/createtraining'
-                element={
-                  <RequireAuth redirectTo='/login'>
-                    <RequireEditor redirectTo='/profile'>
-                      <CreateTrain />
-                    </RequireEditor>
-                  </RequireAuth>
-                }></Route>
-              <Route
-                path='/training'
-                element={
-                  <RequireAuth redirectTo='/login'>
-                    <RequireEditor redirectTo='/profile'>
-                      <TrainingEdit />
-                    </RequireEditor>
-                  </RequireAuth>
-                }></Route>
-              <Route
-                path='/statistics'
-                element={
-                  <RequireAuth redirectTo='/login'>
-                    <RequireEditor redirectTo='/profile'>
-                      <Statistics />
-                    </RequireEditor>
-                  </RequireAuth>
-                }></Route>
-              <Route
-                path='/players'
-                element={
-                  <RequireAuth redirectTo='/login'>
-                    <RequireAdmin redirectTo='/profile'>
-                      <Players />
-                    </RequireAdmin>
-                  </RequireAuth>
-                }></Route>
-              <Route path='*' element={<NotFound />}></Route>
-            </Routes>
+            <AnimatePresence mode='wait'>
+              <Routes location={location} key={location.pathname}>
+                <Route
+                  path='/login'
+                  element={
+                    <RequireNotAuth redirectTo='/'>
+                      <Login />
+                    </RequireNotAuth>
+                  }></Route>
+                <Route
+                  path='/registration'
+                  element={
+                    <RequireNotAuth redirectTo='/'>
+                      <Registr />
+                    </RequireNotAuth>
+                  }></Route>
+                <Route
+                  path='/'
+                  element={
+                    <RequireAuth redirectTo='/login'>
+                      <Profile />
+                    </RequireAuth>
+                  }></Route>
+                <Route
+                  path='/profile'
+                  element={
+                    <RequireAuth redirectTo='/login'>
+                      <Profile />
+                    </RequireAuth>
+                  }></Route>
+                <Route
+                  path='/createtraining'
+                  element={
+                    <RequireAuth redirectTo='/login'>
+                      <RequireEditor redirectTo='/profile'>
+                        <CreateTrain />
+                      </RequireEditor>
+                    </RequireAuth>
+                  }></Route>
+                <Route
+                  path='/training'
+                  element={
+                    <RequireAuth redirectTo='/login'>
+                      <RequireEditor redirectTo='/profile'>
+                        <TrainingEdit />
+                      </RequireEditor>
+                    </RequireAuth>
+                  }></Route>
+                <Route
+                  path='/statistics'
+                  element={
+                    <RequireAuth redirectTo='/login'>
+                      <RequireEditor redirectTo='/profile'>
+                        <Statistics />
+                      </RequireEditor>
+                    </RequireAuth>
+                  }></Route>
+                <Route
+                  path='/players'
+                  element={
+                    <RequireAuth redirectTo='/login'>
+                      <RequireAdmin redirectTo='/profile'>
+                        <Players />
+                      </RequireAdmin>
+                    </RequireAuth>
+                  }></Route>
+                <Route path='*' element={<NotFound />}></Route>
+              </Routes>
+            </AnimatePresence>
           </div>
         </div>
       </div>

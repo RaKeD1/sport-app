@@ -28,6 +28,8 @@ import {
   setStatTeam,
 } from '../../redux/slices/statSlice';
 import ProgressCircle from '../../components/ProgressCircle';
+import pageMotion from '../../components/pageMotion';
+import { motion } from 'framer-motion';
 
 export const columnNames = {
   fio: 'ФИО',
@@ -235,7 +237,12 @@ export const Statistics: React.FC = () => {
 
   return (
     <>
-      <div className={styles.train}>
+      <motion.div
+        variants={pageMotion}
+        initial='hidden'
+        animate='show'
+        exit='exit'
+        className={styles.train}>
         <div className={styles.train__date}>
           <p>Дата:</p>
 
@@ -350,7 +357,7 @@ export const Statistics: React.FC = () => {
             )}
           </>
         )}
-      </div>
+      </motion.div>
       <Modal isActive={isChangeTrain} setIsActive={setIsChangeTrain}>
         <div className={styles.changeModal}>
           <div className={styles.changeModal__group}>

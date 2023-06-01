@@ -25,6 +25,8 @@ import { ISelectUser } from '../../models/ISelectUser';
 import TrainService from '../../services/TrainService';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import qs from 'qs';
+import { AnimatePresence, motion } from 'framer-motion';
+import pageMotion from '../pageMotion';
 
 const CreateTrain: FC = () => {
   const [isValid, setIsValid] = useState<boolean>(false);
@@ -76,7 +78,12 @@ const CreateTrain: FC = () => {
   };
 
   return (
-    <div className={styles.train}>
+    <motion.div
+      variants={pageMotion}
+      initial='hidden'
+      animate='show'
+      exit='exit'
+      className={styles.train}>
       <h2 className={styles.train__title}>Создание тренировки</h2>
       <div className={styles.train__elem}>
         <p>Название команды:</p>
@@ -105,12 +112,14 @@ const CreateTrain: FC = () => {
         <UserSearchBar setCollabs={setCollabs} />
       </div>
       <button
-        className={classNames(styles.train__create, { [styles.train__create_notValid]: !isValid })}
+        className={classNames(styles.train__create, {
+          [styles.train__create_notValid]: !isValid,
+        })}
         disabled={!isValid}
         onClick={() => createTrain(account_id, team, selectPlayers)}>
         Создать
       </button>
-    </div>
+    </motion.div>
   );
 };
 

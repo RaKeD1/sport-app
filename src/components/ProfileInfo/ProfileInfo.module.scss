@@ -121,3 +121,16 @@
     }
   }
 }
+
+/* Стили, применяемые, когда устройство использует тап */
+@media (hover: none) {
+  .root {
+    &__editBtn {
+      &:hover {
+        background: #3389c7;
+        border: none;
+        color: #fff;
+      }
+    }
+  }
+}

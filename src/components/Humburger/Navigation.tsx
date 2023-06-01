@@ -9,12 +9,25 @@ const variants = {
   open: {
     transition: { staggerChildren: 0.07, delayChildren: 0.2 },
     zIndex: 100,
+    height: '100%',
     overflow: 'visible',
+    display: 'block',
+    pointerEvents: 'auto' as const,
   },
   closed: {
-    transition: { staggerChildren: 0.05, staggerDirection: -1 },
-    zIndex: -990,
+    transition: {
+      delay: 0.2,
+      staggerChildren: 0.07,
+      staggerDirection: -99,
+      delayChildren: 0.21,
+    },
+    height: '5%',
+    zIndex: 100,
+    display: 'none',
     overflow: 'hidden',
+
+    // pointerEvents: 'none' as const,
+    // display: 'none',
   },
 };
 const variants2 = {
@@ -29,7 +42,8 @@ const variants2 = {
     y: 20,
     opacity: 0,
     transition: {
-      y: { stiffness: 1000, velocity: -1000 },
+      delay: 0.01,
+      y: { stiffness: 200, velocity: -1000 },
     },
   },
 };
@@ -53,15 +67,14 @@ export const Navigation = ({ setIsOpen }) => {
       {pages.map((page) => (
         <MenuItem setIsOpen={setIsOpen} page={page} key={page.path} />
       ))}
-      <div className='buttons__user'>
-        <motion.button
-          onClick={() => dispatch(logoutAccount())}
-          variants={variants2}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}>
-          Выйти
-        </motion.button>
-      </div>
+      <motion.button
+        className={styles.button__exit}
+        onClick={() => dispatch(logoutAccount())}
+        variants={variants2}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}>
+        Выйти
+      </motion.button>
     </motion.ul>
   );
 };

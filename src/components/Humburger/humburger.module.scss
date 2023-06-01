@@ -7,6 +7,9 @@
   height: 100vh;
   width: 500px;
   z-index: 1000;
+  @media screen and (max-width: 600px) {
+    width: 100%;
+  }
 }
 .backDrop {
   position: fixed;
@@ -22,9 +25,14 @@
 }
 
 .background {
+  position: absolute;
   width: 500px;
   height: 100%;
   background: #fff;
+  @media screen and (max-width: 600px) {
+    position: relative;
+    width: 100%;
+  }
 }
 
 .button {
@@ -33,13 +41,29 @@
   cursor: pointer;
   position: fixed;
   display: flex;
-
   top: calc((100vw - 480px) / (1280 - 480) * (23 - 9) + 9px);
   right: 40px;
   height: 50px;
   width: 50px;
   align-items: center;
   justify-content: center;
+  &__exit {
+    border: none;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    background-color: transparent;
+    color: #e24864;
+    @include dynamicFontSize(20, 10);
+    box-shadow: none;
+    &:hover,
+    :focus,
+    :focus-visible {
+      color: #cb2140;
+      background-color: none;
+      border: none;
+    }
+  }
 }
 
 .ul,

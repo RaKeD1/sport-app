@@ -135,7 +135,9 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
   };
 
   return (
-    <div className={classNames(styles.action, { [styles.active]: isActive })}>
+    <div
+      style={{ zIndex: !isActive ? -1 : 990 }}
+      className={classNames(styles.action, { [styles.active]: isActive })}>
       <div
         ref={modalRef}
         className={classNames(styles.action__content, { [styles.active]: isActive })}>

@@ -16,7 +16,9 @@ const Modal: FC<ModalProps> = ({ isActive, setIsActive, children }) => {
   useOnClickOutside(ref, () => setIsActive(false));
 
   return (
-    <div className={classNames(styles.action, { [styles.active]: isActive })}>
+    <div
+      style={{ zIndex: !isActive ? -1 : 990 }}
+      className={classNames(styles.action, { [styles.active]: isActive })}>
       <div ref={ref} className={classNames(styles.action__content, { [styles.active]: isActive })}>
         <FaTimes className={styles.action__close} onClick={() => setIsActive(false)} />
         {children}

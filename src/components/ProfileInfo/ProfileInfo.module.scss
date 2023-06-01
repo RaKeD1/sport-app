@@ -122,6 +122,28 @@
   }
 }
 
+.row {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+
+  &__header {
+    padding: 15px;
+    background: #4099eb;
+    border-radius: 25px 0px 0 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50vw;
+  }
+
+  &__info {
+    padding: 20px;
+    width: 100%;
+  }
+}
+
 /* Стили, применяемые, когда устройство использует тап */
 @media (hover: none) {
   .root {

@@ -40,6 +40,7 @@ import TrainService from '../../services/TrainService';
 import { AnimatePresence, motion } from 'framer-motion';
 import Pagination from '../../components/Pagination';
 import { TiUserDelete } from 'react-icons/ti';
+import pageMotion from '../../components/pageMotion';
 
 export interface Cols {
   fio: string;
@@ -412,7 +413,7 @@ export const TrainingEdit: React.FC = () => {
   );
 
   return (
-    <>
+    <motion.div variants={pageMotion} initial='hidden' animate='show' exit='exit'>
       <div className={styles.train}>
         <div className={styles.train__date}>
           <p>Дата:</p>
@@ -672,7 +673,7 @@ export const TrainingEdit: React.FC = () => {
           </button>
         </div>
       </Modal>
-    </>
+    </motion.div>
   );
 };
 

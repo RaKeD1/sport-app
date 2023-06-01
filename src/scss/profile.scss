@@ -40,3 +40,9 @@
 .tiles {
   display: flex;
 }
+
+@media (max-width: 760px) {
+  .tiles {
+    flex-direction: column;
+  }
+}

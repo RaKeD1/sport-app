@@ -99,3 +99,44 @@
     margin-left: 15px;
   }
 }
+
+@media (max-width: 560px) {
+  .train {
+    &__title {
+      font-size: 25px;
+      margin-bottom: 30px;
+    }
+
+    &__elem {
+      flex-direction: column;
+
+      input {
+        font-size: 16px;
+      }
+
+      p {
+        margin-bottom: 7px;
+      }
+    }
+
+    &__team {
+      span {
+        top: auto;
+        bottom: -20px;
+      }
+    }
+  }
+}
+
+/* Стили, применяемые, когда устройство использует тап */
+@media (hover: none) {
+  .train {
+    &__create {
+      &:hover {
+        background-color: $button-clr;
+        border: none;
+        color: #fff;
+      }
+    }
+  }
+}

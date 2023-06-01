@@ -41,7 +41,7 @@ button {
   border-radius: calc((100vw - 480px) / (1280 - 480) * (16 - 10) + 10px);
   padding: 10px 30px;
   color: #fff;
-  font-size: 10px;
+  @include dynamicFontSize(15, 8);
   font-weight: 600;
   transition: 0.5s;
   border: 1px solid rgba($color: #000, $alpha: 0);
@@ -53,8 +53,6 @@ button {
     border: 1px solid $button-clr;
     color: $button-clr;
   }
-}
-#root {
 }
 
 .page {

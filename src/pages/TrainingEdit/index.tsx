@@ -16,6 +16,8 @@ import {
   TrainParams,
   setTrainParams,
   deleteAction,
+  deleteTeamTrain,
+  deletePlayerTrain,
 } from '../../redux/slices/trainSlice';
 import { useAppDispatch } from '../../redux/store';
 import ActionModal, { Option } from '../../components/ActionModal';
@@ -34,10 +36,11 @@ import {
   SelectTrainActionsStatus,
   getTrainActions,
 } from '../../redux/slices/actionsSlice';
-import DataSkeleton from '../../components/DataSkeleton';
 import TrainService from '../../services/TrainService';
 import { AnimatePresence, motion } from 'framer-motion';
 import Pagination from '../../components/Pagination';
+import { TiUserDelete } from 'react-icons/ti';
+import pageMotion from '../../components/pageMotion';
 
 export interface Cols {
   fio: string;
@@ -294,6 +297,30 @@ export const TrainingEdit: React.FC = () => {
     );
   }, [page, limit]);
 
+  const deleteTrain = () => {
+    if (window.confirm('Удалить тренировку?')) {
+      dispatch(
+        deleteTeamTrain({
+          account_id,
+          date,
+          team,
+        }),
+      );
+      navigate('');
+    }
+  };
+
+  const onClickDeletePlayer = (id_train: number) => {
+    if (window.confirm('Удалить игрока из команды?')) {
+      dispatch(
+        deletePlayerTrain({
+          account_id,
+          id_train,
+        }),
+      );
+    }
+  };
+
   const actionVariants = {
     hidden: {
       opacity: 0,
@@ -359,6 +386,17 @@ export const TrainingEdit: React.FC = () => {
           </button>
         ),
       },
+      {
+        id: 'Delete',
+        Header: '',
+        Cell: ({ row, value }) => (
+          <button
+            className={classNames(styles.selectButton, styles.deleteButton)}
+            onClick={() => onClickDeletePlayer(+JSON.stringify(row.values.id_train))}>
+            <TiUserDelete />
+          </button>
+        ),
+      },
     ]);
   };
 
@@ -375,7 +413,7 @@ export const TrainingEdit: React.FC = () => {
   );
 
   return (
-    <>
+    <motion.div variants={pageMotion} initial='hidden' animate='show' exit='exit'>
       <div className={styles.train}>
         <div className={styles.train__date}>
           <p>Дата:</p>
@@ -393,13 +431,20 @@ export const TrainingEdit: React.FC = () => {
             <p className={styles.train__group_notSelected}>Не выбрано</p>
           )}
         </div>
-        <button
-          className={classNames(styles.train__btnChange, {
-            [styles.pulse]: players.length === 0 && status !== Status.ERROR && !isChangeTrain,
-          })}
-          onClick={() => setIsChangeTrain(true)}>
-          Сменить тренировку
-        </button>
+        <div className={styles.train__buttons}>
+          <button
+            className={classNames(styles.train__buttons__btnChange, {
+              [styles.pulse]: players.length === 0 && status !== Status.ERROR && !isChangeTrain,
+            })}
+            onClick={() => setIsChangeTrain(true)}>
+            Сменить тренировку
+          </button>
+          {players.length !== 0 && !error && status === Status.SUCCESS && (
+            <button className={styles.train__buttons__btnDelete} onClick={() => deleteTrain()}>
+              Удалить тренировку
+            </button>
+          )}
+        </div>
         {players.length === 0 && status !== Status.ERROR ? (
           <div className={styles.train__error}>
             <span>😕</span>
@@ -478,7 +523,11 @@ export const TrainingEdit: React.FC = () => {
                         {row.cells.map((cell, index) => (
                           <td
                             key={index}
-                            className={index === row.cells.length - 1 ? 'btn_cell' : ''}
+                            className={
+                              index === row.cells.length - 1 || index === row.cells.length - 2
+                                ? 'btn_cell'
+                                : ''
+                            }
                             {...row.getRowProps()}>
                             {cell.render('Cell')}
                           </td>
@@ -624,7 +673,7 @@ export const TrainingEdit: React.FC = () => {
           </button>
         </div>
       </Modal>
-    </>
+    </motion.div>
   );
 };
 

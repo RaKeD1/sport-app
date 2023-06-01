@@ -154,10 +154,14 @@
     background-color: #fff;
     border: 1px solid rgba(120, 198, 255, 0.1);
     color: $button-clr;
-    svg {
-      -webkit-filter: invert(100%);
-      filter: invert(100%);
-    }
+  }
+}
+
+.deleteButton {
+  padding: 8px;
+  &:hover {
+    background-color: #ff4e4e;
+    color: #fff;
   }
 }
 
@@ -211,11 +215,30 @@
     }
   }
 
-  &__btnChange {
+  &__buttons {
     position: absolute;
     top: 30px;
     right: 20px;
     font-weight: normal;
+
+    &__btnChange {
+      font-weight: inherit;
+      font-size: inherit;
+    }
+
+    &__btnDelete {
+      font-weight: inherit;
+      font-size: 14px;
+      background: transparent;
+      border: none;
+      color: rgb(173, 0, 0);
+      box-shadow: none;
+
+      &:hover {
+        border: none;
+        color: rgb(233, 0, 0);
+      }
+    }
 
     @media (max-width: 860px) {
       font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 17px);

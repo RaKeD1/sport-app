@@ -1,12 +1,11 @@
-import { Dispatch, FC, useState } from 'react';
+import { FC, useState } from 'react';
 import styles from './ProfileInfo.module.scss';
 import { SERVER_URL } from '../../http';
-import { PlayersInf, columnUser } from '../../pages/Players';
+import { columnUser } from '../../pages/Players';
 import { AnimatePresence, motion } from 'framer-motion';
 import { IUser } from '../../models/IUser';
 import UserService from '../../services/UserService';
-import { useSelector } from 'react-redux';
-import { SelectUser, setImg } from '../../redux/slices/profileSlice';
+import { setImg } from '../../redux/slices/profileSlice';
 import { useAppDispatch } from '../../hooks/redux';
 
 interface ProfileInfoProps {

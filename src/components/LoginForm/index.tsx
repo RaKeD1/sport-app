@@ -18,27 +18,28 @@ let setSubmittingHigher;
 
 const InnerForm: React.FC = (props: FormikProps<FormValues>) => {
   const { touched, errors, isSubmitting } = props;
+
   return (
     <Form className={styles.auth}>
-      <img className={styles.auth__logo} width="44" src={logo} alt="Volleyball logo"></img>
+      <img className={styles.auth__logo} width='44' src={logo} alt='Volleyball logo'></img>
       <h2 className={styles.auth__title}>Авторизация</h2>
       <div className={styles.auth__inputs}>
         <div className={classnames(styles.auth__forinput)}>
-          <Field name="login" type="text" placeholder="Логин" />
+          <Field name='login' type='text' placeholder='Логин' />
           {errors.login && touched.login && <div>{errors.login}</div>}
         </div>
         <div className={classnames(styles.auth__forinput)}>
-          <Field name="password" type="password" placeholder="Пароль" />
+          <Field name='password' type='password' placeholder='Пароль' />
           {errors.password && touched.password && <div>{errors.password}</div>}
         </div>
       </div>
       <p className={styles.auth__text}>
         Нет аккаунта?&nbsp;
-        <Link to="/registration" className={styles.auth__link}>
+        <Link to='/registration' className={styles.auth__link}>
           Зарегистрироваться
         </Link>
       </p>
-      <button type="submit" className={styles.auth__button} disabled={isSubmitting}>
+      <button type='submit' className={styles.auth__button} disabled={isSubmitting}>
         Войти
       </button>
     </Form>

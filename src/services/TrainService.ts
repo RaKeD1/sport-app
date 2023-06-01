@@ -63,6 +63,21 @@ export default class TrainService {
     return $api.delete<ITrain>(`/train-action?id_action=${id_action}`);
   }
 
+  static async deleteTrain(
+    account_id: number,
+    date: string,
+    day_team: string,
+  ): Promise<AxiosResponse<ITrain[]>> {
+    return $api.delete<ITrain[]>(`/team-train/${account_id}?date=${date}&day_team=${day_team}`);
+  }
+
+  static async deletePlayerTrain(
+    account_id: number,
+    id_train: number,
+  ): Promise<AxiosResponse<ITrain>> {
+    return $api.delete<ITrain>(`/train/${account_id}?id_train=${id_train}`);
+  }
+
   static async checkTeam(team: string): Promise<AxiosResponse<boolean>> {
     return $api.get<boolean>(`/team/${team}`);
   }

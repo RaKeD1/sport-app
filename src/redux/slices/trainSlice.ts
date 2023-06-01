@@ -21,6 +21,11 @@ export type GetTrainParams = {
   date: string;
 };
 
+export type DeletePlayerTrainParams = {
+  account_id: number;
+  id_train: number;
+};
+
 export type TrainParams = {
   team: string;
   date: string;
@@ -69,6 +74,40 @@ export const getTeamTrain = createAsyncThunk<
   try {
     const { account_id, team, date } = params;
     const response = await TrainService.getTrain(account_id, team, date);
+    return response;
+  } catch (error) {
+    if (!error.response) {
+      throw error;
+    }
+    return rejectWithValue(error.response?.data);
+  }
+});
+
+export const deleteTeamTrain = createAsyncThunk<
+  AxiosResponse<Players>,
+  GetTrainParams,
+  { rejectValue: FetchError }
+>('train/deleteTeamTrain', async (params, { rejectWithValue }) => {
+  try {
+    const { account_id, team, date } = params;
+    const response = await TrainService.deleteTrain(account_id, date, team);
+    return response;
+  } catch (error) {
+    if (!error.response) {
+      throw error;
+    }
+    return rejectWithValue(error.response?.data);
+  }
+});
+
+export const deletePlayerTrain = createAsyncThunk<
+  AxiosResponse<ITrain>,
+  DeletePlayerTrainParams,
+  { rejectValue: FetchError }
+>('train/deletePlayerTrain', async (params, { rejectWithValue }) => {
+  try {
+    const { account_id, id_train } = params;
+    const response = await TrainService.deletePlayerTrain(account_id, id_train);
     return response;
   } catch (error) {
     if (!error.response) {
@@ -248,6 +287,47 @@ const trainSlice = createSlice({
       state.players = playersData;
     });
     builder.addCase(deleteAction.rejected, (state, action) => {
+      console.log('REJECTED');
+      console.log(action.payload);
+      state.error = action.payload.message;
+      state.status = Status.ERROR;
+    });
+
+    // Кейсы для удаления тренировки команды
+    builder.addCase(deleteTeamTrain.pending, (state) => {
+      console.log('LOADING');
+      state.status = Status.LOADING;
+      state.error = initialState.error;
+    });
+    builder.addCase(deleteTeamTrain.fulfilled, (state, action) => {
+      state.status = Status.SUCCESS;
+      state.players = initialState.players;
+      state.team = initialState.team;
+      state.date = initialState.date;
+      state.status = initialState.status;
+      state.error = initialState.error;
+    });
+    builder.addCase(deleteTeamTrain.rejected, (state, action) => {
+      console.log('REJECTED');
+      console.log(action.payload);
+      state.error = action.payload.message;
+      state.status = Status.ERROR;
+    });
+
+    // Кейсы для удаления игрока из тренировки
+    builder.addCase(deletePlayerTrain.pending, (state) => {
+      console.log('LOADING');
+      state.status = Status.LOADING;
+      state.error = initialState.error;
+    });
+    builder.addCase(deletePlayerTrain.fulfilled, (state, action) => {
+      state.status = Status.SUCCESS;
+      state.error = initialState.error;
+      const deletedPlayer = action.payload.data;
+      const playersData = state.players.filter((item) => item.id_train !== deletedPlayer.id_train);
+      state.players = playersData;
+    });
+    builder.addCase(deletePlayerTrain.rejected, (state, action) => {
       console.log('REJECTED');
       console.log(action.payload);
       state.error = action.payload.message;

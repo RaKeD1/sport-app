@@ -47,6 +47,22 @@
     display: block;
     text-align: center;
   }
+
+  &__deleteButton {
+    background: transparent;
+    padding: 0;
+    margin-top: 15px;
+    color: #000;
+    opacity: 0.4;
+    box-shadow: none;
+    font-size: calc(100vw * 0.025);
+
+    &:hover {
+      background: transparent;
+      color: #000;
+      box-shadow: none;
+    }
+  }
 }
 
 .example-container {

@@ -22,7 +22,7 @@ import {
 import { useAppDispatch } from '../../redux/store';
 import ActionModal, { Option } from '../../components/ActionModal';
 import TeamSearchBar from '../../components/TeamSearchBar';
-import { SelectAccountID, Status } from '../../redux/slices/profileSlice';
+import { SelectAccountID, SelectUserRole, Status } from '../../redux/slices/profileSlice';
 import Modal from '../../components/Modal';
 import MyCalendar from '../../components/Calendar';
 import classNames from 'classnames';
@@ -41,6 +41,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Pagination from '../../components/Pagination';
 import { TiUserDelete } from 'react-icons/ti';
 import pageMotion from '../../components/pageMotion';
+import { useAppSelector } from '../../hooks/redux';
 
 export interface Cols {
   fio: string;
@@ -87,6 +88,7 @@ export const TrainingEdit: React.FC = () => {
   const [limit, setLimit] = useState<number>(5);
   const isSearch = React.useRef(false);
   const isMounted = useRef(false);
+  const role = useAppSelector(SelectUserRole);
 
   const [matches, setMatches] = useState(window.matchMedia('(min-width: 860px)').matches);
 
@@ -373,31 +375,49 @@ export const TrainingEdit: React.FC = () => {
   );
 
   const tableHooks = (hooks) => {
-    hooks.visibleColumns.push((columns: Column<Cols>[]) => [
-      ...columns,
-      {
-        id: 'Select',
-        Header: '',
-        Cell: ({ row, value }) => (
-          <button
-            className={styles.selectButton}
-            onClick={() => onClickAddAction(+JSON.stringify(row.values.id_train))}>
-            Добавить
-          </button>
-        ),
-      },
-      {
-        id: 'Delete',
-        Header: '',
-        Cell: ({ row, value }) => (
-          <button
-            className={classNames(styles.selectButton, styles.deleteButton)}
-            onClick={() => onClickDeletePlayer(+JSON.stringify(row.values.id_train))}>
-            <TiUserDelete />
-          </button>
-        ),
-      },
-    ]);
+    if (role === 'ADMIN') {
+      hooks.visibleColumns.push((columns: Column<Cols>[]) => [
+        ...columns,
+        {
+          id: 'Select',
+          Header: '',
+          Cell: ({ row, value }) => (
+            <button
+              className={styles.selectButton}
+              onClick={() => onClickAddAction(+JSON.stringify(row.values.id_train))}>
+              Добавить
+            </button>
+          ),
+        },
+        {
+          id: 'Delete',
+          Header: '',
+          Cell: ({ row, value }) => (
+            <button
+              style={{ pointerEvents: role === 'ADMIN' ? 'all' : 'none' }}
+              className={classNames(styles.selectButton, styles.deleteButton)}
+              onClick={() => onClickDeletePlayer(+JSON.stringify(row.values.id_train))}>
+              <TiUserDelete />
+            </button>
+          ),
+        },
+      ]);
+    } else {
+      hooks.visibleColumns.push((columns: Column<Cols>[]) => [
+        ...columns,
+        {
+          id: 'Select',
+          Header: '',
+          Cell: ({ row, value }) => (
+            <button
+              className={styles.selectButton}
+              onClick={() => onClickAddAction(+JSON.stringify(row.values.id_train))}>
+              Добавить
+            </button>
+          ),
+        },
+      ]);
+    }
   };
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable<Cols>(
@@ -439,7 +459,7 @@ export const TrainingEdit: React.FC = () => {
             onClick={() => setIsChangeTrain(true)}>
             Сменить тренировку
           </button>
-          {players.length !== 0 && !error && status === Status.SUCCESS && (
+          {role === 'ADMIN' && players.length !== 0 && !error && status === Status.SUCCESS && (
             <button className={styles.train__buttons__btnDelete} onClick={() => deleteTrain()}>
               Удалить тренировку
             </button>
@@ -468,6 +488,7 @@ export const TrainingEdit: React.FC = () => {
                   playersStats={players}
                   buttonEnabled={true}
                   onClickAddAction={onClickAddAction}
+                  onClickDelete={onClickDeletePlayer}
                 />
               </>
             ) : (

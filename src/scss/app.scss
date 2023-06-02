@@ -55,12 +55,25 @@ button {
   }
 }
 
+/* Стили, применяемые, когда устройство использует тап */
+@media (hover: none) {
+  button {
+    &:hover {
+      background-color: $button-clr;
+      border: 1px solid rgba($color: #000, $alpha: 0);
+      color: #fff;
+    }
+  }
+}
+
 .page {
   display: flex;
   flex-direction: column;
   min-height: calc(100vh - 120px);
 
-  @media (max-width: 480px) {min-height: calc(100vh - 286px);}
+  @media (max-width: 480px) {
+    min-height: calc(100vh - 286px);
+  }
 }
 
 .wrapper {

@@ -3,8 +3,16 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ContentPlaceholder } from './Placeholder';
 import './accordion.scss';
+import { ITrain } from '../../models/ITrain';
 
-const AccordionItem = ({ data, expanded, setExpanded, onClickAddAction, buttonEnabled }) => {
+const AccordionItem = ({
+  data,
+  expanded,
+  setExpanded,
+  onClickAddAction,
+  buttonEnabled,
+  onClickDelete,
+}) => {
   const isOpen = data === expanded;
 
   return (
@@ -32,6 +40,7 @@ const AccordionItem = ({ data, expanded, setExpanded, onClickAddAction, buttonEn
             <ContentPlaceholder
               data={data}
               buttonEnabled={buttonEnabled}
+              onClickDelete={onClickDelete}
               onClickAddAction={onClickAddAction}
             />
           </motion.section>
@@ -48,8 +57,9 @@ export const Accordion = (props) => {
 
   return (
     <div className='accordion'>
-      {props.playersStats.map((item) => (
+      {props.playersStats.map((item: ITrain) => (
         <AccordionItem
+          onClickDelete={props.onClickDelete}
           data={item}
           buttonEnabled={props.buttonEnabled}
           expanded={expanded}

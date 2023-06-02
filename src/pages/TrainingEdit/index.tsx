@@ -18,6 +18,7 @@ import {
   deleteAction,
   deleteTeamTrain,
   deletePlayerTrain,
+  addPlayerTrain,
 } from '../../redux/slices/trainSlice';
 import { useAppDispatch } from '../../redux/store';
 import ActionModal, { Option } from '../../components/ActionModal';
@@ -42,6 +43,8 @@ import Pagination from '../../components/Pagination';
 import { TiUserDelete } from 'react-icons/ti';
 import pageMotion from '../../components/pageMotion';
 import { useAppSelector } from '../../hooks/redux';
+import UserSearchBar from '../../components/UserSearchBar';
+import { ISelectUser } from '../../models/ISelectUser';
 
 export interface Cols {
   fio: string;
@@ -65,9 +68,14 @@ export const columnNames = {
   id_train: 'ID',
 };
 
+type SelectedUser = ISelectUser & {
+  player: string;
+};
+
 export const limitVariants = [5, 10, 15];
 
 export const TrainingEdit: React.FC = () => {
+  // Redux
   const players = useSelector(SelectTrainPlayers);
   const actions = useSelector(SelectTrainActions);
   const count = useSelector(SelectTrainActionsCount);
@@ -77,18 +85,26 @@ export const TrainingEdit: React.FC = () => {
   const status = useSelector(SelectTrainStatus);
   const error = useSelector(SelectTrainError);
   const { team, date } = useSelector(SelectTrain);
+  const role = useAppSelector(SelectUserRole);
+  // Модальное окно добавить действие
   const [isActive, setIsActive] = useState<boolean>(false);
-  const [isChangeTrain, setIsChangeTrain] = useState<boolean>(false);
   const [activePlayer, setActivePlayer] = useState<number>(null);
+  // Модальное окно сменить тренировку
+  const [isChangeTrain, setIsChangeTrain] = useState<boolean>(false);
   const [activeDate, setActiveDate] = useState(null);
   const [isValidModal, setIsValidModal] = useState(false);
   const [activeTeam, setActiveTeam] = useState<Option>(null);
   const [dates, setDates] = useState<string[]>([]);
+  // Модальное окно добавить игрока
+  const [isAddPlayer, setIsAddPlayer] = useState<boolean>(false);
+  const [newPlayer, setNewPlayer] = useState<SelectedUser>(null);
+  const [checkedPlayer, setCheckedPlayer] = useState<boolean>(true);
+  // Пагинация действий
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
+  // Стейты первого рендера
   const isSearch = React.useRef(false);
   const isMounted = useRef(false);
-  const role = useAppSelector(SelectUserRole);
 
   const [matches, setMatches] = useState(window.matchMedia('(min-width: 860px)').matches);
 
@@ -323,22 +339,30 @@ export const TrainingEdit: React.FC = () => {
     }
   };
 
-  const actionVariants = {
-    hidden: {
-      opacity: 0,
-      y: 70,
-      transition: {
-        y: { stiffness: 1000 },
-      },
-    },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.7,
-        y: { stiffness: 1000, velocity: -100 },
-      },
-    },
+  const onClickAddPlayer = (id: number) => {
+    console.log('added', id);
+    setNewPlayer(null);
+    setIsAddPlayer(false);
+    dispatch(
+      addPlayerTrain({
+        account_id: id,
+        date: date,
+        team: team,
+      }),
+    );
+  };
+
+  useEffect(() => {
+    if (newPlayer) {
+      setCheckedPlayer(checkPlayer());
+    }
+  }, [newPlayer]);
+
+  const checkPlayer = () => {
+    const result = players.filter((obj) => obj.fio === newPlayer.player);
+    console.log(result);
+    if (result.length === 0) return true;
+    else return false;
   };
 
   const playersStatsData = useMemo(
@@ -560,6 +584,10 @@ export const TrainingEdit: React.FC = () => {
               </table>
             )}
 
+            <button className={styles.train__buttons__btnAdd} onClick={() => setIsAddPlayer(true)}>
+              + Добавить игрока
+            </button>
+
             <AnimatePresence>
               <div className={styles.actions}>
                 <h3 className={styles.actions__title}>Последние действия</h3>
@@ -691,6 +719,23 @@ export const TrainingEdit: React.FC = () => {
             })}
             onClick={() => changeTrain()}>
             Сменить тренировку
+          </button>
+        </div>
+      </Modal>
+      <Modal isActive={isAddPlayer} setIsActive={setIsAddPlayer}>
+        <div className={styles.addModal}>
+          <h2 className={styles.addModal__title}>Выберите игрока</h2>
+          <UserSearchBar setCollabs={setNewPlayer} isMulti={false} isClearable={false} />
+          {!checkedPlayer && <div className={styles.addModal__error}>Этот игрок уже играет</div>}
+          <button
+            className={classNames(styles.addModal__button, {
+              [styles.addModal__button_disabled]: !newPlayer || !checkedPlayer,
+            })}
+            onClick={(e) => {
+              e.preventDefault();
+              onClickAddPlayer(newPlayer.id_account);
+            }}>
+            Добавить
           </button>
         </div>
       </Modal>

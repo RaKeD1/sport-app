@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import styles from './CreateTrain.module.scss';
 import { useAppDispatch } from '../../redux/store';
 import { useSelector } from 'react-redux';
@@ -7,15 +7,12 @@ import {
   setPlayers,
   setSelectedTeam,
 } from '../../redux/slices/createTrainSlice';
-import { SelectAccountID, Status } from '../../redux/slices/profileSlice';
+import { SelectAccountID } from '../../redux/slices/profileSlice';
 import {
   SelectTrainPlayers,
   SelectTrainStatus,
-  SelectTrainTeam,
-  clearTrain,
   postNewTrain,
   setDate,
-  setLoading,
   setTeam,
 } from '../../redux/slices/trainSlice';
 import { useNavigate } from 'react-router';
@@ -25,7 +22,7 @@ import { ISelectUser } from '../../models/ISelectUser';
 import TrainService from '../../services/TrainService';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import qs from 'qs';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import pageMotion from '../pageMotion';
 
 const CreateTrain: FC = () => {
@@ -109,7 +106,7 @@ const CreateTrain: FC = () => {
       </div>
       <div className={styles.train__elem}>
         <p>Игроки:</p>
-        <UserSearchBar setCollabs={setCollabs} />
+        <UserSearchBar setCollabs={setCollabs} isMulti={true} isClearable={true} />
       </div>
       <button
         className={classNames(styles.train__create, {

@@ -240,6 +240,19 @@
       }
     }
 
+    &__btnAdd {
+      font-weight: 500;
+      font-size: 14px;
+      background: transparent;
+      border: none;
+      color: $button-clr;
+      box-shadow: none;
+
+      &:hover {
+        border: none;
+      }
+    }
+
     @media (max-width: 860px) {
       font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 17px);
       border-radius: 20px;
@@ -496,4 +509,27 @@
 
 .sortIcon {
   padding-top: 4px;
+}
+
+.addModal {
+  &__title {
+    padding: 0 50px;
+    margin-bottom: 20px;
+  }
+
+  &__button {
+    margin-top: 20px;
+
+    &_disabled {
+      pointer-events: none;
+      opacity: 0.6;
+    }
+  }
+
+  &__error {
+    margin-top: 5px;
+    @include dynamicFontSize(12, 10);
+    color: #ff3232;
+    text-align: center;
+  }
 }

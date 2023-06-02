@@ -16,6 +16,18 @@ export default class TrainService {
     });
   }
 
+  static async addPlayerTrain(
+    account_id: number,
+    date: string,
+    day_team: string,
+  ): Promise<AxiosResponse<ITrain>> {
+    return $api.post<ITrain>('/train', {
+      account_id,
+      date,
+      day_team,
+    });
+  }
+
   static async getTrain(
     account_id: number,
     day_team: string,

@@ -15,6 +15,12 @@ export type NewTrainParams = {
   selectPlayers: number[];
 };
 
+export type AddPlayerTrainParams = {
+  account_id: number;
+  date: string;
+  team: string;
+};
+
 export type GetTrainParams = {
   account_id: number;
   team: string;
@@ -55,8 +61,24 @@ export const postNewTrain = createAsyncThunk<
 >('train/postNewTrain', async (params, { rejectWithValue }) => {
   try {
     const { account_id, team, selectPlayers } = params;
-    console.log('team', team);
     const response = await TrainService.newTrain(account_id, team, selectPlayers);
+    return response;
+  } catch (error) {
+    if (!error.response) {
+      throw error;
+    }
+    return rejectWithValue(error.response?.data);
+  }
+});
+
+export const addPlayerTrain = createAsyncThunk<
+  AxiosResponse<ITrain>,
+  AddPlayerTrainParams,
+  { rejectValue: FetchError }
+>('train/addPlayerTrain', async (params, { rejectWithValue }) => {
+  try {
+    const { account_id, date, team } = params;
+    const response = await TrainService.addPlayerTrain(account_id, date, team);
     return response;
   } catch (error) {
     if (!error.response) {
@@ -204,7 +226,6 @@ const trainSlice = createSlice({
   extraReducers: (builder) => {
     // Кейсы для создания новой тренировки
     builder.addCase(postNewTrain.pending, (state) => {
-      console.log('LOADING');
       state.status = Status.LOADING;
       state.players = initialState.players;
       state.error = initialState.error;
@@ -223,9 +244,24 @@ const trainSlice = createSlice({
       state.players = initialState.players;
     });
 
+    // Кейсы для добавления игрока
+    builder.addCase(addPlayerTrain.pending, (state) => {
+      state.status = Status.LOADING;
+      state.error = initialState.error;
+    });
+    builder.addCase(addPlayerTrain.fulfilled, (state, action) => {
+      state.status = Status.SUCCESS;
+      state.error = initialState.error;
+      const newPlayer = action.payload.data;
+      state.players.push(newPlayer);
+    });
+    builder.addCase(addPlayerTrain.rejected, (state, action) => {
+      alert(action.payload.message);
+      state.status = Status.ERROR;
+    });
+
     // Кейсы для получения тренировки
     builder.addCase(getTeamTrain.pending, (state) => {
-      console.log('LOADING');
       state.status = Status.LOADING;
       state.players = initialState.players;
       state.error = initialState.error;
@@ -245,7 +281,6 @@ const trainSlice = createSlice({
 
     // Кейсы для добавления действия
     builder.addCase(postAction.pending, (state) => {
-      console.log('LOADING');
       state.status = Status.LOADING;
       state.error = initialState.error;
     });
@@ -270,7 +305,6 @@ const trainSlice = createSlice({
 
     // Кейсы для удаления действия
     builder.addCase(deleteAction.pending, (state) => {
-      console.log('LOADING');
       state.status = Status.LOADING;
       state.error = initialState.error;
     });
@@ -295,7 +329,6 @@ const trainSlice = createSlice({
 
     // Кейсы для удаления тренировки команды
     builder.addCase(deleteTeamTrain.pending, (state) => {
-      console.log('LOADING');
       state.status = Status.LOADING;
       state.error = initialState.error;
     });
@@ -316,7 +349,6 @@ const trainSlice = createSlice({
 
     // Кейсы для удаления игрока из тренировки
     builder.addCase(deletePlayerTrain.pending, (state) => {
-      console.log('LOADING');
       state.status = Status.LOADING;
       state.error = initialState.error;
     });

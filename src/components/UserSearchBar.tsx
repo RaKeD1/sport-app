@@ -8,6 +8,8 @@ import { ISelectUser } from '../models/ISelectUser';
 
 type Props = {
   setCollabs: (value) => void;
+  isMulti: boolean;
+  isClearable: boolean;
 };
 
 type Player = {
@@ -15,13 +17,13 @@ type Player = {
   player_id: number;
 };
 
-const AsyncSearchBar: FC<Props> = ({ setCollabs }) => {
+const UserSearchBar: FC<Props> = ({ setCollabs, isMulti, isClearable }) => {
   //get animated components wrapper
   const animatedComponents = makeAnimated();
 
   const fetchUsers = async () => {
     try {
-      const fetch = await $api.get<ISelectUser[]>('/users');
+      const fetch = await $api.get<ISelectUser[]>('/select-users');
       console.log('fetch', fetch.data);
       return fetch.data;
     } catch (error) {
@@ -54,8 +56,8 @@ const AsyncSearchBar: FC<Props> = ({ setCollabs }) => {
         placeholder='Выберите участника'
         noOptionsMessage={() => 'Игрок не найден'}
         defaultOptions
-        isClearable={true}
-        isMulti
+        isClearable={isClearable}
+        isMulti={isMulti}
         components={animatedComponents}
         getOptionLabel={(e: Player) => e.player}
         getOptionValue={(e: Player) => e.player}
@@ -66,4 +68,4 @@ const AsyncSearchBar: FC<Props> = ({ setCollabs }) => {
   );
 };
 
-export default AsyncSearchBar;
+export default UserSearchBar;

@@ -9,6 +9,12 @@ import ProfileInfo from '../../components/ProfileInfo';
 import Modal from '../../components/Modal';
 import UpdateUser from '../../components/UpdateDataUser';
 import pageMotion from '../../components/pageMotion';
+import { ISelectUser } from '../../models/ISelectUser';
+import UserSearchBar from '../../components/UserSearchBar';
+import classNames from 'classnames';
+import RolesSelectBar from '../../components/RolesSelectBar';
+import { Option } from '../../components/ActionModal';
+import RoleService from '../../services/RoleService';
 
 export interface PlayersInf {
   email: string;
@@ -54,6 +60,12 @@ const item = {
   },
 };
 
+const roleNames = {
+  USER: 'Пользователь',
+  EDITOR: 'Редактор',
+  ADMIN: 'Администратор',
+};
+
 export const Players = () => {
   const avatarSmall = true;
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -62,6 +74,19 @@ export const Players = () => {
   const [isLoad, setIsLoad] = useState(true);
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<PlayersInf | string>('');
+  const [giveRolesModal, setGiveRolesModal] = useState<boolean>(false);
+  const [collabs, setCollabs] = useState<ISelectUser[]>([]);
+  const [selectPlayers, setSelectPlayers] = useState<number[]>([]);
+  const [selectedRole, setSelectedRole] = useState<Option>(null);
+  const [roles, setRoles] = useState<Option[]>();
+  const [rolesError, setRolesError] = useState<string>(null);
+  const [removeRolesModal, setRemoveRolesModal] = useState<boolean>(false);
+
+  useEffect(() => {
+    console.log('collabs', collabs);
+    const players: number[] = collabs.map((obj) => obj.id_account);
+    setSelectPlayers(players);
+  }, [collabs]);
 
   const dispatch = useAppDispatch();
 
@@ -79,9 +104,27 @@ export const Players = () => {
     return user.player.toLowerCase().includes(value.toLowerCase());
   });
 
+  const fetchRoles = async () => {
+    try {
+      const roles = await RoleService.fetchRoles();
+      return roles.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     dispatch(fetchUsers());
     setIsLoad(false);
+    fetchRoles()
+      .then((res) => {
+        const options = res.map((role) => {
+          const option = { label: roleNames[role], value: role };
+          return option;
+        });
+        setRoles(options);
+      })
+      .catch((e) => console.log(e));
   }, []);
 
   useEffect(() => {
@@ -93,18 +136,44 @@ export const Players = () => {
     setSelectedUser(user);
     setShowModal(true);
   };
+
+  const giveRole = () => {
+    if (selectPlayers.length !== 0 && selectedRole) {
+      RoleService.giveRoles(selectedRole.value, selectPlayers)
+        .then(() => {
+          setGiveRolesModal(false);
+          setRolesError(null);
+        })
+        .catch((err) =>
+          setRolesError(
+            err.response.data.message ? err.response.data.message : 'Не удалось выдать роль',
+          ),
+        );
+    }
+  };
+
   useEffect(() => {}, [selectedUser]);
   return (
     <motion.div variants={pageMotion} initial='hidden' animate='show' exit='exit'>
       <div className={styles.main}>
         <div className={styles.form}>
           <label>Введите ФИО игрока:</label>
-          <input
-            className={styles.input}
-            type='text'
-            value={value}
-            onChange={(event) => setValue(event.target.value)}
-          />
+          <div className={styles.form__box}>
+            <input
+              className={styles.input}
+              type='text'
+              value={value}
+              onChange={(event) => setValue(event.target.value)}
+            />
+            <button onClick={() => setGiveRolesModal(true)} className={styles.form__roleBtn}>
+              Выдать роль
+            </button>
+            <button
+              onClick={() => setRemoveRolesModal(true)}
+              className={classNames(styles.form__roleBtn, styles.form__roleBtn_remove)}>
+              Забрать роль
+            </button>
+          </div>
         </div>
         <motion.ul
           className={styles.container}
@@ -133,6 +202,33 @@ export const Players = () => {
         </motion.ul>
         <Modal isActive={showModal} setIsActive={setShowModal}>
           <UpdateUser isUpdate={setIsUpdate} user={selectedUser} setIsActive={setShowModal} />
+        </Modal>
+        <Modal isActive={giveRolesModal} setIsActive={setGiveRolesModal}>
+          <div className={styles.addModal}>
+            <h2 className={styles.addModal__title}>Выдача роли</h2>
+            {rolesError && <div>{rolesError}</div>}
+            <UserSearchBar setCollabs={setCollabs} isMulti={true} isClearable={false} />
+            <div className={styles.addModal__separator}></div>
+            <RolesSelectBar
+              setSelected={setSelectedRole}
+              disabled={selectPlayers.length === 0}
+              isMulti={false}
+              isClearable={false}
+              placeholder={'Выберите роль'}
+              emptyMessage={'Роли не найдены'}
+              options={roles}
+            />
+            <button
+              className={classNames(styles.addModal__button, {
+                [styles.addModal__button_disabled]: selectPlayers.length === 0 || !selectedRole,
+              })}
+              onClick={(e) => {
+                e.preventDefault();
+                giveRole();
+              }}>
+              Добавить
+            </button>
+          </div>
         </Modal>
       </div>
     </motion.div>

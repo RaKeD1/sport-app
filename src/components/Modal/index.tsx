@@ -17,7 +17,7 @@ const Modal: FC<ModalProps> = ({ isActive, setIsActive, children }) => {
 
   return (
     <div
-      style={{ zIndex: !isActive ? -1 : 990 }}
+      style={{ zIndex: !isActive ? -1 : 999 }}
       className={classNames(styles.action, { [styles.active]: isActive })}>
       <div ref={ref} className={classNames(styles.action__content, { [styles.active]: isActive })}>
         <FaTimes className={styles.action__close} onClick={() => setIsActive(false)} />

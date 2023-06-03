@@ -13,7 +13,7 @@
   opacity: 0;
   pointer-events: none;
   transition: 0.2s;
-  z-index: 990;
+  z-index: 1000;
   backdrop-filter: blur(6px);
 
   &.active {

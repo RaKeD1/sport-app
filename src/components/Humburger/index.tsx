@@ -43,7 +43,13 @@ const Hamburger = ({ setIsOpen, isOpen }) => {
   };
   return (
     <>
-      <div className={isOpen ? styles.backDrop : ''}></div>
+      {isOpen && (
+        <motion.div
+          className={styles.backdrop}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}></motion.div>
+      )}
       <div ref={ref}>
         <MenuToggle toggle={toggleOpen} />
         <motion.nav

@@ -1,41 +1,49 @@
-import { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import Select from 'react-select';
-import { Option } from './ActionModal';
+import makeAnimated from 'react-select/animated';
 
-interface SelectBarProps {
-  data: string[];
-  selected: Option;
-  setSelected: (selected: Option) => void;
-}
+type Props = {
+  setSelected: (value) => void;
+  isMulti: boolean;
+  isClearable: boolean;
+  placeholder: string;
+  emptyMessage: string;
+  options: Option[];
+  disabled: boolean;
+  value: Option | Option[];
+};
 
-const SelectBar: FC<SelectBarProps> = ({ data, selected, setSelected }) => {
-  const [options, setOptions] = useState(data.map((option) => ({ value: option, label: option })));
-  const [value, setValue] = useState<Option>(null);
+export type Option = {
+  label: string;
+  value: any;
+};
 
-  useEffect(() => {
-    setOptions(data.map((option) => ({ value: option, label: option })));
-    console.log(options);
-  }, [data]);
-
-  const handleChange = (selectedOption: Option) => {
-    setValue(selectedOption);
-    setSelected(selectedOption);
-  };
+const SelectBar: FC<Props> = ({
+  setSelected,
+  value,
+  isMulti,
+  isClearable,
+  placeholder,
+  emptyMessage,
+  options,
+  disabled,
+}) => {
+  //get animated components wrapper
+  const animatedComponents = makeAnimated();
 
   return (
     <>
       <Select
-        className='basic-single'
-        classNamePrefix='select'
-        key={`my_unique_select_key__${selected}`}
-        value={selected}
-        placeholder='Выберите условие'
-        noOptionsMessage={() => 'Нет условий'}
+        placeholder={placeholder}
+        noOptionsMessage={() => emptyMessage}
+        isDisabled={disabled}
+        isMulti={isMulti}
+        isClearable={isClearable}
+        components={animatedComponents}
         getOptionLabel={(e: Option) => e.label}
         getOptionValue={(e: Option) => e.value}
-        name='condition'
+        onChange={(value) => setSelected(value)}
         options={options}
-        onChange={(e) => handleChange(e)}
       />
     </>
   );

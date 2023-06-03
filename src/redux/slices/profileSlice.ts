@@ -322,5 +322,6 @@ export const SelectProfile = (state: RootState) => state.profile;
 export const SelectUser = (state: RootState) => state.profile.user;
 export const SelectUserRole = (state: RootState) => state.profile.user.role;
 export const SelectAccountID = (state: RootState) => state.profile.user.id_account;
+export const SelectUserID = (state: RootState) => state.profile.user.id_user;
 
 export default profileSlice.reducer;

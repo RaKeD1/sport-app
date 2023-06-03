@@ -11,7 +11,7 @@ import { bindActionCreators } from '@reduxjs/toolkit';
 import { connect } from 'react-redux';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 
-const phoneNumberMask = [
+export const phoneNumberMask = [
   '+',
   '7',
   '(',

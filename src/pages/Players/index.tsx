@@ -20,6 +20,7 @@ import classNames from 'classnames';
 import SelectBar from '../../components/SelectBar';
 import { Option } from '../../components/SelectBar';
 import RoleService from '../../services/RoleService';
+import { SelectUserID } from '../../redux/slices/profileSlice';
 
 export interface PlayersInf {
   email: string;
@@ -72,6 +73,7 @@ const roleNames = {
 };
 
 export const Players = () => {
+  const MyID = useSelector(SelectUserID);
   const avatarSmall = true;
   const [showModal, setShowModal] = useState<boolean>(false);
   const [changePhotoModal, setChangePhotoModal] = useState<boolean>(false);
@@ -209,26 +211,28 @@ export const Players = () => {
           variants={container}
           initial='hidden'
           animate='visible'>
-          {filtredPlayers.map((player) => {
-            return (
-              <motion.li
-                key={player.id_user}
-                whileHover={{
-                  scale: 1.05,
-                  transition: { duration: 0.2 },
-                }}
-                variants={item}>
-                <ProfileInfo
-                  data={player}
-                  inRow={false}
-                  avatarSmall={avatarSmall}
-                  roleBtn={true}
-                  onClickEdit={() => handleEditUser(player)} // Передаем данные пользователя в обработчик
-                  onClickEditPhoto={setChangePhotoModal}
-                />
-              </motion.li>
-            );
-          })}
+          {filtredPlayers
+            .filter((player) => player.id_user !== MyID)
+            .map((player) => {
+              return (
+                <motion.li
+                  key={player.id_user}
+                  whileHover={{
+                    scale: 1.05,
+                    transition: { duration: 0.2 },
+                  }}
+                  variants={item}>
+                  <ProfileInfo
+                    data={player}
+                    inRow={false}
+                    avatarSmall={avatarSmall}
+                    roleBtn={true}
+                    onClickEdit={() => handleEditUser(player)} // Передаем данные пользователя в обработчик
+                    onClickEditPhoto={setChangePhotoModal}
+                  />
+                </motion.li>
+              );
+            })}
         </motion.ul>
         <Modal isActive={showModal} setIsActive={setShowModal}>
           <UpdateUser isUpdate={setIsUpdate} user={selectedUser} setIsActive={setShowModal} />

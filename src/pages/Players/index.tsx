@@ -20,7 +20,6 @@ import classNames from 'classnames';
 import SelectBar from '../../components/SelectBar';
 import { Option } from '../../components/SelectBar';
 import RoleService from '../../services/RoleService';
-import UserService from '../../services/UserService';
 
 export interface PlayersInf {
   email: string;
@@ -80,6 +79,7 @@ export const Players = () => {
   const [isLoad, setIsLoad] = useState(true);
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<PlayersInf | string>('');
+  // Модальные окна ролей
   const [giveRolesModal, setGiveRolesModal] = useState<boolean>(false);
   const [collabs, setCollabs] = useState<ISelectUser[]>([]);
   const [selectPlayers, setSelectPlayers] = useState<number[]>([]);

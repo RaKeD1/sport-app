@@ -11,13 +11,13 @@ const Header: React.FC = () => {
   return (
     <div className={'header'}>
       <nav className='container'>
-        <div className='header__logo'>
+        <Link to='/profile' className='header__logo'>
           <img src={logo} alt='logo' width='44px' />
           <div className='header__title'>
             Volley
             <br /> Ball
           </div>
-        </div>
+        </Link>
       </nav>
       <Hamburger setIsOpen={setIsOpen} isOpen={isOpen} />
     </div>

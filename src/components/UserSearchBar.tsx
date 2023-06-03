@@ -5,6 +5,8 @@ import axios from 'axios';
 import $api from '../http';
 import UserService from '../services/UserService';
 import { ISelectUser } from '../models/ISelectUser';
+import { useSelector } from 'react-redux';
+import { SelectAccountID } from '../redux/slices/profileSlice';
 
 type Props = {
   setCollabs: (value) => void;
@@ -18,6 +20,7 @@ type Player = {
 };
 
 const UserSearchBar: FC<Props> = ({ setCollabs, isMulti, isClearable }) => {
+  const myId = useSelector(SelectAccountID);
   //get animated components wrapper
   const animatedComponents = makeAnimated();
 
@@ -36,13 +39,15 @@ const UserSearchBar: FC<Props> = ({ setCollabs, isMulti, isClearable }) => {
   const loadOptions = (inputValue: string, callback) => {
     console.log('in load options');
     fetchUsers().then((data) => {
-      const users = data.map((obj) => {
-        const player = {
-          ...obj,
-          player: obj.surname + ' ' + obj.name + ' ' + obj.patronimyc,
-        };
-        return player;
-      });
+      const users = data
+        .filter((player) => player.id_account !== myId)
+        .map((obj) => {
+          const player = {
+            ...obj,
+            player: obj.surname + ' ' + obj.name + ' ' + obj.patronimyc,
+          };
+          return player;
+        });
       const res = users.filter((data) => data.player.includes(inputValue));
       console.log(res);
       callback(res);

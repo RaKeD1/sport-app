@@ -41,6 +41,7 @@ const Hamburger = ({ setIsOpen, isOpen }) => {
   const toggleOpen = () => {
     setIsOpen(!isOpen);
   };
+
   return (
     <>
       {isOpen && (
@@ -51,7 +52,7 @@ const Hamburger = ({ setIsOpen, isOpen }) => {
           exit={{ opacity: 0 }}></motion.div>
       )}
       <div ref={ref}>
-        <MenuToggle toggle={toggleOpen} />
+        <MenuToggle isOpen={isOpen} toggle={toggleOpen} />
         <motion.nav
           className={styles.nav}
           initial={false}

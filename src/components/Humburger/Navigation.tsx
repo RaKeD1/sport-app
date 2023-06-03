@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 import { MenuItem } from './MenuItem';
 import { FaUserAlt } from 'react-icons/fa';
 import styles from './humburger.module.scss';
-import { useAppDispatch } from '../../hooks/redux';
-import { logoutAccount } from '../../redux/slices/profileSlice';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { SelectUserRole, logoutAccount } from '../../redux/slices/profileSlice';
 const variants = {
   open: {
     transition: { staggerChildren: 0.07, delayChildren: 0.2 },
@@ -53,20 +53,24 @@ export const pages = [
     data: 3, // так же является порядковым номеров в бургере
     path: '/createtraining',
     label: 'Создать тренировку',
+    role: 'EDITOR',
   },
-  { data: 4, path: '/training', label: 'Редактировать тренировку' },
-  { data: 2, path: '/statistics', label: 'Посмотреть статистику' },
-  { data: 1, path: '/players', label: 'Игроки' },
-  { data: 0, path: '/', label: 'Профиль' },
+  { data: 4, path: '/training', label: 'Редактировать тренировку', role: 'EDITOR' },
+  { data: 2, path: '/statistics', label: 'Посмотреть статистику', role: 'EDITOR' },
+  { data: 1, path: '/players', label: 'Игроки', role: 'ADMIN' },
+  { data: 0, path: '/', label: 'Профиль', role: 'USER' },
 ];
 
 export const Navigation = ({ setIsOpen }) => {
   const dispatch = useAppDispatch();
+  const role = useAppSelector(SelectUserRole);
   return (
     <motion.ul className={styles.ul} variants={variants}>
-      {pages.map((page) => (
-        <MenuItem setIsOpen={setIsOpen} page={page} key={page.path} />
-      ))}
+      {pages
+        .filter((page) => page.role === role || role === 'ADMIN' || page.role === 'USER')
+        .map((page) => (
+          <MenuItem setIsOpen={setIsOpen} page={page} key={page.path} />
+        ))}
       <motion.button
         className={styles.button__exit}
         onClick={() => dispatch(logoutAccount())}

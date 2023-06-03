@@ -6,7 +6,7 @@ import {
   giveRoleUsers,
   removeRoleUsers,
 } from '../../redux/slices/userSlice';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import styles from './players.module.scss';
 import { useSelector } from 'react-redux';
@@ -17,8 +17,8 @@ import pageMotion from '../../components/pageMotion';
 import { ISelectUser } from '../../models/ISelectUser';
 import UserSearchBar from '../../components/UserSearchBar';
 import classNames from 'classnames';
-import RolesSelectBar from '../../components/RolesSelectBar';
-import { Option } from '../../components/ActionModal';
+import SelectBar from '../../components/SelectBar';
+import { Option } from '../../components/SelectBar';
 import RoleService from '../../services/RoleService';
 
 export interface PlayersInf {
@@ -79,6 +79,7 @@ export const Players = () => {
   const [isLoad, setIsLoad] = useState(true);
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<PlayersInf | string>('');
+  // Модальные окна ролей
   const [giveRolesModal, setGiveRolesModal] = useState<boolean>(false);
   const [collabs, setCollabs] = useState<ISelectUser[]>([]);
   const [selectPlayers, setSelectPlayers] = useState<number[]>([]);
@@ -166,6 +167,18 @@ export const Players = () => {
     }
   };
 
+  const errVariants = {
+    hidden: {
+      opacity: 0,
+      transition: {
+        duration: 0.1,
+      },
+    },
+    visible: {
+      opacity: 1,
+    },
+  };
+
   useEffect(() => {}, [selectedUser]);
   return (
     <motion.div variants={pageMotion} initial='hidden' animate='show' exit='exit'>
@@ -179,14 +192,16 @@ export const Players = () => {
               value={value}
               onChange={(event) => setValue(event.target.value)}
             />
-            <button onClick={() => setGiveRolesModal(true)} className={styles.form__roleBtn}>
-              Выдать роль
-            </button>
-            <button
-              onClick={() => setRemoveRolesModal(true)}
-              className={classNames(styles.form__roleBtn, styles.form__roleBtn_remove)}>
-              Забрать роль
-            </button>
+            <div className={styles.form__roleButtons}>
+              <button onClick={() => setGiveRolesModal(true)} className={styles.form__roleBtn}>
+                Выдать роль
+              </button>
+              <button
+                onClick={() => setRemoveRolesModal(true)}
+                className={classNames(styles.form__roleBtn, styles.form__roleBtn_remove)}>
+                Забрать роль
+              </button>
+            </div>
           </div>
         </div>
         <motion.ul
@@ -224,8 +239,9 @@ export const Players = () => {
             {rolesError && <div>{rolesError}</div>}
             <UserSearchBar setCollabs={setCollabs} isMulti={true} isClearable={false} />
             <div className={styles.addModal__separator}></div>
-            <RolesSelectBar
+            <SelectBar
               setSelected={setSelectedRole}
+              value={selectedRole}
               disabled={selectPlayers.length === 0}
               isMulti={false}
               isClearable={false}
@@ -233,6 +249,19 @@ export const Players = () => {
               emptyMessage={'Роли не найдены'}
               options={roles}
             />
+            <AnimatePresence>
+              {selectedRole && selectedRole.value === 'ADMIN' && (
+                <motion.div
+                  variants={errVariants}
+                  initial='hidden'
+                  animate='visible'
+                  exit='hidden'
+                  className={styles.warning}>
+                  Внимание! Администратор может удалять пользователей и тренировки. Выдавайте роль
+                  администратора только доверенным лицам.
+                </motion.div>
+              )}
+            </AnimatePresence>
             <button
               className={classNames(styles.addModal__button, {
                 [styles.addModal__button_disabled]: selectPlayers.length === 0 || !selectedRole,

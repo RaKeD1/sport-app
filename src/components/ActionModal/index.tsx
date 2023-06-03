@@ -7,7 +7,7 @@ import { SelectActionTypes, getActionsTypes } from '../../redux/slices/actionTyp
 import { useSelector } from 'react-redux';
 import { ActionType } from '../../models/IActionType';
 import { BsInfoCircle } from 'react-icons/bs';
-import SelectBar from '../SelectBar';
+import ConditionsSelectBar from '../ConditionsSelectBar';
 import { SelectTrainDate, SelectTrainTeam, postAction } from '../../redux/slices/trainSlice';
 import useOnClickOutside from '../../hooks/onClickOutside';
 
@@ -202,7 +202,7 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
                 initial='hidden'
                 animate='show'
                 className={styles.action__condition}>
-                <SelectBar
+                <ConditionsSelectBar
                   data={currentAction.win_condition}
                   selected={selectedCondition}
                   setSelected={setSelectedCondition}
@@ -215,7 +215,7 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
                 initial='hidden'
                 animate='show'
                 className={styles.action__condition}>
-                <SelectBar
+                <ConditionsSelectBar
                   data={currentAction.loss_condition}
                   selected={selectedCondition}
                   setSelected={setSelectedCondition}

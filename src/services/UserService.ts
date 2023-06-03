@@ -10,6 +10,10 @@ export default class UserService {
     return $api.get<IUser[]>('/users');
   }
 
+  static fetchSelectUsers(): Promise<AxiosResponse<ISelectUser[]>> {
+    return $api.get<ISelectUser[]>('/select-users');
+  }
+
   static fetchUser(id_account: number): Promise<AxiosResponse<IUser>> {
     return $api.get<IUser>('/user/' + id_account);
   }

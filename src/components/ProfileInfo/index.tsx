@@ -5,9 +5,12 @@ import { columnUser } from '../../pages/Players';
 import { AnimatePresence, motion } from 'framer-motion';
 import { IUser } from '../../models/IUser';
 import UserService from '../../services/UserService';
-import { setImg } from '../../redux/slices/profileSlice';
+import { SelectUserRole, setImg } from '../../redux/slices/profileSlice';
 import { useAppDispatch } from '../../hooks/redux';
 import classNames from 'classnames';
+import { FaCrown, FaPen } from 'react-icons/fa';
+import RoleService from '../../services/RoleService';
+import { removeRoleUsers } from '../../redux/slices/userSlice';
 
 interface ProfileInfoProps {
   onClickEditUser?: (value: number) => void;
@@ -16,13 +19,10 @@ interface ProfileInfoProps {
   onClickEdit: (value: boolean) => void;
   onClickEditPhoto: (value: boolean) => void;
 }
-const ProfileInfo = ({ data, inRow, avatarSmall, onClickEdit, onClickEditPhoto }) => {
-  const handleEditUser = () => {
-    onClickEdit(true); // Передаем сигнал о необходимости открытия компонента редактирования
-    onClickEdit(data); // Передаем данные пользователя в родительский компонент
-  };
+const ProfileInfo = ({ data, inRow, avatarSmall, onClickEdit, onClickEditPhoto, roleBtn }) => {
   const [showPhotoMenu, setShowPhotoMenu] = useState<boolean>(false);
   const [deleteError, setDeleteError] = useState<string>(null);
+  const [rolesError, setRolesError] = useState<string>(null);
   const dispatch = useAppDispatch();
 
   const [matches, setMatches] = useState(window.matchMedia('(max-width: 760px)').matches);
@@ -43,6 +43,11 @@ const ProfileInfo = ({ data, inRow, avatarSmall, onClickEdit, onClickEditPhoto }
       .addEventListener('change', (e) => setMobileMatches(e.matches));
   }, []);
 
+  const handleEditUser = () => {
+    onClickEdit(true); // Передаем сигнал о необходимости открытия компонента редактирования
+    onClickEdit(data); // Передаем данные пользователя в родительский компонент
+  };
+
   const onClickDeletePhoto = async () => {
     await UserService.deleteUserPhoto(data.id_user)
       .then((res) => {
@@ -54,6 +59,14 @@ const ProfileInfo = ({ data, inRow, avatarSmall, onClickEdit, onClickEditPhoto }
       });
   };
 
+  const removeRole = () => {
+    dispatch(
+      removeRoleUsers({
+        users: [data.id_account],
+      }),
+    );
+  };
+
   const variants = {
     hidden: {
       opacity: 0,
@@ -63,7 +76,6 @@ const ProfileInfo = ({ data, inRow, avatarSmall, onClickEdit, onClickEditPhoto }
     },
   };
   const small = avatarSmall ? `${styles.root__header__img_small}` : `${styles.root__header__img}`;
-  console.log('avatar', avatarSmall);
   return (
     <section
       style={{
@@ -109,6 +121,15 @@ const ProfileInfo = ({ data, inRow, avatarSmall, onClickEdit, onClickEditPhoto }
         <p
           style={{ margin: avatarSmall ? '0 auto' : '15px 0 0 0' }}
           className={styles.root__header__fio}>
+          {data.role !== 'USER' && (
+            <span
+              className={classNames(styles.root__header__roleIcon, {
+                [styles.root__header__roleIcon_admin]: data.role === 'ADMIN',
+                [styles.root__header__roleIcon_editor]: data.role === 'EDITOR',
+              })}>
+              {data.role === 'ADMIN' ? <FaCrown /> : <FaPen />}
+            </span>
+          )}
           {data.surname + ' ' + data.name + ' ' + data.patronimyc}
         </p>
       </div>
@@ -133,9 +154,19 @@ const ProfileInfo = ({ data, inRow, avatarSmall, onClickEdit, onClickEditPhoto }
               </div>
             );
           })}
-        <button className={styles.root__editBtn} onClick={handleEditUser}>
+        <button
+          className={classNames(styles.root__button, styles.root__button_editBtn)}
+          onClick={handleEditUser}>
           Редактировать
         </button>
+        {data.role !== 'USER' && roleBtn && (
+          <button
+            onClick={() => removeRole()}
+            className={classNames(styles.root__button, styles.root__button_removeRoleBtn)}>
+            Забрать роль
+          </button>
+        )}
+        {rolesError && <div>{rolesError}</div>}
       </div>
     </section>
   );

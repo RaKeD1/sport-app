@@ -5,7 +5,7 @@ import { ITrain } from '../../models/ITrain';
 import TrainService from '../../services/TrainService';
 import { Status } from './profileSlice';
 
-type FetchError = {
+export type FetchError = {
   message: string;
 };
 

@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from '../../redux/store';
-import { SelectUsers, fetchUsers } from '../../redux/slices/userSlice';
+import {
+  SelectUsers,
+  fetchUsers,
+  giveRoleUsers,
+  removeRoleUsers,
+} from '../../redux/slices/userSlice';
 import { motion } from 'framer-motion';
 
 import styles from './players.module.scss';
@@ -91,6 +96,7 @@ export const Players = () => {
   const dispatch = useAppDispatch();
 
   const users = useSelector(SelectUsers);
+  console.log('users', users);
 
   const players = users.map((obj) => {
     const user = {
@@ -139,16 +145,24 @@ export const Players = () => {
 
   const giveRole = () => {
     if (selectPlayers.length !== 0 && selectedRole) {
-      RoleService.giveRoles(selectedRole.value, selectPlayers)
-        .then(() => {
-          setGiveRolesModal(false);
-          setRolesError(null);
-        })
-        .catch((err) =>
-          setRolesError(
-            err.response.data.message ? err.response.data.message : 'Не удалось выдать роль',
-          ),
-        );
+      dispatch(
+        giveRoleUsers({
+          role: selectedRole.value,
+          users: selectPlayers,
+        }),
+      );
+      setGiveRolesModal(false);
+    }
+  };
+
+  const removeRole = () => {
+    if (selectPlayers.length !== 0) {
+      dispatch(
+        removeRoleUsers({
+          users: selectPlayers,
+        }),
+      );
+      setRemoveRolesModal(false);
     }
   };
 
@@ -193,6 +207,7 @@ export const Players = () => {
                   data={player}
                   inRow={false}
                   avatarSmall={avatarSmall}
+                  roleBtn={true}
                   onClickEdit={() => handleEditUser(player)} // Передаем данные пользователя в обработчик
                   onClickEditPhoto={setChangePhotoModal}
                 />
@@ -226,7 +241,24 @@ export const Players = () => {
                 e.preventDefault();
                 giveRole();
               }}>
-              Добавить
+              Подтвердить
+            </button>
+          </div>
+        </Modal>
+        <Modal isActive={removeRolesModal} setIsActive={setRemoveRolesModal}>
+          <div className={styles.addModal}>
+            <h2 className={styles.addModal__title}>Забрать роль</h2>
+            {rolesError && <div>{rolesError}</div>}
+            <UserSearchBar setCollabs={setCollabs} isMulti={true} isClearable={false} />
+            <button
+              className={classNames(styles.addModal__button, {
+                [styles.addModal__button_disabled]: selectPlayers.length === 0,
+              })}
+              onClick={(e) => {
+                e.preventDefault();
+                removeRole();
+              }}>
+              Подтвердить
             </button>
           </div>
         </Modal>

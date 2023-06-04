@@ -3,7 +3,7 @@ import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
 import logo from '../assets/img/ball.svg';
 import { FaUserAlt } from 'react-icons/fa';
-import Hamburger from './Humburger';
+import Hamburger from './Hamburger';
 import classNames from 'classnames';
 
 const Header: React.FC = () => {

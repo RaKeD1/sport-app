@@ -1,6 +1,6 @@
 import { motion, useAnimation } from 'framer-motion';
 import * as React from 'react';
-import styles from './humburger.module.scss';
+import styles from './hamburger.module.scss';
 
 const Path = (props) => (
   <motion.path

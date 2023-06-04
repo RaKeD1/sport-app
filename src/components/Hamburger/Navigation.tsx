@@ -2,7 +2,7 @@ import * as React from 'react';
 import { motion } from 'framer-motion';
 import { MenuItem } from './MenuItem';
 import { FaUserAlt } from 'react-icons/fa';
-import styles from './humburger.module.scss';
+import styles from './hamburger.module.scss';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { SelectUserRole, logoutAccount } from '../../redux/slices/profileSlice';
 const variants = {

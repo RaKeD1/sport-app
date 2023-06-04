@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { MenuToggle } from './MenuToggle';
 import { Navigation } from './Navigation';
 import { useDimensions } from './use-dimensions';
-import styles from './humburger.module.scss';
+import styles from './hamburger.module.scss';
 import useOnClickOutside from '../../hooks/onClickOutside';
 
 const sidebar = {

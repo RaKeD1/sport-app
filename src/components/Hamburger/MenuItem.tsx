@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { motion } from 'framer-motion';
-import styles from './humburger.module.scss';
+import styles from './hamburger.module.scss';
 import { Link, useLocation } from 'react-router-dom';
 import { pages } from './Navigation';
 

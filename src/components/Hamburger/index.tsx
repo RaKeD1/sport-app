@@ -2,7 +2,6 @@ import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { MenuToggle } from './MenuToggle';
 import { Navigation } from './Navigation';
-import { useDimensions } from './use-dimensions';
 import styles from './hamburger.module.scss';
 import useOnClickOutside from '../../hooks/onClickOutside';
 
@@ -18,7 +17,7 @@ const sidebar = {
     },
   }),
   closed: {
-    clipPath: 'circle(25px at 435px 55px)',
+    clipPath: 'circle(0px at 500px 0px)',
     visability: 'hidden',
     backgroundColor: '#fff',
     transition: {
@@ -32,14 +31,12 @@ const sidebar = {
 
 const Hamburger = ({ setIsOpen, isOpen }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const back = useRef<HTMLDivElement>(null);
 
   useOnClickOutside(ref, () => setIsOpen(false));
-  const containerRef = useRef(null);
-  const { height } = useDimensions(containerRef);
 
   const toggleOpen = () => {
     setIsOpen(!isOpen);
+    console.log('произошел тык', isOpen);
   };
 
   return (
@@ -51,21 +48,17 @@ const Hamburger = ({ setIsOpen, isOpen }) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}></motion.div>
       )}
-      <div ref={ref}>
+      <motion.div ref={ref}>
         <MenuToggle isOpen={isOpen} toggle={toggleOpen} />
         <motion.nav
           className={styles.nav}
           initial={false}
-          custom={height}
-          ref={containerRef}
           variants={sidebar}
-          animate={isOpen ? 'open' : 'closed'}
-          // style={{ visibility: isOpen ? 'visible' : 'hidden' }}
-        >
+          animate={isOpen ? 'open' : 'closed'}>
           <motion.div className={styles.background} variants={sidebar} />
           <Navigation setIsOpen={setIsOpen} />
         </motion.nav>
-      </div>
+      </motion.div>
     </>
   );
 };

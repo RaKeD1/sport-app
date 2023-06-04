@@ -39,7 +39,7 @@
   width: 500px;
   height: 100%;
   background: #fff;
-  @media screen and (max-width: 600px) {
+  @media (max-width: 600px) {
     position: relative;
     width: 100%;
   }
@@ -51,8 +51,12 @@
   cursor: pointer;
   position: fixed;
   display: flex;
-  top: calc((100vw - 480px) / (1280 - 480) * (23 - 9) + 9px);
+  top: 40px;
   right: 40px;
+  @media (max-width: 860px) {
+    top: 15px;
+    right: 10px;
+  }
   height: 50px;
   width: 50px;
   align-items: center;

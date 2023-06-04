@@ -64,7 +64,7 @@
     padding: 0;
     background-color: transparent;
     color: #e24864;
-    @include dynamicFontSize(20, 10);
+    @include dynamicFontSize(16, 14);
     box-shadow: none;
     &:hover,
     :focus,

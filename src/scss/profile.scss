@@ -4,7 +4,15 @@
 .header {
   background-color: #fff;
   width: 100%;
-
+  padding: 10px 0;
+  &__scrolled {
+    width: 100%;
+    background-color: #fff;
+    position: fixed;
+    z-index: 300;
+    top: 0px;
+    padding: 10px;
+  }
   &__logo {
     cursor: pointer;
     line-height: 1.2;
@@ -19,16 +27,6 @@
     color: $head-clr;
     font-weight: 700;
     font-size: calc((100vw - 480px) / (1280 - 480) * (30 - 20) + 20px);
-  }
-}
-@media (min-width: 500px) {
-  .header {
-    padding: 5px 30px;
-  }
-}
-@media (min-width: 1000px) {
-  .header {
-    padding: 5px 50px;
   }
 }
 

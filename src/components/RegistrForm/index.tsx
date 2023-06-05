@@ -279,12 +279,14 @@ const InnerForm = (props: FormikProps<FormValues>) => {
             !values.login ||
             !values.password ||
             !values.passwordCheck ||
+            !values.recaptcha ||
             errors.name ||
             errors.surname ||
             errors.email ||
             errors.login ||
             errors.password ||
             errors.passwordCheck ||
+            errors.recaptcha ||
             errors.phone,
         })}
         disabled={isSubmitting}>

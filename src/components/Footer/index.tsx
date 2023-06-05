@@ -1,28 +1,56 @@
-import { FC, useEffect, useLayoutEffect, useState } from 'react';
+import { FC, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styles from './footer.module.scss';
 
-const Footer: FC = () => {
+const Footer = ({ setBlockHeight }) => {
+  //const [blockHeight, setBlockHeight] = useState(0);
+  const blockRef = useRef(null);
+
+  useEffect(() => {
+    const updateHeight = () => {
+      if (blockRef.current) {
+        const height = blockRef.current.getBoundingClientRect().height + 'px';
+        setBlockHeight(height);
+      }
+    };
+
+    window.addEventListener('resize', updateHeight);
+    updateHeight();
+    return () => {
+      window.removeEventListener('resize', updateHeight);
+    };
+  }, []);
+  // console.log(blockHeight);
+
   return (
-    <div className={styles.footer}>
+    <div className={styles.footer} ref={blockRef}>
+      {/* {blockHeight} */}
       <nav className='container'>
         <ul className={styles.footer__body}>
           <div className={styles.footer__block}>
             <h1 className={styles.footer__title}>
-              <a href='https://www.miet.ru/' target='MIET' className={styles.footer__title}>
+              <a
+                href='https://www.miet.ru/'
+                target='MIET'
+                className={styles.footer__title}
+              >
                 МИЭТ
               </a>
             </h1>
             <a
               className={styles.footer__text}
               href='https://yandex.ru/maps/org/moskovskiy_institut_elektronnoy_tekhniki/1042223652/?ll=37.208453%2C55.983384&z=17.08'
-              target='MIET'>
+              target='MIET'
+            >
               площадь Шокина, 1
             </a>
           </div>
           <div className={styles.footer__teacher}>
             <h1 className={styles.footer__title}>Преподаватель</h1>
             <p className={styles.footer__text}>Борисова Наталья Юрьевна</p>
-            <a href='mailto:n.y.borisova@mail.ru' className={styles.footer__text}>
+            <a
+              href='mailto:n.y.borisova@mail.ru'
+              className={styles.footer__text}
+            >
               n.y.borisova@mail.ru
             </a>
           </div>
@@ -43,10 +71,18 @@ const Footer: FC = () => {
             </p>
           </div>
         </ul>
-        {/* адрес миэта, ФИО препода, номер препода, почта препода, разработчики ФИО */}
       </nav>
     </div>
   );
 };
-
+export const blockHeight = {
+  value: 0,
+  updateHeight: function () {
+    const element = document.querySelector('#yourBlockId');
+    if (element) {
+      this.value = (element as HTMLElement).offsetHeight;
+    }
+  },
+};
+//export const blockHeight = blockHeight;
 export default Footer;

@@ -31,6 +31,7 @@ export const UserTrainings: FC = () => {
   const [page, setPage] = useState<number>(1);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedTrain, setSelectedTrain] = useState<UserTrain>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const container = {
     hidden: { opacity: 1, scale: 0 },
@@ -54,14 +55,17 @@ export const UserTrainings: FC = () => {
 
   const fetchTrains = async () => {
     if (id) {
+      setIsLoading(true);
       await UserService.fetchUserTrains(id, page, limit)
         .then((res) => {
+          setIsLoading(false);
           setError(null);
           setTrains(res.data);
           console.log(res.data);
         })
         .catch((err) => {
           console.log(err);
+          setIsLoading(false);
           setError(
             err.response.data.message
               ? err.response.data.message
@@ -83,7 +87,7 @@ export const UserTrainings: FC = () => {
     <section className={styles.root}>
       <h2 className={styles.root__title}>Мои тренировки</h2>
       <div className={styles.root__content}>
-        {!trains.count ? (
+        {isLoading ? (
           <LoadingSpinner />
         ) : error ? (
           <div className={styles.error}>

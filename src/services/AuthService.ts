@@ -16,6 +16,7 @@ export default class AuthService {
     email: string,
     phone: string,
     team: string,
+    recaptha: string,
   ): Promise<AxiosResponse<AuthResponse>> {
     return $api.post<AuthResponse>('/registration', {
       login,
@@ -26,6 +27,7 @@ export default class AuthService {
       email,
       phone,
       team,
+      ['g-recaptcha-response']: recaptha,
     });
   }
 

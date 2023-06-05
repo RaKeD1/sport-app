@@ -29,5 +29,6 @@ const RegisterSchema = Yup.object().shape({
     .test('password-match', 'Пароли должны совпадать', function (value: string) {
       return this.parent.password === value;
     }),
+  recaptcha: Yup.string(),
 });
 export default RegisterSchema;

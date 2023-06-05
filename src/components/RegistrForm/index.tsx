@@ -10,6 +10,7 @@ import { registrAccount } from '../../redux/slices/profileSlice';
 import { bindActionCreators } from '@reduxjs/toolkit';
 import { connect } from 'react-redux';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 export const phoneNumberMask = [
   '+',
@@ -40,12 +41,13 @@ interface FormValues {
   login: string;
   password: string;
   passwordCheck: string;
+  recaptcha: string; // Добавлено поле для капчи
 }
 
 let setSubmittingHigher;
 
 const InnerForm = (props: FormikProps<FormValues>) => {
-  const { touched, errors, isSubmitting } = props;
+  const { values, touched, errors, isSubmitting } = props;
   return (
     <Form className={styles.auth}>
       <img className={styles.auth__logo} width='44' src={logo} alt='Volleyball logo'></img>
@@ -242,6 +244,22 @@ const InnerForm = (props: FormikProps<FormValues>) => {
             )}
             {errors.passwordCheck && touched.passwordCheck && <div>{errors.passwordCheck}</div>}
           </div>
+          <div
+            className={classnames(
+              styles.auth__forinput,
+              {
+                [styles.input_true]: touched.password && !errors.password,
+              },
+              { [styles.input_false]: touched.password && errors.password },
+            )}>
+            <ReCAPTCHA
+              sitekey='6LdgYm4mAAAAACTOp4w9EpdEFelIVMomXK4EA5L_'
+              onChange={(value) => {
+                props.setFieldValue('recaptcha', value);
+              }}
+            />
+            {errors.recaptcha && touched.recaptcha && <div>{errors.recaptcha}</div>}
+          </div>
         </div>
       </div>
       <p className={styles.auth__text}>
@@ -250,7 +268,26 @@ const InnerForm = (props: FormikProps<FormValues>) => {
           Войти
         </Link>
       </p>
-      <button type='submit' className={styles.auth__button} disabled={isSubmitting}>
+      <button
+        type='submit'
+        className={classnames(styles.auth__button, {
+          [styles.auth__button_disabled]:
+            !values.name ||
+            !values.surname ||
+            !values.phone ||
+            !values.email ||
+            !values.login ||
+            !values.password ||
+            !values.passwordCheck ||
+            errors.name ||
+            errors.surname ||
+            errors.email ||
+            errors.login ||
+            errors.password ||
+            errors.passwordCheck ||
+            errors.phone,
+        })}
+        disabled={isSubmitting}>
         Зарегистрироваться
       </button>
     </Form>
@@ -275,6 +312,7 @@ export const RegistrForm = withFormik<RegistrProps, FormValues>({
       login: props.initialLogin || '',
       password: '',
       passwordCheck: '',
+      recaptcha: '',
     };
   },
 
@@ -288,6 +326,7 @@ export const RegistrForm = withFormik<RegistrProps, FormValues>({
       .replace(/ /g, '');
     const user = { ...values };
     user.phone = changedPhone;
+    user.recaptcha = values.recaptcha;
     props.registrAccount(user);
     setSubmittingHigher = setSubmitting;
   },

@@ -81,6 +81,11 @@
         filter: invert(100%);
       }
     }
+
+    &_disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
   }
   &__text {
     font-weight: 400;

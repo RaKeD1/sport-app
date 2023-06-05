@@ -32,6 +32,7 @@ export type RegistrParams = {
   team: string;
   login: string;
   password: string;
+  recaptcha: string; // Добавлено поле для капчи
 };
 
 export type FetchUserParams = {
@@ -68,7 +69,7 @@ export const registrAccount = createAsyncThunk<AxiosResponse<AuthResponse>, Regi
   'user/registrStatus',
   async (params, { rejectWithValue }) => {
     try {
-      const { name, surname, patronimyc, phone, email, team, login, password } = params;
+      const { name, surname, patronimyc, phone, email, team, login, password, recaptcha } = params;
       const response = await AuthService.registration(
         login,
         password,
@@ -78,6 +79,7 @@ export const registrAccount = createAsyncThunk<AxiosResponse<AuthResponse>, Regi
         email,
         phone,
         team,
+        recaptcha,
       );
       console.log('registration', response);
       return response;

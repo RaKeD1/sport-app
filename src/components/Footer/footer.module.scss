@@ -29,6 +29,11 @@
     color: #e3e3e3;
     @include dynamicFontSize(15, 12);
   }
+
+  &__blockText {
+    display: flex;
+    flex-direction: column;
+  }
   &__text {
     color: #e3e3e3;
     @include dynamicFontSize(13, 11);
@@ -58,10 +63,10 @@
       padding: 10px;
     }
     &__title {
-      font-size: 22px;
+      font-size: 18px;
     }
     &__text {
-      font-size: 18px;
+      font-size: 16px;
     }
   }
 }

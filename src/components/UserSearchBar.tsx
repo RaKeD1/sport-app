@@ -40,7 +40,7 @@ const UserSearchBar: FC<Props> = ({ setCollabs, isMulti, isClearable }) => {
     console.log('in load options');
     fetchUsers().then((data) => {
       const users = data
-        .filter((player) => player.id_account !== myId)
+        // .filter((player) => player.id_account !== myId)
         .map((obj) => {
           const player = {
             ...obj,

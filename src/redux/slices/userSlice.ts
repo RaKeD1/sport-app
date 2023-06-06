@@ -6,6 +6,7 @@ import { RootState } from '../store';
 import UserService from '../../services/UserService';
 import { FetchError } from './trainSlice';
 import RoleService from '../../services/RoleService';
+import { UsersFetch } from '../../pages/Players';
 
 type RemoveRoleUsersParams = {
   users: number[];
@@ -19,12 +20,26 @@ type GiveRoleUsersParams = RemoveRoleUsersParams & {
   role: string;
 };
 
-export const fetchUsers = createAsyncThunk('user/fetchAll', async (_, thunkApi) => {
+type PageParams = {
+  page: number;
+  limit: number;
+};
+
+export const fetchUsers = createAsyncThunk<
+  AxiosResponse<UsersFetch>,
+  PageParams,
+  { rejectValue: FetchError }
+>('user/fetchAllUsers', async (params, { rejectWithValue }) => {
   try {
-    const response = await UserService.fetchUsers(1, 8);
-    return response.data;
-  } catch (e) {
-    return thunkApi.rejectWithValue('Не удалость загрузить пользователей');
+    const { page, limit } = params;
+    const response = await UserService.fetchUsers(page, limit);
+    console.log('data', response.data);
+    return response;
+  } catch (error) {
+    if (!error.response) {
+      throw error;
+    }
+    return rejectWithValue(error.response?.data);
   }
 });
 
@@ -83,12 +98,16 @@ export interface User {
   users: IUser[];
   status: Status;
   isLoading: boolean;
+  count: number;
+  error: string | null;
 }
 
 const initialState: User = {
   users: [],
   isLoading: false,
-  status: Status.SUCCESS,
+  status: Status.LOADING,
+  count: 0,
+  error: null,
 };
 export const userSlice = createSlice({
   name: 'user',
@@ -97,15 +116,18 @@ export const userSlice = createSlice({
     usersFetching(state) {
       state.isLoading = true;
       state.status = Status.LOADING;
+      state.error = initialState.error;
     },
     usersFetchingSuccess(state, action: PayloadAction<IUser[]>) {
       state.isLoading = false;
       state.status = Status.SUCCESS;
       state.users = action.payload;
+      state.error = initialState.error;
     },
-    usersFetchingError(state) {
+    usersFetchingError(state, action) {
       state.isLoading = false;
       state.status = Status.ERROR;
+      state.error = action.payload.message;
     },
   },
   extraReducers: {
@@ -113,19 +135,23 @@ export const userSlice = createSlice({
       state.isLoading = false;
       state.status = Status.SUCCESS;
       state.users = action.payload;
+      state.error = initialState.error;
     },
-    [fetchUsers.pending.type]: (state, action: PayloadAction<IUser[]>) => {
+    [fetchUsers.pending.type]: (state) => {
       state.isLoading = true;
       state.status = Status.LOADING;
+      state.error = initialState.error;
     },
-    [fetchUsers.rejected.type]: (state, action: PayloadAction<IUser[]>) => {
+    [fetchUsers.rejected.type]: (state, action) => {
       state.isLoading = false;
       state.status = Status.ERROR;
+      state.error = action.payload.message;
     },
 
     [giveRoleUsers.fulfilled.type]: (state, action) => {
       state.isLoading = false;
       state.status = Status.SUCCESS;
+      state.error = initialState.error;
       const response = action.payload.data;
       const updUsers = state.users.map((user) => {
         const findUser = response.find((obj) => obj.id_account === user.id_account);
@@ -138,16 +164,19 @@ export const userSlice = createSlice({
     [giveRoleUsers.pending.type]: (state, action) => {
       state.isLoading = true;
       state.status = Status.LOADING;
+      state.error = initialState.error;
     },
     [giveRoleUsers.rejected.type]: (state, action) => {
       state.isLoading = false;
       state.status = Status.ERROR;
+      state.error = action.payload.message;
       alert(action.payload.message);
     },
 
     [removeRoleUsers.fulfilled.type]: (state, action) => {
       state.isLoading = false;
       state.status = Status.SUCCESS;
+      state.error = initialState.error;
       const response = action.payload.data;
       const updUsers = state.users.map((user) => {
         const findUser = response.find((obj: IUser) => obj.id_account === user.id_account);
@@ -160,30 +189,54 @@ export const userSlice = createSlice({
     [removeRoleUsers.pending.type]: (state, action) => {
       state.isLoading = true;
       state.status = Status.LOADING;
+      state.error = initialState.error;
     },
     [removeRoleUsers.rejected.type]: (state, action) => {
       state.isLoading = false;
       state.status = Status.ERROR;
+      state.error = action.payload.message;
       alert(action.payload.message);
     },
 
     [deleteUser.fulfilled.type]: (state, action) => {
       state.isLoading = false;
       state.status = Status.SUCCESS;
+      state.error = initialState.error;
       const delUser = action.payload.data;
       state.users = state.users.filter((user) => user.id_account !== delUser.id_account);
     },
     [deleteUser.pending.type]: (state, action) => {
       state.isLoading = true;
       state.status = Status.LOADING;
+      state.error = initialState.error;
     },
     [deleteUser.rejected.type]: (state, action) => {
       state.isLoading = false;
       state.status = Status.ERROR;
+      state.error = action.payload.message;
+      alert(action.payload.message);
+    },
+    [fetchUsers.fulfilled.type]: (state, action) => {
+      state.isLoading = false;
+      state.status = Status.SUCCESS;
+      state.error = initialState.error;
+      state.users = action.payload.data.rows;
+      state.count = action.payload.data.count;
+    },
+    [fetchUsers.pending.type]: (state, action) => {
+      state.isLoading = true;
+      state.status = Status.LOADING;
+      state.error = initialState.error;
+    },
+    [fetchUsers.rejected.type]: (state, action) => {
+      state.isLoading = false;
+      state.status = Status.ERROR;
+      state.error = action.payload.message;
       alert(action.payload.message);
     },
   },
 });
 export const SelectUsers = (state: RootState) => state.usersReducer.users;
+export const SelectInfoUsers = (state: RootState) => state.usersReducer;
 
 export default userSlice.reducer;

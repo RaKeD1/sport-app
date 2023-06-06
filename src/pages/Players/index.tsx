@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from '../../redux/store';
-import { giveRoleUsers, removeRoleUsers } from '../../redux/slices/userSlice';
+import {
+  SelectInfoUsers,
+  SelectUsers,
+  fetchUsers,
+  giveRoleUsers,
+  removeRoleUsers,
+} from '../../redux/slices/userSlice';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import styles from './players.module.scss';
@@ -73,7 +79,7 @@ const roleNames = {
 
 export interface UsersFetch {
   count: number;
-  rows: IUser[];
+  users: IUser[];
 }
 
 export const Players = () => {
@@ -93,12 +99,9 @@ export const Players = () => {
   const [roles, setRoles] = useState<Option[]>();
   const [rolesError, setRolesError] = useState<string>(null);
   const [removeRolesModal, setRemoveRolesModal] = useState<boolean>(false);
-  // Стейты для пагинации и фукнции вызова пользователей
-  const [error, setError] = useState<string>(null);
+  // Стейты для пагинации
   const [limit, setLimit] = useState<number>(8);
   const [page, setPage] = useState<number>(1);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [users, setUsers] = useState<UsersFetch>({ count: 0, rows: [] });
   const limitVariants = [8, 12, 16];
 
   useEffect(() => {
@@ -109,25 +112,8 @@ export const Players = () => {
 
   const dispatch = useAppDispatch();
 
-  const fetchUsers = async () => {
-    setIsLoading(true);
-    await UserService.fetchUsers(page, limit)
-      .then((res) => {
-        setIsLoading(false);
-        setError(null);
-        setUsers(res.data);
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        setError(
-          err.response.data.message
-            ? err.response.data.message
-            : 'Не удалось получить пользователей',
-        );
-      });
-  };
-
-  const players = users.rows.map((obj) => {
+  const users = useSelector(SelectInfoUsers);
+  const players = users.users.map((obj) => {
     const user = {
       ...obj,
       player: obj.surname + ' ' + obj.name + ' ' + obj.patronimyc,
@@ -147,9 +133,7 @@ export const Players = () => {
       console.log(error);
     }
   };
-
   useEffect(() => {
-    fetchUsers();
     setIsLoad(false);
     fetchRoles()
       .then((res) => {
@@ -163,11 +147,11 @@ export const Players = () => {
   }, []);
 
   useEffect(() => {
-    fetchUsers();
+    dispatch(fetchUsers({ page, limit }));
   }, [page, limit]);
 
   useEffect(() => {
-    fetchUsers();
+    dispatch(fetchUsers({ page, limit }));
     setIsUpdate(false);
   }, [isUpdate]);
 
@@ -216,6 +200,8 @@ export const Players = () => {
   const handlePageClick = (selected: number) => {
     setPage(selected);
   };
+  console.log('length', users.users.length);
+
   return (
     <motion.div variants={pageMotion} initial='hidden' animate='show' exit='exit'>
       <div className={styles.main}>
@@ -240,14 +226,14 @@ export const Players = () => {
             </div>
           </div>
         </div>
-        {isLoading ? (
+        {users.status === 'loading' ? (
           <LoadingSpinner />
-        ) : error ? (
+        ) : users.error !== null ? (
           <div className={styles.error}>
             <span>😕</span>
-            {error}
+            {users.error}
           </div>
-        ) : users.rows.length === 0 ? (
+        ) : users.users.length === 0 ? (
           <div className={styles.root__content__empty}>Нет пользователей</div>
         ) : (
           <>

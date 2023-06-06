@@ -83,17 +83,16 @@ const UpdateUser = (props) => {
           return '';
         }
       },
-      phone: (value) => {
+      phone: () => {
         return '';
       },
 
-      email: (value) => {
+      email: () => {
         return '';
       },
-      team: (value) => {
+      team: () => {
         return '';
       },
-      // Add more fields and validation functions
     };
 
     setErrorsState((prevErrors) => ({

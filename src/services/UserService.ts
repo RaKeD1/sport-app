@@ -41,4 +41,8 @@ export default class UserService {
   static deleteUserPhoto(id: number): Promise<AxiosResponse<string>> {
     return $api.delete<string>(`/photo/${id}`);
   }
+
+  static deleteUser(id: number): Promise<AxiosResponse<IUser>> {
+    return $api.delete<IUser>(`/user/${id}`);
+  }
 }

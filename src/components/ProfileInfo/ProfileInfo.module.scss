@@ -147,6 +147,25 @@
         border: 1px solid #ff7676;
       }
     }
+
+    &_deleteUserBtn {
+      margin-top: 10px;
+      background: transparent;
+      color: #000;
+      box-shadow: none;
+      opacity: 0.3;
+      padding: 0;
+      border: none;
+      font-size: 12px;
+
+      &:hover {
+        background: transparent;
+        color: #000;
+        box-shadow: none;
+        border: none;
+        opacity: 0.5;
+      }
+    }
   }
 }
 

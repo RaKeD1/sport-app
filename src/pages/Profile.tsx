@@ -23,6 +23,7 @@ export const Profile: FC = () => {
     <motion.div variants={pageMotion} initial='hidden' animate='show' exit='exit'>
       <div className='tiles'>
         <ProfileInfo
+          deleteBtn={false}
           data={user}
           avatarSmall={avatarSmall}
           inRow={true}

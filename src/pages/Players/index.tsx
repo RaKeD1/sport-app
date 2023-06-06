@@ -227,6 +227,7 @@ export const Players = () => {
                     inRow={false}
                     avatarSmall={avatarSmall}
                     roleBtn={true}
+                    deleteBtn={true}
                     onClickEdit={() => handleEditUser(player)} // Передаем данные пользователя в обработчик
                     onClickEditPhoto={setChangePhotoModal}
                   />

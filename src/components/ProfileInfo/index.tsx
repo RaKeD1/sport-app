@@ -10,7 +10,7 @@ import { useAppDispatch } from '../../hooks/redux';
 import classNames from 'classnames';
 import { FaCrown, FaPen } from 'react-icons/fa';
 import RoleService from '../../services/RoleService';
-import { removeRoleUsers } from '../../redux/slices/userSlice';
+import { deleteUser, removeRoleUsers } from '../../redux/slices/userSlice';
 
 interface ProfileInfoProps {
   onClickEditUser?: (value: number) => void;
@@ -19,7 +19,15 @@ interface ProfileInfoProps {
   onClickEdit: (value: boolean) => void;
   onClickEditPhoto: (value: boolean) => void;
 }
-const ProfileInfo = ({ data, inRow, avatarSmall, onClickEdit, onClickEditPhoto, roleBtn }) => {
+const ProfileInfo = ({
+  data,
+  inRow,
+  avatarSmall,
+  onClickEdit,
+  onClickEditPhoto,
+  roleBtn,
+  deleteBtn,
+}) => {
   const [showPhotoMenu, setShowPhotoMenu] = useState<boolean>(false);
   const [deleteError, setDeleteError] = useState<string>(null);
   const [rolesError, setRolesError] = useState<string>(null);
@@ -65,6 +73,18 @@ const ProfileInfo = ({ data, inRow, avatarSmall, onClickEdit, onClickEditPhoto, 
         users: [data.id_account],
       }),
     );
+  };
+
+  const onDeleteUser = () => {
+    if (
+      window.confirm('Вы точно хотите удалить пользователя?\nЭто действие нельзя будет отменить')
+    ) {
+      dispatch(
+        deleteUser({
+          id_user: data.id_user,
+        }),
+      );
+    }
   };
 
   const variants = {
@@ -134,6 +154,7 @@ const ProfileInfo = ({ data, inRow, avatarSmall, onClickEdit, onClickEditPhoto, 
         </p>
       </div>
       <div
+        style={{ paddingBottom: deleteBtn ? '15px' : '' }}
         className={classNames(styles.root__info, {
           [styles.row__info]: matches && !mobileMatches && inRow,
         })}>
@@ -164,6 +185,13 @@ const ProfileInfo = ({ data, inRow, avatarSmall, onClickEdit, onClickEditPhoto, 
             onClick={() => removeRole()}
             className={classNames(styles.root__button, styles.root__button_removeRoleBtn)}>
             Забрать роль
+          </button>
+        )}
+        {deleteBtn && (
+          <button
+            onClick={() => onDeleteUser()}
+            className={classNames(styles.root__button, styles.root__button_deleteUserBtn)}>
+            Удалить пользователя
           </button>
         )}
         {rolesError && <div>{rolesError}</div>}

@@ -1,11 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from '../../redux/store';
-import {
-  SelectUsers,
-  fetchUsers,
-  giveRoleUsers,
-  removeRoleUsers,
-} from '../../redux/slices/userSlice';
+import { giveRoleUsers, removeRoleUsers } from '../../redux/slices/userSlice';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import styles from './players.module.scss';
@@ -21,6 +16,11 @@ import SelectBar from '../../components/SelectBar';
 import { Option } from '../../components/SelectBar';
 import RoleService from '../../services/RoleService';
 import { SelectUserID } from '../../redux/slices/profileSlice';
+import UserService from '../../services/UserService';
+import { IUser } from '../../models/IUser';
+import { limitVariants } from '../TrainingEdit';
+import Pagination from '../../components/Pagination';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 export interface PlayersInf {
   email: string;
@@ -72,9 +72,14 @@ const roleNames = {
   ADMIN: 'Администратор',
 };
 
+export interface UsersFetch {
+  count: number;
+  rows: IUser[];
+}
+
 export const Players = () => {
-  const MyID = useSelector(SelectUserID);
   const avatarSmall = true;
+
   const [showModal, setShowModal] = useState<boolean>(false);
   const [changePhotoModal, setChangePhotoModal] = useState<boolean>(false);
   const [value, setValue] = useState<string>('');
@@ -89,7 +94,11 @@ export const Players = () => {
   const [roles, setRoles] = useState<Option[]>();
   const [rolesError, setRolesError] = useState<string>(null);
   const [removeRolesModal, setRemoveRolesModal] = useState<boolean>(false);
-
+  const [error, setError] = useState<string>(null);
+  const [limit, setLimit] = useState<number>(8);
+  const [page, setPage] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [users, setUsers] = useState<UsersFetch>({ count: 0, rows: [] });
   useEffect(() => {
     console.log('collabs', collabs);
     const players: number[] = collabs.map((obj) => obj.id_account);
@@ -98,10 +107,24 @@ export const Players = () => {
 
   const dispatch = useAppDispatch();
 
-  const users = useSelector(SelectUsers);
-  console.log('users', users);
+  const fetchUsers = async () => {
+    await UserService.fetchUsers(page, limit)
+      .then((res) => {
+        setIsLoading(false);
+        setError(null);
+        setUsers(res.data);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        setError(
+          err.response.data.message
+            ? err.response.data.message
+            : 'Не удалось получить пользователей',
+        );
+      });
+  };
 
-  const players = users.map((obj) => {
+  const players = users.rows.map((obj) => {
     const user = {
       ...obj,
       player: obj.surname + ' ' + obj.name + ' ' + obj.patronimyc,
@@ -123,7 +146,7 @@ export const Players = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchUsers());
+    fetchUsers();
     setIsLoad(false);
     fetchRoles()
       .then((res) => {
@@ -137,9 +160,15 @@ export const Players = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(fetchUsers());
+    fetchUsers();
+  }, [page, limit]);
+
+  useEffect(() => {
+    fetchUsers();
     setIsUpdate(false);
   }, [isUpdate]);
+
+  useEffect(() => {}, [selectedUser]);
 
   const handleEditUser = (user: PlayersInf) => {
     setSelectedUser(user);
@@ -181,7 +210,9 @@ export const Players = () => {
     },
   };
 
-  useEffect(() => {}, [selectedUser]);
+  const handlePageClick = (selected: number) => {
+    setPage(selected);
+  };
   return (
     <motion.div variants={pageMotion} initial='hidden' animate='show' exit='exit'>
       <div className={styles.main}>
@@ -206,35 +237,74 @@ export const Players = () => {
             </div>
           </div>
         </div>
-        <motion.ul
-          className={styles.container}
-          variants={container}
-          initial='hidden'
-          animate='visible'>
-          {filtredPlayers
-            .filter((player) => player.id_user !== MyID)
-            .map((player) => {
-              return (
-                <motion.li
-                  key={player.id_user}
-                  whileHover={{
-                    scale: 1.05,
-                    transition: { duration: 0.2 },
-                  }}
-                  variants={item}>
-                  <ProfileInfo
-                    data={player}
-                    inRow={false}
-                    avatarSmall={avatarSmall}
-                    roleBtn={true}
-                    deleteBtn={true}
-                    onClickEdit={() => handleEditUser(player)} // Передаем данные пользователя в обработчик
-                    onClickEditPhoto={setChangePhotoModal}
-                  />
-                </motion.li>
-              );
-            })}
-        </motion.ul>
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : error ? (
+          <div className={styles.error}>
+            <span>😕</span>
+            {error}
+          </div>
+        ) : users.rows.length === 0 ? (
+          <div className={styles.root__content__empty}>У вас пока не было тренировок</div>
+        ) : (
+          <>
+            <motion.ul
+              className={styles.container}
+              variants={container}
+              initial='hidden'
+              animate='visible'>
+              {filtredPlayers
+                // .filter((player) => player.id_user !== MyID)
+                .map((player) => {
+                  return (
+                    <motion.li
+                      key={player.id_user}
+                      whileHover={{
+                        scale: 1.05,
+                        transition: { duration: 0.2 },
+                      }}
+                      variants={item}>
+                      <ProfileInfo
+                        deleteBtn={true}
+                        data={player}
+                        inRow={false}
+                        avatarSmall={avatarSmall}
+                        roleBtn={true}
+                        onClickEdit={() => handleEditUser(player)} // Передаем данные пользователя в обработчик
+                        onClickEditPhoto={setChangePhotoModal}
+                      />
+                    </motion.li>
+                  );
+                })}
+            </motion.ul>
+            {limit !== users.count && limit < users.count && (
+              <>
+                <Pagination
+                  page={page}
+                  pageCount={Math.ceil(users.count / limit)}
+                  handlePageClick={handlePageClick}
+                />
+                <div className={styles.showNum}>
+                  <p>Показывать на странице:</p>
+                  {limitVariants.map((item, i) => (
+                    <span
+                      key={i}
+                      className={classNames(styles.showNum__item, {
+                        [styles.showNum__item_active]: item === limit,
+                      })}
+                      onClick={() => {
+                        setPage(1);
+                        setLimit(item);
+                      }}>
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </>
+            )}
+          </>
+        )}
+
         <Modal isActive={showModal} setIsActive={setShowModal}>
           <UpdateUser isUpdate={setIsUpdate} user={selectedUser} setIsActive={setShowModal} />
         </Modal>

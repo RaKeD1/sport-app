@@ -21,7 +21,7 @@ type GiveRoleUsersParams = RemoveRoleUsersParams & {
 
 export const fetchUsers = createAsyncThunk('user/fetchAll', async (_, thunkApi) => {
   try {
-    const response = await UserService.fetchUsers();
+    const response = await UserService.fetchUsers(1, 8);
     return response.data;
   } catch (e) {
     return thunkApi.rejectWithValue('Не удалость загрузить пользователей');

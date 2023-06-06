@@ -4,10 +4,11 @@ import { IUser } from '../models/IUser';
 import { ISelectUser } from '../models/ISelectUser';
 import { ITrain } from '../models/ITrain';
 import { UserTrains } from '../components/UserTrainings';
+import { UsersFetch } from '../pages/Players';
 
 export default class UserService {
-  static fetchUsers(): Promise<AxiosResponse<IUser[]>> {
-    return $api.get<IUser[]>('/users');
+  static fetchUsers(page: number, limit: number): Promise<AxiosResponse<UsersFetch>> {
+    return $api.get<UsersFetch>('/users/' + `?page=${page}&limit=${limit}`);
   }
 
   static fetchSelectUsers(): Promise<AxiosResponse<ISelectUser[]>> {

@@ -78,6 +78,25 @@
   }
 }
 
+/// Для пагинации
+.showNum {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+
+  &__item {
+    margin-left: 10px;
+    text-decoration: underline;
+    color: $button-clr;
+    cursor: pointer;
+
+    &_active {
+      text-decoration: none;
+      color: #000;
+      pointer-events: none;
+    }
+  }
+}
 label {
   @include dynamicFontSize(20, 12);
   margin-bottom: 10px;

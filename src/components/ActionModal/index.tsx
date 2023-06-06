@@ -144,7 +144,10 @@ const ActionModal: FC<ActionModalProps> = ({ isActive, setIsActive, id_train, up
         <div className={styles.action__current}>
           <h2 className={styles.action__title}>
             <span ref={infoRef}>
-              <BsInfoCircle onClick={() => setShowInfo(!showInfo)} />
+              <BsInfoCircle
+                onMouseEnter={() => setShowInfo(true)}
+                onMouseLeave={() => setShowInfo(false)}
+              />
               <AnimatePresence>
                 {showInfo && (
                   <motion.div

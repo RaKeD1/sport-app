@@ -115,8 +115,6 @@ export const TrainingEdit: React.FC = () => {
       .addEventListener('change', (e) => setMatches(e.matches));
   }, []);
 
-  console.log('playersStats', players);
-
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -125,7 +123,6 @@ export const TrainingEdit: React.FC = () => {
 
   // Если был первый рендер, то проверяем URL-параметры и сохраняем в редуксе
   useEffect(() => {
-    console.log('useEffect [] /training');
     if (window.location.search) {
       const params = qs.parse(window.location.search.substring(1)) as unknown as TrainParams;
 
@@ -141,7 +138,6 @@ export const TrainingEdit: React.FC = () => {
 
   // Если изменили параметры и был первый рендер
   useEffect(() => {
-    console.log('useEffect [team, date] /training');
     if (isMounted.current && team && date) {
       const queryString = qs.stringify({
         team: team,
@@ -156,7 +152,6 @@ export const TrainingEdit: React.FC = () => {
   // Если был первый рендер, то запрашиваем тренировку
   useEffect(() => {
     window.scrollTo(0, 0);
-    console.log('useEffect [team, date], isSearch.current=', isSearch.current);
 
     if (isSearch.current && isMounted.current && team && date) {
       dispatch(
@@ -179,7 +174,6 @@ export const TrainingEdit: React.FC = () => {
   }, [team, date]);
 
   useEffect(() => {
-    console.log('useEffect [isChangeTrain] /training');
     if (isChangeTrain) {
       setActiveDate(null);
     }
@@ -188,21 +182,16 @@ export const TrainingEdit: React.FC = () => {
   const fetchDates = async (day_team: string) => {
     try {
       const fetch = await TrainService.getTeamDates(day_team);
-      console.log('fetch', fetch.data);
+
       return fetch.data;
     } catch (error) {
-      console.log(error.response?.data?.message);
       return [];
     }
   };
 
-  useEffect(() => {
-    console.log('useEffect [dates] /training');
-    console.log('dates', dates);
-  }, [dates]);
+  useEffect(() => {}, [dates]);
 
   useEffect(() => {
-    console.log('useEffect [activeTeam] /training');
     setActiveDate(null);
     if (activeTeam) {
       fetchDates(activeTeam.value).then((data) => {
@@ -214,7 +203,6 @@ export const TrainingEdit: React.FC = () => {
   }, [activeTeam]);
 
   useEffect(() => {
-    console.log('useEffect [activeDate, activeTeam] /training');
     if (activeDate && activeTeam) {
       setIsValidModal(true);
     } else {
@@ -223,25 +211,23 @@ export const TrainingEdit: React.FC = () => {
   }, [activeDate, activeTeam]);
 
   useEffect(() => {
-    console.log('useEffect [players] /training');
-    dispatch(
-      getTrainActions({
-        team,
-        date,
-        limit,
-        page,
-      }),
-    );
+    if (team && date) {
+      dispatch(
+        getTrainActions({
+          team,
+          date,
+          limit,
+          page,
+        }),
+      );
+    }
   }, [players]);
 
   const onChangeDate = (value) => {
-    console.log('onChangeDate /training');
     setActiveDate(value);
-    console.log('Date', activeDate);
   };
 
   const onClickAddAction = (id_train: number) => {
-    console.log('id_train in onClickAddAction', id_train);
     setActivePlayer(id_train);
     setIsActive(true);
   };
@@ -253,14 +239,12 @@ export const TrainingEdit: React.FC = () => {
   };
 
   const changeTrain = () => {
-    console.log('changeTrain /training');
     setIsChangeTrain(false);
-    console.log('team:', team);
-    console.log('date:', date);
+
     const formattedDate = `${activeDate.getFullYear()}-${
       activeDate.getMonth() + 1
     }-${activeDate.getDate()}`;
-    console.log('Formatted Date', formattedDate);
+
     dispatch(setTeam(activeTeam.value));
     dispatch(setDate(formattedDate));
     dispatch(
@@ -281,9 +265,6 @@ export const TrainingEdit: React.FC = () => {
   };
 
   const updateTrain = () => {
-    console.log('updateTrain /training');
-    console.log('team:', team);
-    console.log('date:', date);
     dispatch(
       getTeamTrain({
         account_id,
@@ -343,7 +324,6 @@ export const TrainingEdit: React.FC = () => {
   };
 
   const onClickAddPlayer = (id: number) => {
-    console.log('added', id);
     setNewPlayer(null);
     setIsAddPlayer(false);
     dispatch(
@@ -363,7 +343,7 @@ export const TrainingEdit: React.FC = () => {
 
   const checkPlayer = () => {
     const result = players.filter((obj) => obj.fio === newPlayer.player);
-    console.log(result);
+
     if (result.length === 0) return true;
     else return false;
   };
@@ -375,7 +355,6 @@ export const TrainingEdit: React.FC = () => {
         for (var key in newObj) {
           if (newObj.hasOwnProperty(key)) {
             if (key !== 'fio' && key !== 'id_train') {
-              console.log(typeof newObj[key]);
               newObj[key] = Number(newObj[key] * 100).toFixed() + '%';
             }
           }
@@ -384,8 +363,6 @@ export const TrainingEdit: React.FC = () => {
       }),
     [players],
   );
-
-  console.log('playersStatsData', playersStatsData);
 
   const playersStatsColumns = useMemo<Column<Cols>[]>(
     () =>

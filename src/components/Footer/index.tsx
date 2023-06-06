@@ -36,13 +36,22 @@ const Footer = ({ setBlockHeight }) => {
                 МИЭТ
               </a>
             </h1>
-            <a
-              className={styles.footer__text}
-              href='https://yandex.ru/maps/org/moskovskiy_institut_elektronnoy_tekhniki/1042223652/?ll=37.208453%2C55.983384&z=17.08'
-              target='MIET'
-            >
-              площадь Шокина, 1
-            </a>
+            <div className={styles.footer__blockText}>
+              <a
+                className={styles.footer__text}
+                href='https://yandex.ru/maps/org/moskovskiy_institut_elektronnoy_tekhniki/1042223652/?ll=37.208453%2C55.983384&z=17.08'
+                target='MIET'
+              >
+                площадь Шокина, 1
+              </a>
+              <a
+                className={styles.footer__text}
+                href='https://vk.com/sport.miet'
+                target='VK_Electron'
+              >
+                ССК «Электрон»
+              </a>
+            </div>
           </div>
           <div className={styles.footer__teacher}>
             <h1 className={styles.footer__title}>Преподаватель</h1>

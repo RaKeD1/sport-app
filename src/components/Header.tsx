@@ -1,7 +1,8 @@
 import { FC, useState, useEffect } from 'react';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
-import logo from '../assets/img/ball.svg';
+//import logo from '../assets/img/ball.svg';
+import logo from '../assets/img/Logo_VolleyBall.png';
 import { FaUserAlt } from 'react-icons/fa';
 import Hamburger from './Hamburger';
 import { motion } from 'framer-motion';
@@ -26,12 +27,16 @@ const Header: FC = () => {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
-    <header className={`header `} style={{ backgroundColor: isScrolled ? 'transparent' : '#fff' }}>
+    <header
+      className={`header `}
+      style={{ backgroundColor: isScrolled ? 'transparent' : '#fff' }}
+    >
       <motion.nav className='container'>
         <motion.div
           initial={{ opacity: 1 }}
           animate={{ opacity: isScrolled ? 0 : 1 }}
-          transition={{ duration: 0.5 }}>
+          transition={{ duration: 0.5 }}
+        >
           <Link to='/profile' className='header__logo'>
             <img src={logo} alt='logo' width='44px' />
             <div className='header__title'>
@@ -42,10 +47,21 @@ const Header: FC = () => {
         </motion.div>
       </motion.nav>
       <motion.div
-        initial={{ position: 'fixed', top: '0px', width: '100%', opacity: 0, y: 10 }}
-        animate={{ opacity: isScrolled ? 1 : 0, position: 'fixed', y: isScrolled ? 0 : -10 }}
+        initial={{
+          position: 'fixed',
+          top: '0px',
+          width: '100%',
+          opacity: 0,
+          y: 10,
+        }}
+        animate={{
+          opacity: isScrolled ? 1 : 0,
+          position: 'fixed',
+          y: isScrolled ? 0 : -10,
+        }}
         transition={{ duration: 0.3 }}
-        className={isScrolled ? ' header__scrolled ' : ''}>
+        className={isScrolled ? ' header__scrolled ' : ''}
+      >
         <div className='container'>
           <Link to='/profile' className='header__logo'>
             <motion.img

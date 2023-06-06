@@ -2,10 +2,10 @@ import React, { useEffect, useState, FC, useRef } from 'react';
 import styles from './UserStatCircles.module.scss';
 import UserService from '../../services/UserService';
 import { ITrain } from '../../models/ITrain';
-import { columnNames } from '../../pages/TrainingEdit';
 import ProgressCircle from '../ProgressCircle';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import { AnimatePresence, motion, useAnimation } from 'framer-motion';
+import StatTile from '../StatTile';
 
 interface UserStatCirclesProps {
   user: number;
@@ -47,10 +47,14 @@ const UserStatCircles: FC<UserStatCirclesProps> = ({ user }) => {
           </div>
         ) : (
           Object.entries(stat).map((arr) => (
-            <div key={arr[0]} className={styles.root__content__tile}>
-              <p className={styles.root__content__tile__text}>{columnNames[arr[0]]}</p>
-              <ProgressCircle progress={arr[1] * 100} />
-            </div>
+            <>
+              <StatTile
+                name={arr[0]}
+                winCount={arr[1][arr[0] + '_winCount']}
+                lossCount={arr[1][arr[0] + '_lossCount']}
+                stat={arr[1][arr[0] + '_stat']}
+              />
+            </>
           ))
         )}
       </div>

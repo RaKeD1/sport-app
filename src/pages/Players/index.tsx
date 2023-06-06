@@ -18,7 +18,6 @@ import RoleService from '../../services/RoleService';
 import { SelectUserID } from '../../redux/slices/profileSlice';
 import UserService from '../../services/UserService';
 import { IUser } from '../../models/IUser';
-import { limitVariants } from '../TrainingEdit';
 import Pagination from '../../components/Pagination';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
@@ -94,11 +93,14 @@ export const Players = () => {
   const [roles, setRoles] = useState<Option[]>();
   const [rolesError, setRolesError] = useState<string>(null);
   const [removeRolesModal, setRemoveRolesModal] = useState<boolean>(false);
+  // Стейты для пагинации и фукнции вызова пользователей
   const [error, setError] = useState<string>(null);
   const [limit, setLimit] = useState<number>(8);
   const [page, setPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [users, setUsers] = useState<UsersFetch>({ count: 0, rows: [] });
+  const limitVariants = [8, 12, 16];
+
   useEffect(() => {
     console.log('collabs', collabs);
     const players: number[] = collabs.map((obj) => obj.id_account);

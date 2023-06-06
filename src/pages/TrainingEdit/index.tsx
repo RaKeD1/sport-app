@@ -211,14 +211,16 @@ export const TrainingEdit: React.FC = () => {
   }, [activeDate, activeTeam]);
 
   useEffect(() => {
-    dispatch(
-      getTrainActions({
-        team,
-        date,
-        limit,
-        page,
-      }),
-    );
+    if (team && date) {
+      dispatch(
+        getTrainActions({
+          team,
+          date,
+          limit,
+          page,
+        }),
+      );
+    }
   }, [players]);
 
   const onChangeDate = (value) => {

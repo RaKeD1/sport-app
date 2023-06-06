@@ -3,7 +3,7 @@ import '../../scss/statistics.scss';
 import qs from 'qs';
 import { Column, useSortBy, useTable } from 'react-table';
 import styles from './trainingEdit.module.scss';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
   SelectTrain,
@@ -105,6 +105,7 @@ export const TrainingEdit: React.FC = () => {
   // Стейты первого рендера
   const isSearch = React.useRef(false);
   const isMounted = useRef(false);
+  const location = useLocation();
 
   const [matches, setMatches] = useState(window.matchMedia('(min-width: 860px)').matches);
 
@@ -157,7 +158,7 @@ export const TrainingEdit: React.FC = () => {
     window.scrollTo(0, 0);
     console.log('useEffect [team, date], isSearch.current=', isSearch.current);
 
-    if (isSearch.current && isMounted.current) {
+    if (isSearch.current && isMounted.current && team && date) {
       dispatch(
         getTeamTrain({
           account_id,
@@ -305,14 +306,16 @@ export const TrainingEdit: React.FC = () => {
   };
 
   useEffect(() => {
-    dispatch(
-      getTrainActions({
-        team: team,
-        date: date,
-        limit,
-        page,
-      }),
-    );
+    if (team && date) {
+      dispatch(
+        getTrainActions({
+          team: team,
+          date: date,
+          limit,
+          page,
+        }),
+      );
+    }
   }, [page, limit]);
 
   const deleteTrain = () => {
@@ -489,7 +492,7 @@ export const TrainingEdit: React.FC = () => {
             </button>
           )}
         </div>
-        {players.length === 0 && status !== Status.ERROR ? (
+        {players.length === 0 && !location.search && status !== Status.ERROR ? (
           <div className={styles.train__error}>
             <span>😕</span>
             Выберите дату тренировки и группу.

@@ -108,6 +108,7 @@ export const Players = () => {
   const dispatch = useAppDispatch();
 
   const fetchUsers = async () => {
+    setIsLoading(true);
     await UserService.fetchUsers(page, limit)
       .then((res) => {
         setIsLoading(false);
@@ -245,7 +246,7 @@ export const Players = () => {
             {error}
           </div>
         ) : users.rows.length === 0 ? (
-          <div className={styles.root__content__empty}>У вас пока не было тренировок</div>
+          <div className={styles.root__content__empty}>Нет пользователей</div>
         ) : (
           <>
             <motion.ul

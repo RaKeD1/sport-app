@@ -423,6 +423,7 @@ export const TrainingEdit: React.FC = () => {
       ]);
     }
   };
+  console.log('location.search', location.search);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable<Cols>(
     {
@@ -469,7 +470,11 @@ export const TrainingEdit: React.FC = () => {
             </button>
           )}
         </div>
-        {players.length === 0 && !location.search && status !== Status.ERROR ? (
+        {players.length === 0 &&
+        (!location.search ||
+          !new URLSearchParams(location.search).get('date') ||
+          !new URLSearchParams(location.search).get('team')) &&
+        status !== Status.ERROR ? (
           <div className={styles.train__error}>
             <span>😕</span>
             Выберите дату тренировки и группу.

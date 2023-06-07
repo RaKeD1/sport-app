@@ -1,21 +1,14 @@
-import React from "react";
-import classnames from "classnames";
-import { Link } from "react-router-dom";
-import {
-  Formik,
-  Form,
-  Field,
-  withFormik,
-  FormikProps,
-  FormikErrors,
-} from "formik";
-import logo from "../../assets/img/ball.svg";
-import styles from "../RegistrForm/RegistrForm.module.scss";
-import LoginSchema from "../../models/validation/LoginSchema";
-import { loginAccount } from "../../redux/slices/profileSlice";
-import { bindActionCreators } from "@reduxjs/toolkit";
-import { connect } from "react-redux";
-import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import React from 'react';
+import classnames from 'classnames';
+import { Link } from 'react-router-dom';
+import { Formik, Form, Field, withFormik, FormikProps, FormikErrors } from 'formik';
+import logo from '../../assets/img/ball.svg';
+import styles from '../RegistrForm/RegistrForm.module.scss';
+import LoginSchema from '../../models/validation/LoginSchema';
+import { loginAccount } from '../../redux/slices/profileSlice';
+import { bindActionCreators } from '@reduxjs/toolkit';
+import { connect } from 'react-redux';
+import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 
 interface FormValues {
   login: string;
@@ -29,62 +22,26 @@ const InnerForm: React.FC = (props: FormikProps<FormValues>) => {
 
   return (
     <Form className={styles.auth}>
-      <img
-        className={styles.auth__logo}
-        width="44"
-        src={logo}
-        alt="Volleyball logo"
-      ></img>
+      <img className={styles.auth__logo} width='44' src={logo} alt='Volleyball logo'></img>
       <h2 className={styles.auth__title}>Авторизация</h2>
       <div className={styles.auth__inputs}>
         <div className={classnames(styles.auth__forinput)}>
-          <Field name="login" type="text" placeholder="Логин" />
-          {!errors.login && touched.login && (
-            <span>
-              <FaCheckCircle
-                className={classnames(styles.checkIcon, styles.checkIcon_true)}
-              />
-            </span>
-          )}
-          {errors.login && touched.login && (
-            <span>
-              <FaTimesCircle
-                className={classnames(styles.checkIcon, styles.checkIcon_false)}
-              />
-            </span>
-          )}
+          <Field name='login' type='text' placeholder='Логин' />
           {errors.login && touched.login && <div>{errors.login}</div>}
         </div>
         <div className={classnames(styles.auth__forinput)}>
-          <Field name="password" type="password" placeholder="Пароль" />
-          {!errors.password && touched.password && (
-            <span>
-              <FaCheckCircle
-                className={classnames(styles.checkIcon, styles.checkIcon_true)}
-              />
-            </span>
-          )}
-          {errors.password && touched.password && (
-            <span>
-              <FaTimesCircle
-                className={classnames(styles.checkIcon, styles.checkIcon_false)}
-              />
-            </span>
-          )}
+          <Field name='password' type='password' placeholder='Пароль' />
+
           {errors.password && touched.password && <div>{errors.password}</div>}
         </div>
       </div>
       <p className={styles.auth__text}>
         Нет аккаунта?&nbsp;
-        <Link to="/registration" className={styles.auth__link}>
+        <Link to='/registration' className={styles.auth__link}>
           Зарегистрироваться
         </Link>
       </p>
-      <button
-        type="submit"
-        className={styles.auth__button}
-        disabled={isSubmitting}
-      >
+      <button type='submit' className={styles.auth__button} disabled={isSubmitting}>
         Войти
       </button>
     </Form>
@@ -100,8 +57,8 @@ export const LoginForm = withFormik<LoginProps, FormValues>({
   // Transform outer props into form values
   mapPropsToValues: (props) => {
     return {
-      login: props.initialLogin || "",
-      password: "",
+      login: props.initialLogin || '',
+      password: '',
     };
   },
 
@@ -112,7 +69,7 @@ export const LoginForm = withFormik<LoginProps, FormValues>({
     props.loginAccount(values);
     setSubmittingHigher = setSubmitting;
   },
-  displayName: "LoginForm",
+  displayName: 'LoginForm',
 })(InnerForm);
 
 const mapDispatchToProps = (dispatch) =>
@@ -120,7 +77,7 @@ const mapDispatchToProps = (dispatch) =>
     {
       loginAccount,
     },
-    dispatch
+    dispatch,
   );
 
 const Redux = connect(null, mapDispatchToProps)(LoginForm);

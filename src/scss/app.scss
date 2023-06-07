@@ -19,9 +19,10 @@ input {
   width: 100%;
   background-color: $input-clr;
   color: #939393;
+  background-color: transparent;
   border-radius: calc((100vw - 480px) / (1280 - 480) * (16 - 10) + 10px);
   padding: 10px 15px;
-  border: 1px solid rgba(0, 0, 0, 0);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   font-weight: 400;
   font-size: calc((100vw - 480px) / (1280 - 480) * (16 - 12) + 12px);
 
@@ -31,7 +32,7 @@ input {
     color: #000;
     background-color: #fff;
     border: 1px solid;
-    border-color: rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.4);
     outline: -webkit-focus-ring-color auto 0px !important;
   }
 }

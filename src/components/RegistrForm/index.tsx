@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
 import { Formik, Form, Field, withFormik, FormikProps, FormikErrors } from 'formik';
@@ -47,6 +47,8 @@ interface FormValues {
 let setSubmittingHigher;
 
 const InnerForm = (props: FormikProps<FormValues>) => {
+  const [style, setStyle] = useState('');
+  const error = 'border:1px solid red';
   const { values, touched, errors, isSubmitting } = props;
   return (
     <Form className={styles.auth}>
@@ -62,7 +64,12 @@ const InnerForm = (props: FormikProps<FormValues>) => {
               },
               { [styles.input_false]: touched.name && errors.name },
             )}>
-            <Field name='name' type='text' placeholder='Имя' />
+            <Field
+              style={{ border: errors.name && touched.name ? '1px solid red' : '' }}
+              name='name'
+              type='text'
+              placeholder='Имя'
+            />
             {!errors.name && touched.name && (
               <span>
                 <FaCheckCircle className={classnames(styles.checkIcon, styles.checkIcon_true)} />
@@ -83,7 +90,12 @@ const InnerForm = (props: FormikProps<FormValues>) => {
               },
               { [styles.input_false]: touched.surname && errors.surname },
             )}>
-            <Field name='surname' type='text' placeholder='Фамилия' />
+            <Field
+              style={{ border: errors.surname && touched.surname ? '1px solid red' : '' }}
+              name='surname'
+              type='text'
+              placeholder='Фамилия'
+            />
             {!errors.surname && touched.surname && (
               <span>
                 <FaCheckCircle className={classnames(styles.checkIcon, styles.checkIcon_true)} />
@@ -104,7 +116,12 @@ const InnerForm = (props: FormikProps<FormValues>) => {
               },
               { [styles.input_false]: touched.patronimyc && errors.patronimyc },
             )}>
-            <Field name='patronimyc' type='text' placeholder='Отчество (если есть)' />
+            <Field
+              style={{ border: errors.patronimyc && touched.patronimyc ? '1px solid red' : '' }}
+              name='patronimyc'
+              type='text'
+              placeholder='Отчество (если есть)'
+            />
             {!errors.patronimyc && touched.patronimyc && (
               <span>
                 <FaCheckCircle className={classnames(styles.checkIcon, styles.checkIcon_true)} />
@@ -126,6 +143,7 @@ const InnerForm = (props: FormikProps<FormValues>) => {
               { [styles.input_false]: touched.phone && errors.phone },
             )}>
             <Field
+              style={{ border: errors.phone && touched.phone ? '1px solid red' : '' }}
               name='phone'
               type='tel'
               render={({ field }) => (
@@ -152,7 +170,12 @@ const InnerForm = (props: FormikProps<FormValues>) => {
               },
               { [styles.input_false]: touched.email && errors.email },
             )}>
-            <Field name='email' type='email' placeholder='Email' />
+            <Field
+              style={{ border: errors.email && touched.email ? '1px solid red' : '' }}
+              name='email'
+              type='email'
+              placeholder='Email'
+            />
             {!errors.email && touched.email && (
               <span>
                 <FaCheckCircle className={classnames(styles.checkIcon, styles.checkIcon_true)} />
@@ -168,7 +191,12 @@ const InnerForm = (props: FormikProps<FormValues>) => {
         </div>
         <div className={styles.auth__inputs_box2}>
           <div className={classnames(styles.auth__forinput)}>
-            <Field name='team' type='text' placeholder='Группа' />
+            <Field
+              style={{ border: errors.team && touched.team ? '1px solid red' : '' }}
+              name='team'
+              type='text'
+              placeholder='Группа'
+            />
             {!errors.team && touched.team && (
               <span>
                 <FaCheckCircle className={classnames(styles.checkIcon, styles.checkIcon_true)} />
@@ -189,7 +217,12 @@ const InnerForm = (props: FormikProps<FormValues>) => {
               },
               { [styles.input_false]: touched.login && errors.login },
             )}>
-            <Field name='login' type='text' placeholder='Логин' />
+            <Field
+              style={{ border: errors.login && touched.login ? '1px solid red' : '' }}
+              name='login'
+              type='text'
+              placeholder='Логин'
+            />
             {!errors.login && touched.login && (
               <span>
                 <FaCheckCircle className={classnames(styles.checkIcon, styles.checkIcon_true)} />
@@ -210,7 +243,12 @@ const InnerForm = (props: FormikProps<FormValues>) => {
               },
               { [styles.input_false]: touched.password && errors.password },
             )}>
-            <Field name='password' type='password' placeholder='Пароль' />
+            <Field
+              style={{ border: errors.password && touched.password ? '1px solid red' : '' }}
+              name='password'
+              type='password'
+              placeholder='Пароль'
+            />
             {!errors.password && touched.password && (
               <span>
                 <FaCheckCircle className={classnames(styles.checkIcon, styles.checkIcon_true)} />
@@ -231,7 +269,14 @@ const InnerForm = (props: FormikProps<FormValues>) => {
               },
               { [styles.input_false]: touched.passwordCheck && errors.passwordCheck },
             )}>
-            <Field name='passwordCheck' type='password' placeholder='Повторите пароль' />
+            <Field
+              style={{
+                border: errors.passwordCheck && touched.passwordCheck ? '1px solid red' : '',
+              }}
+              name='passwordCheck'
+              type='password'
+              placeholder='Повторите пароль'
+            />
             {!errors.passwordCheck && touched.passwordCheck && (
               <span>
                 <FaCheckCircle className={classnames(styles.checkIcon, styles.checkIcon_true)} />

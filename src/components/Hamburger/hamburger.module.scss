@@ -53,8 +53,24 @@
   display: flex;
   top: 40px;
   right: 40px;
+  @media (max-width: 1800px) {
+    top: 35px;
+    right: 25px;
+  }
+  @media (max-width: 1400px) {
+    top: 25px;
+    right: 25px;
+  }
+  @media (max-width: 1000px) {
+    top: 20px;
+    right: 20px;
+  }
   @media (max-width: 860px) {
     top: 15px;
+    right: 10px;
+  }
+  @media (max-width: 400px) {
+    top: 10px;
     right: 10px;
   }
   height: 50px;

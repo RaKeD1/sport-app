@@ -29,14 +29,13 @@ const Header: FC = () => {
   return (
     <header
       className={`header `}
-      style={{ backgroundColor: isScrolled ? 'transparent' : '#fff' }}
-    >
+      id='header'
+      style={{ backgroundColor: isScrolled ? 'transparent' : '#fff' }}>
       <motion.nav className='container'>
         <motion.div
           initial={{ opacity: 1 }}
           animate={{ opacity: isScrolled ? 0 : 1 }}
-          transition={{ duration: 0.5 }}
-        >
+          transition={{ duration: 0.5 }}>
           <Link to='/profile' className='header__logo'>
             <img src={logo} alt='logo' width='44px' />
             <div className='header__title'>
@@ -60,8 +59,7 @@ const Header: FC = () => {
           y: isScrolled ? 0 : -10,
         }}
         transition={{ duration: 0.3 }}
-        className={isScrolled ? ' header__scrolled ' : ''}
-      >
+        className={isScrolled ? ' header__scrolled ' : ''}>
         <div className='container'>
           <Link to='/profile' className='header__logo'>
             <motion.img

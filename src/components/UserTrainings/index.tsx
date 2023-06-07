@@ -10,6 +10,7 @@ import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import { FaStar } from 'react-icons/fa';
 import classNames from 'classnames';
 import Modal from '../Modal';
+import TrainCardSkeleton from '../TrainCardSkeleton';
 
 type UserTrain = ITrain & {
   day_team: string;
@@ -79,16 +80,43 @@ export const UserTrainings: FC = () => {
     fetchTrains();
   }, [page, limit]);
 
-  const handlePageClick = (selected: number) => {
-    setPage(selected);
+  const scrollToTop = () => {
+    const rootElement = document.getElementById('trainings'); // Замените 'root' на ID родительского элемента компонента
+    const headerElement = document.getElementById('header'); // Замените 'header' на ID вашего заголовка
+    console.log(rootElement);
+    console.log(headerElement);
+
+    if (rootElement && headerElement) {
+      const headerHeight = headerElement.offsetHeight;
+      const rootTopOffset = rootElement.offsetTop - headerHeight - 15;
+
+      window.scrollTo({
+        top: rootTopOffset,
+        behavior: 'smooth',
+      });
+
+      console.log('SCROLL');
+    } else console.log('not scroll');
   };
 
+  const handlePageClick = (selected: number) => {
+    setPage(selected);
+    scrollToTop();
+  };
+
+  const skeletons = [...new Array(limit)].map(() => <TrainCardSkeleton />);
+  console.log(skeletons);
+
   return (
-    <section className={styles.root}>
+    <section className={styles.root} id='trainings'>
       <h2 className={styles.root__title}>Мои тренировки</h2>
       <div className={styles.root__content}>
         {isLoading ? (
-          <LoadingSpinner />
+          <ul className={styles.container}>
+            {skeletons.map((skeleton) => (
+              <li>{skeleton}</li>
+            ))}
+          </ul>
         ) : error ? (
           <div className={styles.error}>
             <span>😕</span>

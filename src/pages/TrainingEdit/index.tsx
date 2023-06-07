@@ -151,7 +151,7 @@ export const TrainingEdit: React.FC = () => {
 
   // Если был первый рендер, то запрашиваем тренировку
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     if (isSearch.current && isMounted.current && team && date) {
       dispatch(

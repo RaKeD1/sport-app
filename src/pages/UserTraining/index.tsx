@@ -75,7 +75,12 @@ const UserTraining = () => {
   };
 
   useEffect(() => {
-    if (!location.search) navigate('/');
+    if (
+      !location.search ||
+      !new URLSearchParams(location.search).get('id_train') ||
+      !new URLSearchParams(location.search).get('account_id')
+    )
+      navigate('/');
     if (!isMounted.current) {
       setIdTrain(+new URLSearchParams(location.search).get('id_train'));
       setIdAccount(+new URLSearchParams(location.search).get('account_id'));

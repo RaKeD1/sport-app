@@ -20,7 +20,7 @@ const variants = {
     },
   },
 };
-const colors = ['#FF008C', '#D309E1', '#9C1AFF', '#7700FF', '#4400FF'];
+const colors = ['#03a9f4', '#29b6f6', '#4fc3f7', '#81d4fa', '#40c4ff'];
 export const MenuItem = ({ page, setIsOpen }) => {
   const location = useLocation();
   const style = {

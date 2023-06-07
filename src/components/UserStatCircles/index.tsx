@@ -14,23 +14,31 @@ interface UserStatCirclesProps {
 const UserStatCircles: FC<UserStatCirclesProps> = ({ user }) => {
   const [error, setError] = useState<string>(null);
   const [stat, setStat] = useState<ITrain>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const fetchStat = async (user: number) => {
-    try {
-      const response = await UserService.fetchUserStat(user);
-      return response.data;
-    } catch (error) {
-      return error.response.data.message;
-    }
+    setIsLoading(true);
+    await UserService.fetchUserStat(user)
+      .then((res) => {
+        console.log('then', res.data);
+        setStat(res.data);
+        setError(null);
+      })
+      .catch((error) => {
+        console.log('catch', error);
+        setError(
+          error.response?.data?.message
+            ? error.response?.data?.message
+            : 'Не удалось получить статистику',
+        );
+      })
+      .finally(() => setIsLoading(false));
   };
 
   useEffect(() => {
-    fetchStat(user)
-      .then((data) => {
-        setStat(data);
-        setError(null);
-      })
-      .catch((error) => setError(error));
+    if (user) {
+      fetchStat(user);
+    }
   }, []);
 
   return (
@@ -38,12 +46,12 @@ const UserStatCircles: FC<UserStatCirclesProps> = ({ user }) => {
       <h2 className={styles.root__title}>Статистика тренировок</h2>
 
       <div className={styles.root__content}>
-        {!stat ? (
+        {isLoading ? (
           <LoadingSpinner />
-        ) : error ? (
+        ) : error || !stat ? (
           <div className={styles.error}>
             <span>😕</span>
-            {error}
+            {error ? error : 'Не удалось получить статистику'}
           </div>
         ) : (
           Object.entries(stat).map((arr) => (

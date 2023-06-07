@@ -11,6 +11,7 @@ import { FaStar } from 'react-icons/fa';
 import classNames from 'classnames';
 import Modal from '../Modal';
 import TrainCardSkeleton from '../TrainCardSkeleton';
+import { useNavigate } from 'react-router';
 
 type UserTrain = ITrain & {
   day_team: string;
@@ -30,9 +31,8 @@ export const UserTrainings: FC = () => {
   const [error, setError] = useState<string>(null);
   const [limit, setLimit] = useState<number>(8);
   const [page, setPage] = useState<number>(1);
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [selectedTrain, setSelectedTrain] = useState<UserTrain>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const container = {
     hidden: { opacity: 1, scale: 0 },
@@ -139,8 +139,7 @@ export const UserTrainings: FC = () => {
                       className={styles.item}
                       variants={item}
                       onClick={() => {
-                        setShowModal(true);
-                        setSelectedTrain(train);
+                        navigate(`/my-training?id_train=${train.id_train}&account_id=${id}`);
                       }}>
                       <div className={styles.item__content}>
                         <div className={styles.item__team}>{train.day_team}</div>
@@ -186,26 +185,6 @@ export const UserTrainings: FC = () => {
           </>
         )}
       </div>
-      <Modal isActive={showModal} setIsActive={setShowModal}>
-        {selectedTrain && (
-          <div key={selectedTrain.id_train} className={styles.train}>
-            <div className={styles.train__header}>
-              <div className={styles.train__team}>{selectedTrain.day_team}</div>
-              <div className={styles.train__separator}></div>
-              <div className={styles.train__date}>
-                {selectedTrain.date.split('T')[0].split('-').reverse().join('.')}
-              </div>
-              <div className={styles.train__rating}>
-                {' '}
-                <FaStar /> 5.0
-              </div>
-            </div>
-            <div className={styles.train__content}>
-              <p>Lorem Ipsum</p>
-            </div>
-          </div>
-        )}
-      </Modal>
     </section>
   );
 };

@@ -16,7 +16,9 @@ import NotFound from './pages/NotFound/NotFound';
 import LoadingSpinner from './components/LoadingSpinner/LoadingSpinner';
 import Statistics from './pages/Statistics';
 import Footer from './components/Footer';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
+import pageMotion from './components/pageMotion';
+import UserTraining from './pages/UserTraining';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -36,10 +38,7 @@ function App() {
 
   return (
     <>
-      <div
-        className='page'
-        style={{ minHeight: `calc(100vh - ${blockHeight})` }}
-      >
+      <div className='page' style={{ minHeight: `calc(100vh - ${blockHeight})` }}>
         {isAuth && <Header />}
         <div className='container'>
           <div className='content'>
@@ -51,32 +50,35 @@ function App() {
                     <RequireNotAuth redirectTo='/'>
                       <Login />
                     </RequireNotAuth>
-                  }
-                ></Route>
+                  }></Route>
                 <Route
                   path='/registration'
                   element={
                     <RequireNotAuth redirectTo='/'>
                       <Registr />
                     </RequireNotAuth>
-                  }
-                ></Route>
+                  }></Route>
                 <Route
                   path='/'
                   element={
                     <RequireAuth redirectTo='/login'>
                       <Profile />
                     </RequireAuth>
-                  }
-                ></Route>
+                  }></Route>
                 <Route
                   path='/profile'
                   element={
                     <RequireAuth redirectTo='/login'>
                       <Profile />
                     </RequireAuth>
-                  }
-                ></Route>
+                  }></Route>
+                <Route
+                  path='/my-training'
+                  element={
+                    <RequireAuth redirectTo='/login'>
+                      <UserTraining />
+                    </RequireAuth>
+                  }></Route>
                 <Route
                   path='/createtraining'
                   element={
@@ -85,8 +87,7 @@ function App() {
                         <CreateTrain />
                       </RequireEditor>
                     </RequireAuth>
-                  }
-                ></Route>
+                  }></Route>
                 <Route
                   path='/training'
                   element={
@@ -95,8 +96,7 @@ function App() {
                         <TrainingEdit />
                       </RequireEditor>
                     </RequireAuth>
-                  }
-                ></Route>
+                  }></Route>
                 <Route
                   path='/statistics'
                   element={
@@ -105,8 +105,7 @@ function App() {
                         <Statistics />
                       </RequireEditor>
                     </RequireAuth>
-                  }
-                ></Route>
+                  }></Route>
                 <Route
                   path='/players'
                   element={
@@ -115,8 +114,7 @@ function App() {
                         <Players />
                       </RequireAdmin>
                     </RequireAuth>
-                  }
-                ></Route>
+                  }></Route>
                 <Route path='*' element={<NotFound />}></Route>
               </Routes>
             </AnimatePresence>
@@ -144,11 +142,7 @@ function RequireEditor({ children, redirectTo }) {
   const role = localStorage.getItem('role');
   console.log('role', role);
   if (role !== 'EDITOR' && role !== 'ADMIN') alert('Нет прав доступа!');
-  return role === 'EDITOR' || role === 'ADMIN' ? (
-    children
-  ) : (
-    <Navigate to={redirectTo} />
-  );
+  return role === 'EDITOR' || role === 'ADMIN' ? children : <Navigate to={redirectTo} />;
 }
 
 function RequireAdmin({ children, redirectTo }) {

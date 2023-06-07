@@ -1,0 +1,16 @@
+.train {
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 30px;
+  position: relative;
+
+  &__stat {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    &__tile {
+      margin-bottom: 20px;
+    }
+  }
+}

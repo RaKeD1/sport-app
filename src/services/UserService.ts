@@ -19,8 +19,15 @@ export default class UserService {
     return $api.get<IUser>('/user/' + id_account);
   }
 
-  static fetchUserStat(id_account: number): Promise<AxiosResponse<ITrain>> {
-    return $api.get<ITrain>('/stat/' + id_account);
+  static fetchUserStat(
+    id_account: number,
+    id_train?: number | undefined,
+    date_start?: string | undefined,
+    date_end?: string | undefined,
+  ): Promise<AxiosResponse<ITrain>> {
+    return $api.get<ITrain>(
+      '/stat/' + id_account + `?id_train=${id_train}&date_start=${date_start}&date_end=${date_end}`,
+    );
   }
 
   static fetchUserTrains(

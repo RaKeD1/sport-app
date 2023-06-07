@@ -2,6 +2,7 @@ import $api from '../http';
 import { AxiosResponse } from 'axios';
 import { ITrain } from '../models/ITrain';
 import { ActionType } from '../models/IActionType';
+import { UserTrain } from '../pages/UserTraining';
 
 export default class TrainService {
   static async newTrain(
@@ -36,6 +37,13 @@ export default class TrainService {
     return $api.get<ITrain[]>(
       `/team-train?account_id=${account_id}&date=${date}&day_team=${day_team}`,
     );
+  }
+
+  static async getOneTrain(
+    id_train: number,
+    account_id: number,
+  ): Promise<AxiosResponse<UserTrain>> {
+    return $api.get<UserTrain>(`/train/${account_id}?id_train=${id_train}`);
   }
 
   static async getTeamRangeStat(

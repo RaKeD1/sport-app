@@ -36,7 +36,7 @@ export type RegistrParams = {
 };
 
 export type FetchUserParams = {
-  id_user: number;
+  id_account: number;
 };
 
 const localAuth = (local: string) => {
@@ -129,8 +129,8 @@ export const fetchUser = createAsyncThunk<AxiosResponse<IUser>, FetchUserParams>
   'user/fetchUserStatus',
   async (params, { rejectWithValue }) => {
     try {
-      const { id_user } = params;
-      const response = await UserService.fetchUser(id_user);
+      const { id_account } = params;
+      const response = await UserService.fetchUser(id_account);
       return response;
       console.log('Данные пользователя', response);
     } catch (error) {
@@ -143,23 +143,23 @@ export const fetchUser = createAsyncThunk<AxiosResponse<IUser>, FetchUserParams>
   },
 );
 // Функция обновления данных пользователя
-export const updateUser = createAsyncThunk<
-  AxiosResponse<IUser>,
-  { id_user: number; userData: Partial<IUser> }
->('user/updateUserData', async (params, { rejectWithValue }) => {
-  try {
-    const { id_user, userData } = params;
-    const response = await UserService.updateUser(id_user, userData);
-    console.log('response', response);
-    return response;
-  } catch (error) {
-    if (!error.response) {
-      throw error;
-    }
-    alert(error.response?.data?.message);
-    return rejectWithValue(error.response?.data?.message);
-  }
-});
+// export const updateUser = createAsyncThunk<
+//   AxiosResponse<IUser>,
+//   { id_user: number; userData: Partial<IUser> }
+// >('user/updateUserData', async (params, { rejectWithValue }) => {
+//   try {
+//     const { id_user, userData } = params;
+//     const response = await UserService.updateUser(id_user, userData);
+//     console.log('response', response);
+//     return response;
+//   } catch (error) {
+//     if (!error.response) {
+//       throw error;
+//     }
+//     alert(error.response?.data?.message);
+//     return rejectWithValue(error.response?.data?.message);
+//   }
+// });
 
 // Ключи статуса
 export enum Status {
@@ -269,21 +269,21 @@ const profileSlice = createSlice({
       state.status = Status.ERROR;
     });
 
-    // Кейсы для обновления данных пользователя
-    builder.addCase(updateUser.pending, (state) => {
-      state.updateUserStatus = Status.LOADING;
-    });
+    // // Кейсы для обновления данных пользователя
+    // builder.addCase(updateUser.pending, (state) => {
+    //   state.updateUserStatus = Status.LOADING;
+    // });
 
-    builder.addCase(updateUser.fulfilled, (state, action) => {
-      state.updateUserStatus = Status.SUCCESS;
-      state.user = action.payload.data;
-      localStorage.setItem('role', action.payload.data.role);
-      console.log('Данные пользователя', action.payload.data.name);
-    });
+    // builder.addCase(updateUser.fulfilled, (state, action) => {
+    //   state.updateUserStatus = Status.SUCCESS;
+    //   state.user = action.payload.data;
+    //   localStorage.setItem('role', action.payload.data.role);
+    //   console.log('Данные пользователя', action.payload.data.name);
+    // });
 
-    builder.addCase(updateUser.rejected, (state) => {
-      state.updateUserStatus = Status.ERROR; // Устанавливаем статус ERROR при ошибке при обновлении данных пользователя
-    });
+    // builder.addCase(updateUser.rejected, (state) => {
+    //   state.updateUserStatus = Status.ERROR; // Устанавливаем статус ERROR при ошибке при обновлении данных пользователя
+    // });
 
     // Кейсы для проверки авторизации
     builder.addCase(checkAuth.pending, (state) => {

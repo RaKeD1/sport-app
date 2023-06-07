@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useAppDispatch } from '../../hooks/redux';
-import { updateUser } from '../../redux/slices/profileSlice';
+import { SelectUserID, fetchUser } from '../../redux/slices/profileSlice';
 import styles from './UpdateDataUser.module.scss';
 import MaskedInput from 'react-text-mask';
 import { phoneNumberMask } from '../RegistrForm';
+import { useSelector } from 'react-redux';
+import { updateOneUser } from '../../redux/slices/userSlice';
 
 const UpdateUser = (props) => {
   const dispatch = useAppDispatch();
@@ -24,6 +26,8 @@ const UpdateUser = (props) => {
     team: '',
   });
   const [disable, setDisable] = useState(true);
+
+  const myID = useSelector(SelectUserID);
   // Заносим данные при первой загрузке
   useEffect(() => {
     setFormData({
@@ -107,7 +111,7 @@ const UpdateUser = (props) => {
       .replace(/\(/g, '')
       .replace(/-/g, '')
       .replace(/ /g, '');
-    console.log(changedPhone);
+    console.log('formData', formData);
     if (window.confirm('Обновить данные?')) {
       const updatedUserData = {
         name: formData.name,
@@ -119,7 +123,8 @@ const UpdateUser = (props) => {
         team: formData.team,
       };
       props.setIsActive(false);
-      dispatch(updateUser({ id_user: props.user.id_user, userData: updatedUserData }));
+      console.log('Произошло изменение user');
+      dispatch(updateOneUser({ id_user: props.user.id_user, userData: updatedUserData }));
       if (props.isUpdate) {
         props.isUpdate(true);
       }

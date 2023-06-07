@@ -24,7 +24,7 @@ type PageParams = {
   page: number;
   limit: number;
 };
-
+//Функция запроса users
 export const fetchUsers = createAsyncThunk<
   AxiosResponse<UsersFetch>,
   PageParams,
@@ -42,7 +42,7 @@ export const fetchUsers = createAsyncThunk<
     return rejectWithValue(error.response?.data);
   }
 });
-
+//Функция добавления роли у user
 export const giveRoleUsers = createAsyncThunk<
   AxiosResponse<IUser[]>,
   GiveRoleUsersParams,
@@ -59,7 +59,7 @@ export const giveRoleUsers = createAsyncThunk<
     return rejectWithValue(error.response?.data);
   }
 });
-
+//Функция удаления роли у user
 export const removeRoleUsers = createAsyncThunk<
   AxiosResponse<IUser[]>,
   RemoveRoleUsersParams,
@@ -76,7 +76,7 @@ export const removeRoleUsers = createAsyncThunk<
     return rejectWithValue(error.response?.data);
   }
 });
-
+//Функция удаления user
 export const deleteUser = createAsyncThunk<
   AxiosResponse<IUser>,
   DeleteUserParams,
@@ -91,6 +91,24 @@ export const deleteUser = createAsyncThunk<
       throw error;
     }
     return rejectWithValue(error.response?.data);
+  }
+});
+// Функция обновления данных пользователя
+export const updateOneUser = createAsyncThunk<
+  AxiosResponse<IUser>,
+  { id_user: number; userData: Partial<IUser> }
+>('user/updateUserData', async (params, { rejectWithValue }) => {
+  try {
+    const { id_user, userData } = params;
+    const response = await UserService.updateUser(id_user, userData);
+    console.log('response', response);
+    return response;
+  } catch (error) {
+    if (!error.response) {
+      throw error;
+    }
+    alert(error.response?.data?.message);
+    return rejectWithValue(error.response?.data?.message);
   }
 });
 
@@ -146,6 +164,33 @@ export const userSlice = createSlice({
       state.isLoading = false;
       state.status = Status.ERROR;
       state.error = action.payload.message;
+    },
+
+    [updateOneUser.fulfilled.type]: (state, action) => {
+      state.isLoading = false;
+      state.status = Status.SUCCESS;
+      state.error = initialState.error;
+      const response = action.payload.data;
+      console.log('Обновленный пользователь', response);
+      const updUsers = state.users.map((user) => {
+        const findUser = response.find((obj) => obj.id_account === user.id_account);
+        if (findUser) {
+          return findUser;
+        } else return user;
+      });
+      state.users = updUsers;
+    },
+
+    [updateOneUser.pending.type]: (state, action) => {
+      state.isLoading = true;
+      state.status = Status.LOADING;
+      state.error = initialState.error;
+    },
+    [updateOneUser.rejected.type]: (state, action) => {
+      state.isLoading = false;
+      state.status = Status.ERROR;
+      state.error = action.payload.message;
+      alert(action.payload.message);
     },
 
     [giveRoleUsers.fulfilled.type]: (state, action) => {

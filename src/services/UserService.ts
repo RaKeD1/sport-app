@@ -31,8 +31,8 @@ export default class UserService {
     return $api.get<UserTrains>('/trains/' + id_account + `?page=${page}&limit=${limit}`);
   }
 
-  static updateUser(id_account: number, userData: Partial<IUser>): Promise<AxiosResponse<IUser>> {
-    return $api.put<IUser>('/user/' + id_account, userData);
+  static updateUser(id_user: number, userData: Partial<IUser>): Promise<AxiosResponse<IUser>> {
+    return $api.put<IUser>('/user/' + id_user, userData);
   }
 
   static updateUserPhoto(data: FormData): Promise<AxiosResponse<string>> {

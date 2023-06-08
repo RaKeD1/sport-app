@@ -7,9 +7,14 @@ import { FaUserAlt } from 'react-icons/fa';
 import Hamburger from './Hamburger';
 import { motion } from 'framer-motion';
 import { delay } from '@reduxjs/toolkit/dist/utils';
+import { useAppSelector } from '../hooks/redux';
+import { SelectUser, SelectUserRole, logoutAccount } from '../redux/slices/profileSlice';
+import { MdLogout } from 'react-icons/md';
 
 const Header: FC = () => {
   const [scrollPosition, setScrollPosition] = useState<number>(0);
+  const { name, surname, patronimyc } = useAppSelector(SelectUser);
+  const role = useAppSelector(SelectUserRole);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,6 +31,10 @@ const Header: FC = () => {
   const isScrolled = scrollPosition > 100;
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  function dispatch(arg0: any): void {
+    throw new Error('Function not implemented.');
+  }
+
   return (
     <header
       className={`header `}
@@ -35,7 +44,8 @@ const Header: FC = () => {
         <motion.div
           initial={{ opacity: 1 }}
           animate={{ opacity: isScrolled ? 0 : 1 }}
-          transition={{ duration: 0.5 }}>
+          transition={{ duration: 0.5 }}
+          className='header__container'>
           <Link to='/profile' className='header__logo'>
             <img src={logo} alt='logo' width='44px' />
             <div className='header__title'>
@@ -43,6 +53,22 @@ const Header: FC = () => {
               <br /> Ball
             </div>
           </Link>
+          <div className='header__box'>
+            {name && surname && (
+              <Link to='/profile' className='header__fio'>
+                {surname +
+                  ' ' +
+                  name.split('')[0].toUpperCase() +
+                  '.' +
+                  (patronimyc ? ' ' + patronimyc.split('')[0].toUpperCase() + '.' : '')}
+              </Link>
+            )}
+            {role === 'USER' && (
+              <motion.div className='header__box__logout' onClick={() => dispatch(logoutAccount())}>
+                <MdLogout />
+              </motion.div>
+            )}
+          </div>
         </motion.div>
       </motion.nav>
       <motion.div
@@ -59,24 +85,44 @@ const Header: FC = () => {
           y: isScrolled ? 0 : -10,
         }}
         transition={{ duration: 0.3 }}
-        className={isScrolled ? ' header__scrolled ' : ''}>
+        className={isScrolled ? ' header__scrolled' : ''}>
         <div className='container'>
-          <Link to='/profile' className='header__logo'>
-            <motion.img
-              animate={{ opacity: isScrolled ? 1 : 0, y: isScrolled ? 0 : 0 }}
-              transition={{ duration: 0, delay: 0 }}
-              src={logo}
-              alt='logo'
-              width='44px'
-            />
-            <div className='header__title'>
-              Volley
-              <br /> Ball
+          <div className='header__container'>
+            <Link to='/profile' className='header__logo'>
+              <motion.img
+                animate={{ opacity: isScrolled ? 1 : 0, y: isScrolled ? 0 : 0 }}
+                transition={{ duration: 0, delay: 0 }}
+                src={logo}
+                alt='logo'
+                width='44px'
+              />
+              <div className='header__title'>
+                Volley
+                <br /> Ball
+              </div>
+            </Link>
+            <div className='header__box'>
+              {name && surname && (
+                <Link to='/profile' className='header__fio'>
+                  {surname +
+                    ' ' +
+                    name.split('')[0].toUpperCase() +
+                    '.' +
+                    (patronimyc ? ' ' + patronimyc.split('')[0].toUpperCase() + '.' : '')}
+                </Link>
+              )}
+              {role === 'USER' && (
+                <motion.div
+                  className='header__box__logout'
+                  onClick={() => dispatch(logoutAccount())}>
+                  <MdLogout />
+                </motion.div>
+              )}
             </div>
-          </Link>
+          </div>
         </div>
       </motion.div>
-      <Hamburger setIsOpen={setIsOpen} isOpen={isOpen} />
+      {role !== 'USER' && role && <Hamburger setIsOpen={setIsOpen} isOpen={isOpen} />}
     </header>
   );
 };

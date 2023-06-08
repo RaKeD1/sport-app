@@ -28,11 +28,7 @@ const Footer = ({ setBlockHeight }) => {
         <ul className={styles.footer__body}>
           <div className={styles.footer__block}>
             <h1 className={styles.footer__title}>
-              <a
-                href='https://www.miet.ru/'
-                target='MIET'
-                className={styles.footer__title}
-              >
+              <a href='https://www.miet.ru/' target='MIET' className={styles.footer__title}>
                 МИЭТ
               </a>
             </h1>
@@ -40,15 +36,13 @@ const Footer = ({ setBlockHeight }) => {
               <a
                 className={styles.footer__text}
                 href='https://yandex.ru/maps/org/moskovskiy_institut_elektronnoy_tekhniki/1042223652/?ll=37.208453%2C55.983384&z=17.08'
-                target='MIET'
-              >
+                target='MIET'>
                 площадь Шокина, 1
               </a>
               <a
                 className={styles.footer__text}
                 href='https://vk.com/sport.miet'
-                target='VK_Electron'
-              >
+                target='VK_Electron'>
                 ССК «Электрон»
               </a>
             </div>
@@ -56,10 +50,7 @@ const Footer = ({ setBlockHeight }) => {
           <div className={styles.footer__teacher}>
             <h1 className={styles.footer__title}>Преподаватель</h1>
             <p className={styles.footer__text}>Борисова Наталья Юрьевна</p>
-            <a
-              href='mailto:n.y.borisova@mail.ru'
-              className={styles.footer__text}
-            >
+            <a href='mailto:n.y.borisova@mail.ru' className={styles.footer__text}>
               n.y.borisova@mail.ru
             </a>
           </div>
@@ -78,6 +69,7 @@ const Footer = ({ setBlockHeight }) => {
                 Богдан
               </a>
             </p>
+            <p className={styles.footer__text}>© {String(new Date().getFullYear())}</p>
           </div>
         </ul>
       </nav>

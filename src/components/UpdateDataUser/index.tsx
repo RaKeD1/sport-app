@@ -94,8 +94,6 @@ const UpdateUser = (props) => {
           .replace(/ /g, '')
           .replace(/_/g, '');
         if (changedPhone.length !== 12) {
-          console.log('Измененный телефон и его длина', changedPhone, ' ', changedPhone.length);
-
           return 'Проверьте правильность введенного номера';
         } else {
           return '';
@@ -117,7 +115,6 @@ const UpdateUser = (props) => {
   };
 
   const handleUpdateUser = () => {
-    console.log('formData', formData);
     const changedPhone = formData.phone
       .replace(/\)/g, '')
       .replace(/\(/g, '')
@@ -134,7 +131,6 @@ const UpdateUser = (props) => {
         team: formData.team,
       };
       props.setIsActive(false);
-      console.log('Произошло изменение user');
       if (props.user.id_user === authId) {
         dispatch(updateUser({ id_user: authId, userData: updatedUserData }));
       } else {

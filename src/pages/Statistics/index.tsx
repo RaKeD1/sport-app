@@ -46,6 +46,16 @@ export interface OptionDate {
   label: Date;
 }
 
+export const dateConvertToIso = (date) => {
+  let z = date.getTimezoneOffset() * 60 * 1000;
+  let tLocal: any = date - z;
+  tLocal = new Date(tLocal);
+  let iso = tLocal.toISOString();
+  iso = iso.split('.')[0];
+  iso = iso.replace('T', ' ').split(' ')[0];
+  return iso;
+};
+
 export const Statistics: React.FC = () => {
   const playersRangeStat = useSelector(SelectTeamStatPlayers);
   const { status, error, team, date_start, date_end } = useSelector(SelectTeamStat);
@@ -150,16 +160,6 @@ export const Statistics: React.FC = () => {
     console.log('playersRangeStat in statistics useEffect', playersRangeStat);
     setPlayersStats(playersRangeStat);
   }, [playersRangeStat]);
-
-  const dateConvertToIso = (date) => {
-    let z = date.getTimezoneOffset() * 60 * 1000;
-    let tLocal: any = date - z;
-    tLocal = new Date(tLocal);
-    let iso = tLocal.toISOString();
-    iso = iso.split('.')[0];
-    iso = iso.replace('T', ' ').split(' ')[0];
-    return iso;
-  };
 
   const onChangeDate = async (value) => {
     console.log('onChangeDate /statistics');

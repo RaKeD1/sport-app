@@ -12,6 +12,7 @@ import classNames from 'classnames';
 import Modal from '../Modal';
 import TrainCardSkeleton from '../TrainCardSkeleton';
 import { useNavigate } from 'react-router';
+import { dateConvertToIso } from '../../pages/Statistics';
 
 type UserTrain = ITrain & {
   day_team: string;
@@ -145,7 +146,7 @@ export const UserTrainings: FC = () => {
                         <div className={styles.item__team}>{train.day_team}</div>
                         <div className={styles.item__separator}></div>
                         <div className={styles.item__date}>
-                          {train.date.split('T')[0].split('-').reverse().join('.')}
+                          {dateConvertToIso(new Date(train.date)).split('-').reverse().join('.')}
                         </div>
                         <div className={styles.item__rating}>
                           {' '}

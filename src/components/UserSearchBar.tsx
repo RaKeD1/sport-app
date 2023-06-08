@@ -12,6 +12,7 @@ type Props = {
   setCollabs: (value) => void;
   isMulti: boolean;
   isClearable: boolean;
+  filter?: number[];
 };
 
 type Player = {
@@ -19,10 +20,11 @@ type Player = {
   player_id: number;
 };
 
-const UserSearchBar: FC<Props> = ({ setCollabs, isMulti, isClearable }) => {
+const UserSearchBar: FC<Props> = ({ setCollabs, isMulti, isClearable, filter }) => {
   const myId = useSelector(SelectAccountID);
   //get animated components wrapper
   const animatedComponents = makeAnimated();
+  if (!filter) filter = [];
 
   const fetchUsers = async () => {
     try {
@@ -48,7 +50,9 @@ const UserSearchBar: FC<Props> = ({ setCollabs, isMulti, isClearable }) => {
           };
           return player;
         });
-      const res = users.filter((data) => data.player.includes(inputValue));
+      const res = users
+        .filter((user) => !filter.includes(user.id_account))
+        .filter((data) => data.player.includes(inputValue));
       console.log(res);
       callback(res);
     });

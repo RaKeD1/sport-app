@@ -45,6 +45,7 @@ import pageMotion from '../../components/pageMotion';
 import { useAppSelector } from '../../hooks/redux';
 import UserSearchBar from '../../components/UserSearchBar';
 import { ISelectUser } from '../../models/ISelectUser';
+import ActionTile from '../../components/ActionTile';
 
 export interface Cols {
   fio: string;
@@ -138,7 +139,7 @@ export const TrainingEdit: React.FC = () => {
 
   // Если изменили параметры и был первый рендер
   useEffect(() => {
-    if (isMounted.current && team && date) {
+    if (team && date) {
       const queryString = qs.stringify({
         team: team,
         date: date,
@@ -240,6 +241,8 @@ export const TrainingEdit: React.FC = () => {
 
   const changeTrain = () => {
     setIsChangeTrain(false);
+    setPage(1);
+    setLimit(5);
 
     const formattedDate = `${activeDate.getFullYear()}-${
       activeDate.getMonth() + 1
@@ -606,38 +609,7 @@ export const TrainingEdit: React.FC = () => {
                           ))}
                         </div>
                         {actions.map((obj) => (
-                          <motion.div key={obj.id_action} className={styles.actions__item}>
-                            <div className={styles.actions__item__time}>
-                              {obj.time.split('').splice(0, 8).join('')}
-                            </div>
-                            <div
-                              className={classNames(styles.actions__item__status, {
-                                [styles.actions__item__status_win]: obj.score === 1,
-                                [styles.actions__item__status_loss]: obj.score === -1,
-                                [styles.actions__item__status_null]: obj.score === 0,
-                              })}></div>
-                            <div className={styles.actions__item__content}>
-                              <div className={styles.actions__item__header}>
-                                <div className={styles.actions__item__player}>{obj.fio}</div>
-                                <div className={styles.actions__item__actionName}>
-                                  <span>{obj.name_action}</span>
-                                </div>
-                              </div>
-                              <div className={styles.actions__item__result}>
-                                Результат:<span>{obj.result}</span>
-                              </div>
-                              {obj.condition && (
-                                <div className={styles.actions__item__condition}>
-                                  Условие:<span>{obj.condition}</span>
-                                </div>
-                              )}
-                              <div
-                                className={styles.actions__item__delete}
-                                onClick={() => onDeleteAction(obj.id_action)}>
-                                Удалить
-                              </div>
-                            </div>
-                          </motion.div>
+                          <ActionTile data={obj} onDeleteAction={onDeleteAction} />
                         ))}
                       </>
                     )}

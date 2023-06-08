@@ -15,11 +15,14 @@ import { deleteUser, removeRoleUsers } from '../../redux/slices/userSlice';
 interface ProfileInfoProps {
   onClickEditUser?: (value: number) => void;
   data: IUser;
+  inRow: boolean;
+  roleBtn: boolean;
+  deleteBtn: boolean;
   avatarSmall: boolean;
-  onClickEdit: (value: boolean) => void;
+  onClickEdit: (value: IUser) => void;
   onClickEditPhoto: (value: boolean) => void;
 }
-const ProfileInfo = ({
+const ProfileInfo: FC<ProfileInfoProps> = ({
   data,
   inRow,
   avatarSmall,
@@ -52,7 +55,6 @@ const ProfileInfo = ({
   }, []);
 
   const handleEditUser = () => {
-    onClickEdit(true); // Передаем сигнал о необходимости открытия компонента редактирования
     onClickEdit(data); // Передаем данные пользователя в родительский компонент
   };
 

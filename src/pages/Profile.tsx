@@ -19,6 +19,10 @@ export const Profile: FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [changePhotoModal, setChangePhotoModal] = useState<boolean>(false);
 
+  const handleEdit = () => {
+    setShowModal(true);
+  };
+
   return (
     <motion.div variants={pageMotion} initial='hidden' animate='show' exit='exit'>
       <div className='tiles'>
@@ -28,7 +32,7 @@ export const Profile: FC = () => {
           avatarSmall={avatarSmall}
           inRow={true}
           roleBtn={false}
-          onClickEdit={setShowModal}
+          onClickEdit={() => handleEdit()}
           onClickEditPhoto={setChangePhotoModal}
         />
         <UserStatCircles user={user.id_account} />

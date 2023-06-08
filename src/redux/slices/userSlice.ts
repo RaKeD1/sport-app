@@ -1,4 +1,4 @@
-import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
 import { IUser } from '../../models/IUser';
 import { AxiosResponse } from 'axios';
 import { Status } from './profileSlice';
@@ -29,7 +29,7 @@ export const fetchUsers = createAsyncThunk<
   AxiosResponse<UsersFetch>,
   PageParams,
   { rejectValue: FetchError }
->('user/fetchAllUsers', async (params, { rejectWithValue }) => {
+>('users/fetchAllUsers', async (params, { rejectWithValue }) => {
   try {
     const { page, limit } = params;
     const response = await UserService.fetchUsers(page, limit);
@@ -47,7 +47,7 @@ export const giveRoleUsers = createAsyncThunk<
   AxiosResponse<IUser[]>,
   GiveRoleUsersParams,
   { rejectValue: FetchError }
->('user/giveRoleUsers', async (params, { rejectWithValue }) => {
+>('users/giveRoleUsers', async (params, { rejectWithValue }) => {
   try {
     const { role, users } = params;
     const response = await RoleService.giveRoles(role, users);
@@ -64,7 +64,7 @@ export const removeRoleUsers = createAsyncThunk<
   AxiosResponse<IUser[]>,
   RemoveRoleUsersParams,
   { rejectValue: FetchError }
->('user/removeRoleUsers', async (params, { rejectWithValue }) => {
+>('users/removeRoleUsers', async (params, { rejectWithValue }) => {
   try {
     const { users } = params;
     const response = await RoleService.removeRoles(users);
@@ -81,7 +81,7 @@ export const deleteUser = createAsyncThunk<
   AxiosResponse<IUser>,
   DeleteUserParams,
   { rejectValue: FetchError }
->('user/deleteUser', async (params, { rejectWithValue }) => {
+>('users/deleteUser', async (params, { rejectWithValue }) => {
   try {
     const { id_user } = params;
     const response = await UserService.deleteUser(id_user);
@@ -97,7 +97,7 @@ export const deleteUser = createAsyncThunk<
 export const updateOneUser = createAsyncThunk<
   AxiosResponse<IUser>,
   { id_user: number; userData: Partial<IUser> }
->('user/updateUserData', async (params, { rejectWithValue }) => {
+>('users/updateUserData', async (params, { rejectWithValue }) => {
   try {
     const { id_user, userData } = params;
     const response = await UserService.updateUser(id_user, userData);
@@ -173,14 +173,15 @@ export const userSlice = createSlice({
       const response = action.payload.data;
       console.log('Обновленный пользователь', response);
       const updUsers = state.users.map((user) => {
+        console.log('in map');
         const findUser = response.find((obj) => obj.id_account === user.id_account);
         if (findUser) {
+          console.log('FIND USER', findUser);
           return findUser;
         } else return user;
       });
       state.users = updUsers;
     },
-
     [updateOneUser.pending.type]: (state, action) => {
       state.isLoading = true;
       state.status = Status.LOADING;

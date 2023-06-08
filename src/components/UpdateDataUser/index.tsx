@@ -64,7 +64,6 @@ const UpdateUser = (props) => {
       ...prevFormData,
       [name]: value,
     }));
-
     const validationFunctions = {
       name: (value) => {
         if (/\d/.test(value)) {
@@ -87,8 +86,20 @@ const UpdateUser = (props) => {
           return '';
         }
       },
-      phone: () => {
-        return '';
+      phone: (value) => {
+        const changedPhone = value
+          .replace(/\)/g, '')
+          .replace(/\(/g, '')
+          .replace(/-/g, '')
+          .replace(/ /g, '')
+          .replace(/_/g, '');
+        if (changedPhone.length !== 12) {
+          console.log('Измененный телефон и его длина', changedPhone, ' ', changedPhone.length);
+
+          return 'Проверьте правильность введенного номера';
+        } else {
+          return '';
+        }
       },
 
       email: () => {
@@ -106,12 +117,12 @@ const UpdateUser = (props) => {
   };
 
   const handleUpdateUser = () => {
+    console.log('formData', formData);
     const changedPhone = formData.phone
       .replace(/\)/g, '')
       .replace(/\(/g, '')
       .replace(/-/g, '')
       .replace(/ /g, '');
-    console.log('formData', formData);
     if (window.confirm('Обновить данные?')) {
       const updatedUserData = {
         name: formData.name,
@@ -211,6 +222,7 @@ const UpdateUser = (props) => {
                   value={formData.phone}
                   onChange={handleChange}
                   autoComplete='off'
+                  Length={12}
                   mask={phoneNumberMask}
                 />
                 {errorsState.phone && <div className={styles.error}>{errorsState.phone}</div>}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
 import { Formik, Form, Field, withFormik, FormikProps, FormikErrors } from 'formik';
-import logo from '../../assets/img/ball.svg';
+import logo from '../../assets/img/Logo_VolleyBall.png';
 import RegisterSchema from '../../models/validation/RegisterSchema';
 import styles from './RegistrForm.module.scss';
 import MaskedInput from 'react-text-mask';

@@ -171,7 +171,10 @@ const ProfileInfo: FC<ProfileInfoProps> = ({
             return (
               <div key={item[0]} className={styles.root__info__item}>
                 <p className={styles.root__info__title}>{columnUser[item[0]]}</p>
-                <p style={style} className={styles.root__info__text}>
+                <p
+                  style={style}
+                  className={styles.root__info__text}
+                  title={item[1] ? item[1] : 'Нет данных'}>
                   {String(item[1] ? item[1] : 'Нет данных')}
                 </p>
               </div>

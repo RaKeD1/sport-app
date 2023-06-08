@@ -168,18 +168,16 @@ export const userSlice = createSlice({
 
     [updateOneUser.fulfilled.type]: (state, action) => {
       state.isLoading = false;
-      state.status = Status.SUCCESS;
       state.error = initialState.error;
       const response = action.payload.data;
       console.log('Обновленный пользователь', response);
       const updUsers = state.users.map((user) => {
-        console.log('in map');
-        const findUser = response.find((obj) => obj.id_account === user.id_account);
-        if (findUser) {
-          console.log('FIND USER', findUser);
-          return findUser;
-        } else return user;
+        if (user.id_account === response.id_account) {
+          return response; // Заменяем объект пользователем с обновленными данными
+        }
+        return user; // Возвращаем неизмененный объект
       });
+      state.status = Status.SUCCESS;
       state.users = updUsers;
     },
     [updateOneUser.pending.type]: (state, action) => {
@@ -199,7 +197,11 @@ export const userSlice = createSlice({
       state.status = Status.SUCCESS;
       state.error = initialState.error;
       const response = action.payload.data;
+      console.log('Тут выдают роль', response);
+
       const updUsers = state.users.map((user) => {
+        console.log('Выдалась роль user', response);
+
         const findUser = response.find((obj) => obj.id_account === user.id_account);
         if (findUser) {
           return findUser;

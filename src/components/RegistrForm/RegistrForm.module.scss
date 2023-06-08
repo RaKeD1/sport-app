@@ -131,27 +131,23 @@
   }
 }
 @media (min-width: 900px) {
-  @media (min-width: 900px) {
-    .auth {
-      margin: 0 200px;
-      &__title {
-        color: $head-clr;
-        margin: 15px auto 15px;
-      }
+  .auth {
+    margin: 0 150px;
+    &__title {
+      color: $head-clr;
+      margin: 15px auto 15px;
     }
   }
 }
 @media (min-width: 1300px) {
-  @media (min-width: 1300px) {
-    .auth {
-      &__logo {
-        display: none;
-      }
-      margin: 10px 0;
-      &__title {
-        color: $head-clr;
-        margin: 15px auto 15px;
-      }
+  .auth {
+    &__logo {
+      display: none;
+    }
+    margin: 10px 300px;
+    &__title {
+      color: $head-clr;
+      margin: 15px auto 15px;
     }
   }
 }

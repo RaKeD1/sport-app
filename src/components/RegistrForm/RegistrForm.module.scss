@@ -37,7 +37,7 @@
   }
   &__logo {
     margin: 0 auto;
-    width: calc((100vw - 480px) / (1280 - 480) * (100 - 44) + 44px);
+    width: calc((100vw - 480px) / (1280 - 480) * (80 - 44) + 44px);
   }
   &__title {
     color: $head-clr;
@@ -141,10 +141,14 @@
 }
 @media (min-width: 1300px) {
   .auth {
+    margin: 10px 300px;
+  }
+}
+@media (max-width: 1300px) {
+  .auth {
     &__logo {
       display: none;
     }
-    margin: 10px 300px;
     &__title {
       color: $head-clr;
       margin: 15px auto 15px;

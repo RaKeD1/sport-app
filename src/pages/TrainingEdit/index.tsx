@@ -357,7 +357,7 @@ export const TrainingEdit: React.FC = () => {
         const newObj = { ...obj };
         for (var key in newObj) {
           if (newObj.hasOwnProperty(key)) {
-            if (key !== 'fio' && key !== 'id_train') {
+            if (key !== 'fio' && key !== 'id_train' && key !== 'id_account') {
               newObj[key] = Number(newObj[key] * 100).toFixed() + '%';
             }
           }
@@ -433,7 +433,7 @@ export const TrainingEdit: React.FC = () => {
       columns: playersStatsColumns,
       data: playersStatsData,
       initialState: {
-        hiddenColumns: ['id_train'],
+        hiddenColumns: ['id_train', 'id_account'],
       },
     },
     tableHooks,
@@ -682,7 +682,12 @@ export const TrainingEdit: React.FC = () => {
       <Modal isActive={isAddPlayer} setIsActive={setIsAddPlayer}>
         <div className={styles.addModal}>
           <h2 className={styles.addModal__title}>Выберите игрока</h2>
-          <UserSearchBar setCollabs={setNewPlayer} isMulti={false} isClearable={false} />
+          <UserSearchBar
+            setCollabs={setNewPlayer}
+            isMulti={false}
+            isClearable={false}
+            filter={players.map((obj) => obj.id_account)}
+          />
           {!checkedPlayer && <div className={styles.addModal__error}>Этот игрок уже играет</div>}
           <button
             className={classNames(styles.addModal__button, {

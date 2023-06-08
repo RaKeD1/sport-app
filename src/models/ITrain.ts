@@ -7,4 +7,5 @@ export interface ITrain {
   defence_stat: string;
   support_stat: string;
   id_train?: number;
+  id_account?: number;
 }

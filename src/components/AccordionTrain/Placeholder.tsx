@@ -13,7 +13,7 @@ export const ContentPlaceholder = ({ data, onClickAddAction, buttonEnabled, onCl
       transition={{ duration: 0.5 }}
       className='content-placeholder'>
       {Object.entries(data)
-        .filter((arr) => arr[0] !== 'fio' && arr[0] !== 'id_train')
+        .filter((arr) => arr[0] !== 'fio' && arr[0] !== 'id_train' && arr[0] !== 'id_account')
         .map((arr, index) => {
           const num = arr[1].toString().replace('0.', '');
 

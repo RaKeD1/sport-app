@@ -5,6 +5,7 @@ import { ISelectUser } from '../models/ISelectUser';
 import { ITrain } from '../models/ITrain';
 import { UserTrains } from '../components/UserTrainings';
 import { UsersFetch } from '../pages/Players';
+import { IActionsPage } from '../models/IActionsPage';
 
 export default class UserService {
   static fetchUsers(page: number, limit: number): Promise<AxiosResponse<UsersFetch>> {
@@ -36,6 +37,14 @@ export default class UserService {
     limit: number,
   ): Promise<AxiosResponse<UserTrains>> {
     return $api.get<UserTrains>('/trains/' + id_account + `?page=${page}&limit=${limit}`);
+  }
+
+  static fetchUserTrainActions(
+    id_train: number,
+    page: number,
+    limit: number,
+  ): Promise<AxiosResponse<IActionsPage>> {
+    return $api.get<IActionsPage>(`/actions?id_train=${id_train}&page=${page}&limit=${limit}`);
   }
 
   static updateUser(id_user: number, userData: Partial<IUser>): Promise<AxiosResponse<IUser>> {

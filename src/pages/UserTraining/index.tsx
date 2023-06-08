@@ -16,6 +16,7 @@ import classNames from 'classnames';
 import ActionTile from '../../components/ActionTile';
 import Pagination from '../../components/Pagination';
 import StatTileSkeleton from '../../components/StatTileSkeleton';
+import { dateConvertToIso } from '../Statistics';
 
 export type UserTrain = {
   date: string;
@@ -153,7 +154,9 @@ const UserTraining = () => {
         ) : (
           <>
             <button onClick={() => navigate(-1)}>{'<'}&nbsp; Вернуться назад</button>
-            <h1>Тренировка: {train.date.split('T')[0].split('-').reverse().join('.')}</h1>
+            <h1>
+              Тренировка: {dateConvertToIso(new Date(train.date)).split('-').reverse().join('.')}
+            </h1>
             <h2>Команда: {train.day_team}</h2>
             <ul className={styles.train__stat}>
               {isLoadingStat ? (

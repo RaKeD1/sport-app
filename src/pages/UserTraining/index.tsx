@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useAppSelector } from '../../hooks/redux';
-import { SelectAccountID } from '../../redux/slices/profileSlice';
+import { SelectAccountID, Status } from '../../redux/slices/profileSlice';
 import { useLocation, useNavigate } from 'react-router';
 import TrainService from '../../services/TrainService';
 import { ITrain } from '../../models/ITrain';
@@ -10,6 +10,11 @@ import pageMotion from '../../components/pageMotion';
 import styles from './UserTraining.module.scss';
 import StatTile from '../../components/StatTile';
 import UserService from '../../services/UserService';
+import { IAction } from '../../models/IAction';
+import { limitVariants } from '../TrainingEdit';
+import classNames from 'classnames';
+import ActionTile from '../../components/ActionTile';
+import Pagination from '../../components/Pagination';
 
 export type UserTrain = {
   date: string;
@@ -33,11 +38,18 @@ const UserTraining = () => {
   const [error, setError] = useState<string>(null);
   const [train, setTrain] = useState<UserTrain>(null);
   const [stat, setStat] = useState(null);
+  const [actionsStatus, setActionsStatus] = useState<string>(Status.LOADING);
+  const [actionsError, setActionsError] = useState<string>(null);
+  const [actions, setActions] = useState<IAction[]>([]);
+  const [actionsCount, setActionsCount] = useState<number>(0);
   // Стейты первого рендера
   const isSearch = React.useRef(false);
   const isMounted = useRef(false);
   const location = useLocation();
   const navigate = useNavigate();
+  // Пагинация действий
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(5);
 
   const fetchTrain = async () => {
     await TrainService.getOneTrain(idTrain, idAccount)
@@ -74,6 +86,25 @@ const UserTraining = () => {
       .finally(() => setIsLoadingStat(false));
   };
 
+  const fetchActions = async () => {
+    setActionsStatus(Status.LOADING);
+    await UserService.fetchUserTrainActions(idTrain, page, limit)
+      .then((res) => {
+        setActions(res.data.actions);
+        setActionsCount(res.data.count);
+        setActionsStatus(Status.SUCCESS);
+        setActionsError(null);
+      })
+      .catch((err) => {
+        setActionsStatus(Status.ERROR);
+        setActionsError(
+          err.response?.data?.message
+            ? err.response?.data?.message
+            : 'Не удалось получить действия',
+        );
+      });
+  };
+
   useEffect(() => {
     if (
       !location.search ||
@@ -92,8 +123,19 @@ const UserTraining = () => {
     if (idTrain && idAccount) {
       fetchTrain();
       fetchStat();
+      fetchActions();
     }
   }, [idTrain, idAccount]);
+
+  const handlePageClick = (selected: number) => {
+    setPage(selected);
+  };
+
+  const onDeleteAction = async (id_action: number) => {
+    if (window.confirm('Удалить действие?')) {
+      await TrainService.deleteTrainAction(id_action);
+    }
+  };
 
   return (
     <motion.div variants={pageMotion} initial='hidden' animate='show' exit='exit'>
@@ -131,6 +173,62 @@ const UserTraining = () => {
                 ))
               )}
             </ul>
+            <div className={styles.actions}>
+              <h3 className={styles.actions__title}>Действия за тренировку</h3>
+              {actionsStatus === Status.LOADING ? (
+                <LoadingSpinner />
+              ) : actionsStatus === Status.ERROR ? (
+                <div className={styles.train__error}>
+                  <span>😕</span>
+                  {actionsError ? actionsError : 'Произошла ошибка'}
+                </div>
+              ) : (
+                <motion.div transition={{ delayChildren: 0.5 }} className={styles.actions__list}>
+                  {actions.length === 0 ? (
+                    <div className={styles.actions__list__empty}>Действий пока нет</div>
+                  ) : (
+                    <>
+                      <div className={styles.actions__list__showNum}>
+                        <p>Показывать на странице:</p>
+                        {limitVariants.map((item, i) => (
+                          <span
+                            key={i}
+                            className={classNames(styles.actions__list__showNum__item, {
+                              [styles.actions__list__showNum__item_active]: item === limit,
+                            })}
+                            onClick={() => {
+                              setPage(1);
+                              setLimit(item);
+                            }}>
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                      {actions.map((obj) => (
+                        <ActionTile data={obj} onDeleteAction={onDeleteAction} />
+                      ))}
+                    </>
+                  )}
+                </motion.div>
+              )}
+              {limit !== actionsCount && limit < actionsCount && (
+                <>
+                  <div
+                    className={styles.actions__showAll}
+                    onClick={() => {
+                      setLimit(actionsCount);
+                      setPage(1);
+                    }}>
+                    Показать все
+                  </div>{' '}
+                  <Pagination
+                    page={page}
+                    pageCount={Math.ceil(actionsCount / limit)}
+                    handlePageClick={handlePageClick}
+                  />
+                </>
+              )}
+            </div>
           </>
         )}
       </div>

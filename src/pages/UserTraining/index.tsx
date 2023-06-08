@@ -15,6 +15,7 @@ import { limitVariants } from '../TrainingEdit';
 import classNames from 'classnames';
 import ActionTile from '../../components/ActionTile';
 import Pagination from '../../components/Pagination';
+import StatTileSkeleton from '../../components/StatTileSkeleton';
 
 export type UserTrain = {
   date: string;
@@ -137,6 +138,8 @@ const UserTraining = () => {
     }
   };
 
+  const statTileSkeletons = [...new Array(6)].map((item) => <StatTileSkeleton />);
+
   return (
     <motion.div variants={pageMotion} initial='hidden' animate='show' exit='exit'>
       <div className={styles.train}>
@@ -154,7 +157,7 @@ const UserTraining = () => {
             <h2>Команда: {train.day_team}</h2>
             <ul className={styles.train__stat}>
               {isLoadingStat ? (
-                <LoadingSpinner />
+                statTileSkeletons.map((skeleton) => skeleton)
               ) : error ? (
                 <div>
                   <span>😕</span>

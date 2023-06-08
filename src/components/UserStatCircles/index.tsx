@@ -6,6 +6,7 @@ import ProgressCircle from '../ProgressCircle';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import { AnimatePresence, motion, useAnimation } from 'framer-motion';
 import StatTile from '../StatTile';
+import StatTileSkeleton from '../StatTileSkeleton';
 
 interface UserStatCirclesProps {
   user: number;
@@ -40,6 +41,7 @@ const UserStatCircles: FC<UserStatCirclesProps> = ({ user }) => {
       fetchStat(user);
     }
   }, []);
+  const skeletons = [...new Array(6)].map((item) => <StatTileSkeleton />);
 
   return (
     <section className={styles.root}>
@@ -47,7 +49,7 @@ const UserStatCircles: FC<UserStatCirclesProps> = ({ user }) => {
 
       <div className={styles.root__content}>
         {isLoading ? (
-          <LoadingSpinner />
+          skeletons.map((skeleton) => skeleton)
         ) : error || !stat ? (
           <div className={styles.error}>
             <span>😕</span>

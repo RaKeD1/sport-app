@@ -151,11 +151,12 @@ export const Players = () => {
   }, [page, limit]);
 
   useEffect(() => {
-    dispatch(fetchUsers({ page, limit }));
+    // dispatch(fetchUsers({ page, limit }));
     setIsUpdate(false);
   }, [isUpdate]);
 
-  useEffect(() => {}, [selectedUser]);
+  // useEffect(() => {
+  // }, [selectedUser]);
 
   const handleEditUser = (user: PlayersInf) => {
     setSelectedUser(user);
@@ -201,7 +202,6 @@ export const Players = () => {
     setPage(selected);
   };
   const inputRef = useRef<HTMLInputElement>(null);
-  console.log('length', users.users.length);
   const onClickClear = () => {
     setValue('');
     inputRef.current?.focus();
@@ -263,29 +263,27 @@ export const Players = () => {
               variants={container}
               initial='hidden'
               animate='visible'>
-              {filtredPlayers
-                // .filter((player) => player.id_user !== MyID)
-                .map((player) => {
-                  return (
-                    <motion.li
-                      key={player.id_user}
-                      whileHover={{
-                        scale: 1.05,
-                        transition: { duration: 0.2 },
-                      }}
-                      variants={item}>
-                      <ProfileInfo
-                        deleteBtn={true}
-                        data={player}
-                        inRow={false}
-                        avatarSmall={avatarSmall}
-                        roleBtn={true}
-                        onClickEdit={() => handleEditUser(player)} // Передаем данные пользователя в обработчик
-                        onClickEditPhoto={setChangePhotoModal}
-                      />
-                    </motion.li>
-                  );
-                })}
+              {filtredPlayers.map((player) => {
+                return (
+                  <motion.li
+                    key={player.id_user}
+                    whileHover={{
+                      scale: 1.05,
+                      transition: { duration: 0.2 },
+                    }}
+                    variants={item}>
+                    <ProfileInfo
+                      deleteBtn={true}
+                      data={player}
+                      inRow={false}
+                      avatarSmall={avatarSmall}
+                      roleBtn={true}
+                      onClickEdit={() => handleEditUser(player)} // Передаем данные пользователя в обработчик
+                      onClickEditPhoto={setChangePhotoModal}
+                    />
+                  </motion.li>
+                );
+              })}
             </motion.ul>
             {limit !== users.count && limit < users.count && (
               <>

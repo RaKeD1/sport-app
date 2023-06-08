@@ -10,11 +10,14 @@ import { delay } from '@reduxjs/toolkit/dist/utils';
 import { useAppSelector } from '../hooks/redux';
 import { SelectUser, SelectUserRole, logoutAccount } from '../redux/slices/profileSlice';
 import { MdLogout } from 'react-icons/md';
+import { useAppDispatch } from '../redux/store';
 
 const Header: FC = () => {
   const [scrollPosition, setScrollPosition] = useState<number>(0);
   const { name, surname, patronimyc } = useAppSelector(SelectUser);
   const role = useAppSelector(SelectUserRole);
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,9 +34,6 @@ const Header: FC = () => {
   const isScrolled = scrollPosition > 100;
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  function dispatch(arg0: any): void {
-    throw new Error('Function not implemented.');
-  }
 
   return (
     <header

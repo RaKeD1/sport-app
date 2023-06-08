@@ -19,6 +19,9 @@ export const StatTile = ({ name, winCount, lossCount, stat }) => {
     hidden: {
       height: 0,
       opacity: 0,
+      transition: {
+        duration: 0.4,
+      },
     },
     show: {
       height: 'auto',
@@ -34,19 +37,21 @@ export const StatTile = ({ name, winCount, lossCount, stat }) => {
         onMouseLeave={() => setExpand(false)}>
         <div className={styles.tile__info}>
           <p className={styles.tile__info__text}>{circlesNames[name]}</p>
-          {expand && (
-            <motion.div
-              variants={expandVariants}
-              initial='hidden'
-              animate='show'
-              exit='hidden'
-              transition={{ duration: 0.2 }}
-              layoutId={circlesNames[name]}
-              className={styles.tile__info__expand}>
-              <p className={styles.tile__info__expand__count}>Выиграно: {winCount}</p>
-              <p className={styles.tile__info__expand__count}>Проиграно: {lossCount}</p>
-            </motion.div>
-          )}
+          <AnimatePresence>
+            {expand && (
+              <motion.div
+                variants={expandVariants}
+                initial='hidden'
+                animate='show'
+                exit='hidden'
+                transition={{ duration: 0.3 }}
+                layoutId={circlesNames[name]}
+                className={styles.tile__info__expand}>
+                <p className={styles.tile__info__expand__count}>Выиграно: {winCount}</p>
+                <p className={styles.tile__info__expand__count}>Проиграно: {lossCount}</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
         <ProgressCircle progress={stat * 100} />
       </div>

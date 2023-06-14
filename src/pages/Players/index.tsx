@@ -90,7 +90,7 @@ export const Players = () => {
   const [value, setValue] = useState<string>('');
   const [isLoad, setIsLoad] = useState(true);
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
-  const [selectedUser, setSelectedUser] = useState<PlayersInf | string>('');
+  const [selectedUser, setSelectedUser] = useState<IUser>();
   // Модальные окна ролей
   const [giveRolesModal, setGiveRolesModal] = useState<boolean>(false);
   const [collabs, setCollabs] = useState<ISelectUser[]>([]);
@@ -158,7 +158,7 @@ export const Players = () => {
   // useEffect(() => {
   // }, [selectedUser]);
 
-  const handleEditUser = (user: PlayersInf) => {
+  const handleEditUser = (user: IUser) => {
     setSelectedUser(user);
     setShowModal(true);
   };

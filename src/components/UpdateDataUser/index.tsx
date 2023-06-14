@@ -6,16 +6,21 @@ import MaskedInput from 'react-text-mask';
 import { phoneNumberMask } from '../RegistrForm';
 import { useSelector } from 'react-redux';
 import { updateOneUser } from '../../redux/slices/userSlice';
-
-const UpdateUser = (props) => {
+import { IUser } from '../../models/IUser';
+interface PropsValues {
+  user: IUser;
+  isUpdate?: (value: boolean) => void;
+  setIsActive: (value: boolean) => void;
+}
+const UpdateUser = (props: PropsValues) => {
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
-    name: props.user.name,
-    surname: props.user.surname,
-    patronimyc: props.user.patronimyc,
-    email: props.user.email,
-    phone: props.user.phone,
-    team: props.user.team,
+    name: props.user?.name,
+    surname: props.user?.surname,
+    patronimyc: props.user?.patronimyc,
+    email: props.user?.email,
+    phone: props.user?.phone,
+    team: props.user?.team,
   });
   const [errorsState, setErrorsState] = useState({
     name: '',
@@ -31,12 +36,12 @@ const UpdateUser = (props) => {
   // Заносим данные при первой загрузке
   useEffect(() => {
     setFormData({
-      name: props.user.name,
-      surname: props.user.surname,
-      patronimyc: props.user.patronimyc,
-      email: props.user.email,
-      phone: props.user.phone,
-      team: props.user.team,
+      name: props.user?.name,
+      surname: props.user?.surname,
+      patronimyc: props.user?.patronimyc,
+      email: props.user?.email,
+      phone: props.user?.phone,
+      team: props.user?.team,
     });
 
     setDisable(true);
@@ -46,12 +51,12 @@ const UpdateUser = (props) => {
   useEffect(() => {
     const areAllErrorsEmpty = Object.values(errorsState).every((error) => error === '');
     if (
-      (formData.name !== props.user.name ||
-        formData.surname !== props.user.surname ||
-        formData.phone !== props.user.phone ||
-        formData.email !== props.user.email ||
-        formData.patronimyc !== props.user.patronimyc ||
-        formData.team !== props.user.team) &&
+      (formData.name !== props.user?.name ||
+        formData.surname !== props.user?.surname ||
+        formData.phone !== props.user?.phone ||
+        formData.email !== props.user?.email ||
+        formData.patronimyc !== props.user?.patronimyc ||
+        formData.team !== props.user?.team) &&
       areAllErrorsEmpty
     ) {
       setDisable(false);

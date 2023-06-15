@@ -25,7 +25,8 @@ type PageParams = {
   limit: number;
 };
 type ParamsSearch = {
-  value: string;
+  value?: string;
+  valueGroup?: string;
   page: number;
   limit: number;
 };
@@ -53,8 +54,8 @@ export const searchUsers = createAsyncThunk<
   { rejectValue: FetchError }
 >('users/fetchAllUsers', async (params, { rejectWithValue }) => {
   try {
-    const { value, page, limit } = params;
-    const response = await UserService.searchUsers(value, page, limit);
+    const { value, valueGroup, page, limit } = params;
+    const response = await UserService.searchUsers(value, valueGroup, page, limit);
     console.log('data', response.data);
     return response;
   } catch (error) {

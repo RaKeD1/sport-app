@@ -153,11 +153,13 @@ const UserTraining = () => {
           </div>
         ) : (
           <>
-            <button onClick={() => navigate(-1)}>{'<'}&nbsp; Вернуться назад</button>
-            <h1>
+            <button onClick={() => navigate(-1)} className={styles.train__backBtn}>
+              {'<'}&nbsp; Вернуться назад
+            </button>
+            <h1 className={styles.train__title}>
               Тренировка: {dateConvertToIso(new Date(train.date)).split('-').reverse().join('.')}
             </h1>
-            <h2>Команда: {train.day_team}</h2>
+            <h2 className={styles.train__team}>Команда: {train.day_team}</h2>
             <ul className={styles.train__stat}>
               {isLoadingStat ? (
                 statTileSkeletons.map((skeleton) => skeleton)
@@ -194,13 +196,13 @@ const UserTraining = () => {
                     <div className={styles.actions__list__empty}>Действий пока нет</div>
                   ) : (
                     <>
-                      <div className={styles.actions__list__showNum}>
+                      <div className={styles.actions__showNum}>
                         <p>Показывать на странице:</p>
                         {limitVariants.map((item, i) => (
                           <span
                             key={i}
-                            className={classNames(styles.actions__list__showNum__item, {
-                              [styles.actions__list__showNum__item_active]: item === limit,
+                            className={classNames(styles.actions__showNum__item, {
+                              [styles.actions__showNum__item_active]: item === limit,
                             })}
                             onClick={() => {
                               setPage(1);

@@ -1,16 +1,72 @@
+@import '../../scss/vars';
+
 .train {
   padding: 30px;
   background-color: #fff;
   border-radius: 30px;
   position: relative;
 
+  &__backBtn {
+    margin-left: 0;
+  }
+
+  &__title,
+  &__team {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 500;
+    margin-top: 10px;
+  }
+
   &__stat {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    width: 70%;
+    margin: auto;
+    margin-top: 20px;
+
+    > div {
+      margin-top: 20px;
+    }
 
     &__tile {
       margin-bottom: 20px;
+    }
+  }
+}
+
+.actions {
+  &__title {
+    text-align: center;
+    font-size: 25px;
+    font-weight: 500;
+    margin-top: 30px;
+  }
+
+  &__showNum {
+    display: flex;
+    justify-content: right;
+
+    &__item {
+      margin-left: 10px;
+      text-decoration: underline;
+      color: $button-clr;
+      cursor: pointer;
+
+      &_active {
+        text-decoration: none;
+        color: #000;
+        pointer-events: none;
+      }
+    }
+
+    @media screen and (max-width: 1100px) {
+      margin-top: 20px;
+    }
+
+    @media screen and (max-width: 550px) {
+      justify-content: center;
     }
   }
 }

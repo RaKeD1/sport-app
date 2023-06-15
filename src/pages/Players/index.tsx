@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { useAppDispatch } from '../../redux/store';
 import {
   SelectInfoUsers,
@@ -6,8 +6,10 @@ import {
   fetchUsers,
   giveRoleUsers,
   removeRoleUsers,
+  searchUsers,
 } from '../../redux/slices/userSlice';
 import { AnimatePresence, motion } from 'framer-motion';
+import debounce from 'lodash.debounce';
 
 import styles from './players.module.scss';
 import { useSelector } from 'react-redux';
@@ -26,6 +28,7 @@ import UserService from '../../services/UserService';
 import { IUser } from '../../models/IUser';
 import Pagination from '../../components/Pagination';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import { setSearchValue } from '../../redux/slices/filterSlice';
 
 export interface PlayersInf {
   email: string;
@@ -121,9 +124,11 @@ export const Players = () => {
     return user;
   });
 
-  const filtredPlayers = players.filter((user) => {
-    return user.player.toLowerCase().includes(value.toLowerCase());
-  });
+  const filtredPlayers = useMemo(() => {
+    return players.filter((user) => {
+      return user.player.toLowerCase().includes(value.toLowerCase());
+    });
+  }, [players, value]);
 
   const fetchRoles = async () => {
     try {
@@ -148,7 +153,25 @@ export const Players = () => {
 
   useEffect(() => {
     dispatch(fetchUsers({ page, limit }));
+    console.log('Произошло изменние page, limit ');
   }, [page, limit]);
+
+  useEffect(() => {
+    let timerId;
+    const delaySearch = () => {
+      timerId = setTimeout(() => {
+        if (value !== '') {
+          dispatch(searchUsers({ value, page, limit }));
+        } else {
+          dispatch(fetchUsers({ page, limit }));
+        }
+      }, 300);
+    };
+    delaySearch();
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [value]);
 
   useEffect(() => {
     // dispatch(fetchUsers({ page, limit }));
@@ -203,8 +226,19 @@ export const Players = () => {
   };
   const inputRef = useRef<HTMLInputElement>(null);
   const onClickClear = () => {
+    dispatch(setSearchValue(''));
     setValue('');
     inputRef.current?.focus();
+  };
+  const updateSearchValue = useCallback(
+    debounce((value: string) => {
+      dispatch(setSearchValue(value));
+    }, 250),
+    [],
+  );
+  const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value);
+    updateSearchValue(event.target.value);
   };
   return (
     <motion.div variants={pageMotion} initial='hidden' animate='show' exit='exit'>
@@ -218,7 +252,7 @@ export const Players = () => {
                 className={styles.input}
                 type='text'
                 value={value}
-                onChange={(event) => setValue(event.target.value)}
+                onChange={onChangeInput}
               />
               {value && (
                 <svg

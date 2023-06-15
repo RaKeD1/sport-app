@@ -88,6 +88,8 @@ export interface UsersFetch {
 export const Players = () => {
   const avatarSmall = true;
 
+  const [initialLoad, setInitialLoad] = useState(true); // Отвечает за анимацию при первом рендере
+
   const [showModal, setShowModal] = useState<boolean>(false);
   const [changePhotoModal, setChangePhotoModal] = useState<boolean>(false);
   const [value, setValue] = useState<string>('');
@@ -154,6 +156,7 @@ export const Players = () => {
   useEffect(() => {
     dispatch(fetchUsers({ page, limit }));
     console.log('Произошло изменние page, limit ');
+    setInitialLoad(false); // присваиваем false после получение юзеров
   }, [page, limit]);
 
   useEffect(() => {
@@ -174,12 +177,8 @@ export const Players = () => {
   }, [value]);
 
   useEffect(() => {
-    // dispatch(fetchUsers({ page, limit }));
     setIsUpdate(false);
   }, [isUpdate]);
-
-  // useEffect(() => {
-  // }, [selectedUser]);
 
   const handleEditUser = (user: IUser) => {
     setSelectedUser(user);

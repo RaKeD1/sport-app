@@ -78,11 +78,13 @@ const Header: FC = () => {
           width: '100%',
           opacity: 0,
           y: 10,
+          pointerEvents: 'none',
         }}
         animate={{
           opacity: isScrolled ? 1 : 0,
           position: 'fixed',
           y: isScrolled ? 0 : -10,
+          pointerEvents: isScrolled ? 'auto' : 'none',
         }}
         transition={{ duration: 0.3 }}
         className={isScrolled ? ' header__scrolled' : ''}>

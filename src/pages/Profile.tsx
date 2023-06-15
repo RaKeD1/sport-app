@@ -15,6 +15,7 @@ import pageMotion from '../components/pageMotion';
 export const Profile: FC = () => {
   const avatarSmall = false;
   const user = useAppSelector(SelectUser);
+  console.log('user', user);
   const dispatch = useAppDispatch();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [changePhotoModal, setChangePhotoModal] = useState<boolean>(false);

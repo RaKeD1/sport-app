@@ -24,6 +24,12 @@ type PageParams = {
   page: number;
   limit: number;
 };
+type ParamsSearch = {
+  value?: string;
+  valueGroup?: string;
+  page: number;
+  limit: number;
+};
 //Функция запроса users
 export const fetchUsers = createAsyncThunk<
   AxiosResponse<UsersFetch>,
@@ -33,6 +39,23 @@ export const fetchUsers = createAsyncThunk<
   try {
     const { page, limit } = params;
     const response = await UserService.fetchUsers(page, limit);
+    console.log('data', response.data);
+    return response;
+  } catch (error) {
+    if (!error.response) {
+      throw error;
+    }
+    return rejectWithValue(error.response?.data);
+  }
+});
+export const searchUsers = createAsyncThunk<
+  AxiosResponse<UsersFetch>,
+  ParamsSearch,
+  { rejectValue: FetchError }
+>('users/fetchAllUsers', async (params, { rejectWithValue }) => {
+  try {
+    const { value, valueGroup, page, limit } = params;
+    const response = await UserService.searchUsers(value, valueGroup, page, limit);
     console.log('data', response.data);
     return response;
   } catch (error) {
@@ -161,6 +184,23 @@ export const userSlice = createSlice({
       state.error = initialState.error;
     },
     [fetchUsers.rejected.type]: (state, action) => {
+      state.isLoading = false;
+      state.status = Status.ERROR;
+      state.error = action.payload.message;
+    },
+
+    [searchUsers.fulfilled.type]: (state, action: PayloadAction<IUser[]>) => {
+      state.isLoading = false;
+      state.status = Status.SUCCESS;
+      state.users = action.payload;
+      state.error = initialState.error;
+    },
+    [searchUsers.pending.type]: (state) => {
+      state.isLoading = true;
+      state.status = Status.LOADING;
+      state.error = initialState.error;
+    },
+    [searchUsers.rejected.type]: (state, action) => {
       state.isLoading = false;
       state.status = Status.ERROR;
       state.error = action.payload.message;

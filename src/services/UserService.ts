@@ -11,6 +11,16 @@ export default class UserService {
   static fetchUsers(page: number, limit: number): Promise<AxiosResponse<UsersFetch>> {
     return $api.get<UsersFetch>('/users/' + `?page=${page}&limit=${limit}`);
   }
+  static searchUsers(
+    search: string,
+    group: string,
+    page: number,
+    limit: number,
+  ): Promise<AxiosResponse<UsersFetch>> {
+    return $api.get<UsersFetch>(
+      '/search-users/' + `?search=${search}&group=${group}&page=${page}&limit=${limit}`,
+    );
+  }
 
   static fetchSelectUsers(): Promise<AxiosResponse<ISelectUser[]>> {
     return $api.get<ISelectUser[]>('/select-users');

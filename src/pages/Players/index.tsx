@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { useAppDispatch } from '../../redux/store';
 import {
   SelectInfoUsers,
@@ -6,8 +6,10 @@ import {
   fetchUsers,
   giveRoleUsers,
   removeRoleUsers,
+  searchUsers,
 } from '../../redux/slices/userSlice';
 import { AnimatePresence, motion } from 'framer-motion';
+import debounce from 'lodash.debounce';
 
 import styles from './players.module.scss';
 import { useSelector } from 'react-redux';
@@ -26,6 +28,8 @@ import UserService from '../../services/UserService';
 import { IUser } from '../../models/IUser';
 import Pagination from '../../components/Pagination';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import { setSearchValue, setSearchValueGroup } from '../../redux/slices/filterSlice';
+import { group } from 'console';
 
 export interface PlayersInf {
   email: string;
@@ -85,12 +89,15 @@ export interface UsersFetch {
 export const Players = () => {
   const avatarSmall = true;
 
+  const [initialLoad, setInitialLoad] = useState(true); // Отвечает за анимацию при первом рендере
+
   const [showModal, setShowModal] = useState<boolean>(false);
   const [changePhotoModal, setChangePhotoModal] = useState<boolean>(false);
   const [value, setValue] = useState<string>('');
+  const [valueGroup, setValueGroup] = useState<string>('');
   const [isLoad, setIsLoad] = useState(true);
   const [isUpdate, setIsUpdate] = useState<boolean>(false);
-  const [selectedUser, setSelectedUser] = useState<PlayersInf | string>('');
+  const [selectedUser, setSelectedUser] = useState<IUser>();
   // Модальные окна ролей
   const [giveRolesModal, setGiveRolesModal] = useState<boolean>(false);
   const [collabs, setCollabs] = useState<ISelectUser[]>([]);
@@ -121,9 +128,11 @@ export const Players = () => {
     return user;
   });
 
-  const filtredPlayers = players.filter((user) => {
-    return user.player.toLowerCase().includes(value.toLowerCase());
-  });
+  const filtredPlayers = useMemo(() => {
+    return players.filter((user) => {
+      return user.player.toLowerCase().includes(value.toLowerCase());
+    });
+  }, [players, value]);
 
   const fetchRoles = async () => {
     try {
@@ -148,17 +157,28 @@ export const Players = () => {
 
   useEffect(() => {
     dispatch(fetchUsers({ page, limit }));
+    console.log('Произошло изменние page, limit ');
+    setInitialLoad(false); // присваиваем false после получение юзеров
   }, [page, limit]);
 
   useEffect(() => {
-    // dispatch(fetchUsers({ page, limit }));
+    let timerId;
+    const delaySearch = () => {
+      timerId = setTimeout(() => {
+        dispatch(searchUsers({ value, valueGroup, page, limit }));
+      }, 500);
+    };
+    delaySearch();
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [value, valueGroup]);
+
+  useEffect(() => {
     setIsUpdate(false);
   }, [isUpdate]);
 
-  // useEffect(() => {
-  // }, [selectedUser]);
-
-  const handleEditUser = (user: PlayersInf) => {
+  const handleEditUser = (user: IUser) => {
     setSelectedUser(user);
     setShowModal(true);
   };
@@ -201,38 +221,93 @@ export const Players = () => {
   const handlePageClick = (selected: number) => {
     setPage(selected);
   };
+  // для input FIO
   const inputRef = useRef<HTMLInputElement>(null);
   const onClickClear = () => {
+    dispatch(setSearchValue(''));
     setValue('');
     inputRef.current?.focus();
+  };
+
+  const updateSearchValue = useCallback(
+    debounce((value: string) => {
+      dispatch(setSearchValue(value));
+    }, 250),
+    [],
+  );
+  // для input Group
+  const inputRefGroup = useRef<HTMLInputElement>(null);
+  const onClickClearGroup = () => {
+    dispatch(setSearchValueGroup(''));
+    setValueGroup('');
+    inputRefGroup.current?.focus();
+  };
+  const updateSearchValueGroup = useCallback(
+    debounce((valueGroup: string) => {
+      dispatch(setSearchValueGroup(valueGroup));
+    }, 250),
+    [],
+  );
+  const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value);
+    updateSearchValue(event.target.value);
+  };
+  const onChangeInputGroup = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValueGroup(event.target.value);
+    updateSearchValueGroup(event.target.value);
   };
   return (
     <motion.div variants={pageMotion} initial='hidden' animate='show' exit='exit'>
       <div className={styles.main}>
         <div className={styles.form}>
-          <label>Введите ФИО игрока:</label>
           <div className={styles.form__box}>
-            <div className={styles.root}>
-              <input
-                ref={inputRef}
-                className={styles.input}
-                type='text'
-                value={value}
-                onChange={(event) => setValue(event.target.value)}
-              />
-              {value && (
-                <svg
-                  onClick={onClickClear}
-                  className={styles.iconClear}
-                  version='1.1'
-                  viewBox='0 0 24 24'
-                  xmlns='http://www.w3.org/2000/svg'>
-                  <g id='grid_system' />
-                  <g id='_icons'>
-                    <path d='M5.3,18.7C5.5,18.9,5.7,19,6,19s0.5-0.1,0.7-0.3l5.3-5.3l5.3,5.3c0.2,0.2,0.5,0.3,0.7,0.3s0.5-0.1,0.7-0.3   c0.4-0.4,0.4-1,0-1.4L13.4,12l5.3-5.3c0.4-0.4,0.4-1,0-1.4s-1-0.4-1.4,0L12,10.6L6.7,5.3c-0.4-0.4-1-0.4-1.4,0s-0.4,1,0,1.4   l5.3,5.3l-5.3,5.3C4.9,17.7,4.9,18.3,5.3,18.7z' />
-                  </g>
-                </svg>
-              )}
+            <div className={styles.form__box_inp}>
+              <div className={styles.root}>
+                <label>Введите ФИО игрока:</label>
+                <input
+                  ref={inputRef}
+                  className={styles.input}
+                  type='text'
+                  value={value}
+                  onChange={onChangeInput}
+                />
+                {value && (
+                  <svg
+                    onClick={onClickClear}
+                    className={styles.iconClear}
+                    version='1.1'
+                    viewBox='0 0 24 24'
+                    xmlns='http://www.w3.org/2000/svg'>
+                    <g id='grid_system' />
+                    <g id='_icons'>
+                      <path d='M5.3,18.7C5.5,18.9,5.7,19,6,19s0.5-0.1,0.7-0.3l5.3-5.3l5.3,5.3c0.2,0.2,0.5,0.3,0.7,0.3s0.5-0.1,0.7-0.3   c0.4-0.4,0.4-1,0-1.4L13.4,12l5.3-5.3c0.4-0.4,0.4-1,0-1.4s-1-0.4-1.4,0L12,10.6L6.7,5.3c-0.4-0.4-1-0.4-1.4,0s-0.4,1,0,1.4   l5.3,5.3l-5.3,5.3C4.9,17.7,4.9,18.3,5.3,18.7z' />
+                    </g>
+                  </svg>
+                )}
+              </div>
+              <div className={styles.root}>
+                <label>Введите группу игрока:</label>
+                <input
+                  ref={inputRefGroup}
+                  className={styles.input}
+                  type='text'
+                  value={valueGroup}
+                  onChange={onChangeInputGroup}
+                />
+                {valueGroup && (
+                  <svg
+                    onClick={onClickClearGroup}
+                    className={styles.iconClear}
+                    version='1.1'
+                    viewBox='0 0 24 24'
+                    xmlns='http://www.w3.org/2000/svg'>
+                    <g id='grid_system' />
+                    <g id='_icons'>
+                      <path d='M5.3,18.7C5.5,18.9,5.7,19,6,19s0.5-0.1,0.7-0.3l5.3-5.3l5.3,5.3c0.2,0.2,0.5,0.3,0.7,0.3s0.5-0.1,0.7-0.3   c0.4-0.4,0.4-1,0-1.4L13.4,12l5.3-5.3c0.4-0.4,0.4-1,0-1.4s-1-0.4-1.4,0L12,10.6L6.7,5.3c-0.4-0.4-1-0.4-1.4,0s-0.4,1,0,1.4   l5.3,5.3l-5.3,5.3C4.9,17.7,4.9,18.3,5.3,18.7z' />
+                    </g>
+                  </svg>
+                )}
+              </div>
             </div>
 
             <div className={styles.form__roleButtons}>

@@ -165,17 +165,8 @@ export const Players = () => {
     let timerId;
     const delaySearch = () => {
       timerId = setTimeout(() => {
-        // if (value !== '') {
-        //   if (valueGroup !== '') {
-        //     dispatch(searchUsers({ value, valueGroup, page, limit }));
-        //   } else dispatch(searchUsers({ value, page, limit }));
-        // } else if (valueGroup !== '') {
-        //   dispatch(searchUsers({ valueGroup, page, limit }));
-        // } else {
-        //   dispatch(fetchUsers({ page, limit }));
-        // }
         dispatch(searchUsers({ value, valueGroup, page, limit }));
-      }, 300);
+      }, 500);
     };
     delaySearch();
     return () => {

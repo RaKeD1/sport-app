@@ -52,6 +52,9 @@
   &__fio {
     font-weight: 500;
     color: $head-clr;
+    @media (max-width: 1000px) {
+      margin-right: 50px;
+    }
   }
 }
 

@@ -51,14 +51,14 @@
   cursor: pointer;
   position: fixed;
   display: flex;
-  top: 40px;
+  top: 35px;
   right: 40px;
   @media (max-width: 1800px) {
-    top: 35px;
+    top: 30px;
     right: 25px;
   }
   @media (max-width: 1400px) {
-    top: 25px;
+    top: 22px;
     right: 25px;
   }
   @media (max-width: 1000px) {
@@ -67,6 +67,10 @@
   }
   @media (max-width: 860px) {
     top: 15px;
+    right: 10px;
+  }
+  @media (max-width: 550px) {
+    top: 10px;
     right: 10px;
   }
   @media (max-width: 400px) {

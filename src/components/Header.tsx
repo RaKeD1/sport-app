@@ -1,12 +1,8 @@
 import { FC, useState, useEffect } from 'react';
-import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';
-//import logo from '../assets/img/ball.svg';
 import logo from '../assets/img/Logo_VolleyBall.png';
-import { FaUserAlt } from 'react-icons/fa';
 import Hamburger from './Hamburger';
 import { motion } from 'framer-motion';
-import { delay } from '@reduxjs/toolkit/dist/utils';
 import { useAppSelector } from '../hooks/redux';
 import { SelectUser, SelectUserRole, logoutAccount } from '../redux/slices/profileSlice';
 import { MdLogout } from 'react-icons/md';

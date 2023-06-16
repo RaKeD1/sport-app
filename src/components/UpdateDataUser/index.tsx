@@ -1,17 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useAppDispatch } from '../../hooks/redux';
-import { SelectUserID, fetchUser, updateUser } from '../../redux/slices/profileSlice';
+import { SelectUserID, updateUser } from '../../redux/slices/profileSlice';
 import styles from './UpdateDataUser.module.scss';
 import MaskedInput from 'react-text-mask';
 import { phoneNumberMask } from '../RegistrForm';
 import { useSelector } from 'react-redux';
 import { updateOneUser } from '../../redux/slices/userSlice';
 import { IUser } from '../../models/IUser';
+
 interface PropsValues {
   user: IUser;
   isUpdate?: (value: boolean) => void;
   setIsActive: (value: boolean) => void;
 }
+//Валидация для email
+export const EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const UpdateUser = (props: PropsValues) => {
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
@@ -50,10 +54,18 @@ const UpdateUser = (props: PropsValues) => {
   //введены без ошибок и изменилось хотя бы одно поле
   useEffect(() => {
     const areAllErrorsEmpty = Object.values(errorsState).every((error) => error === '');
+    const changedPhone = formData.phone
+      ? formData.phone
+          .replace(/\)/g, '')
+          .replace(/\(/g, '')
+          .replace(/-/g, '')
+          .replace(/ /g, '')
+          .replace(/_/g, '')
+      : '';
     if (
       (formData.name !== props.user?.name ||
         formData.surname !== props.user?.surname ||
-        formData.phone !== props.user?.phone ||
+        changedPhone !== props.user?.phone ||
         formData.email !== props.user?.email ||
         formData.patronimyc !== props.user?.patronimyc ||
         formData.team !== props.user?.team) &&
@@ -70,43 +82,51 @@ const UpdateUser = (props: PropsValues) => {
       [name]: value,
     }));
     const validationFunctions = {
-      name: (value) => {
+      name: (value: string) => {
         if (/\d/.test(value)) {
           return 'Имя не должно содержать цифры';
         } else {
           return '';
         }
       },
-      surname: (value) => {
+      surname: (value: string) => {
         if (/\d/.test(value)) {
           return 'Фамилия не должна содержать цифры';
         } else {
           return '';
         }
       },
-      patronimyc: (value) => {
+      patronimyc: (value: string) => {
         if (/\d/.test(value)) {
           return 'Отчество не должно содержать цифры';
         } else {
           return '';
         }
       },
-      phone: (value) => {
+      phone: (value: string) => {
+        const changedPhoneBefore = props.user.phone;
         const changedPhone = value
           .replace(/\)/g, '')
           .replace(/\(/g, '')
           .replace(/-/g, '')
           .replace(/ /g, '')
           .replace(/_/g, '');
+        console.log('before', changedPhoneBefore, 'after', changedPhone);
         if (changedPhone.length !== 12) {
           return 'Проверьте правильность введенного номера';
+        } else if (changedPhone === changedPhoneBefore) {
+          return '';
         } else {
           return '';
         }
       },
 
-      email: () => {
-        return '';
+      email: (value: string) => {
+        if (!EMAIL_REGEXP.test(value)) {
+          return 'Проверьте правильность ввденного Email';
+        } else {
+          return '';
+        }
       },
       team: () => {
         return '';

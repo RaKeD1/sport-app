@@ -13,7 +13,7 @@
   &__title,
   &__team {
     text-align: center;
-    font-size: 30px;
+    @include dynamicFontSize(30, 22);
     font-weight: 500;
     margin-top: 10px;
   }
@@ -39,7 +39,7 @@
 .actions {
   &__title {
     text-align: center;
-    font-size: 25px;
+    @include dynamicFontSize(28, 22);
     font-weight: 500;
     margin-top: 30px;
   }

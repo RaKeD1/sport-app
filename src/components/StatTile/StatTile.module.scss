@@ -1,3 +1,6 @@
+@import '../../scss/vars';
+
+
 .tile {
   background: #fff;
   display: flex;
@@ -14,6 +17,7 @@
 
     &__text {
       font-weight: 500;
+      @include dynamicFontSize(20, 16);
     }
 
     &__expand {

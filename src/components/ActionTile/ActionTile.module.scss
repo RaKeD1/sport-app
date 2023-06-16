@@ -101,6 +101,7 @@
     &__actionName {
       span {
         margin-left: 0;
+        @include dynamicFontSize(16, 14);
       }
     }
 
@@ -122,12 +123,13 @@
     &__result,
     &__condition {
       margin-top: 20px;
+      @include dynamicFontSize(16, 14.5);
     }
 
     &__delete {
       margin-top: 15px;
       display: inline-block;
-      font-size: calc((100vw - 480px) / (1280 - 480) * (18 - 12) + 10px);
+      @include dynamicFontSize(15, 13);
       font-weight: 500;
       opacity: 0.3;
       transition: 0.5s;
@@ -155,6 +157,9 @@
 
       &__result {
         margin-top: 15px;
+        span {
+          margin-left: 5px;
+        }
       }
 
       &__condition {
@@ -167,6 +172,7 @@
           margin-top: 10px;
         }
       }
+
     }
   }
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import { useAppDispatch } from '../../hooks/redux';
 import { SelectUserID, updateUser } from '../../redux/slices/profileSlice';
 import styles from './UpdateDataUser.module.scss';
@@ -75,7 +75,7 @@ const UpdateUser = (props: PropsValues) => {
     } else setDisable(true);
   }, [formData, errorsState]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,

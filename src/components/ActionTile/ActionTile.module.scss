@@ -68,7 +68,7 @@
       // color: $button-clr;
       background: $button-clr;
       color: #fff;
-      padding: 5px 10px;
+      padding: 3px 10px 5px 10px;
       border-radius: 15px;
       margin-left: 15px;
     }
@@ -173,6 +173,19 @@
         }
       }
 
+    }
+    @media (max-width: 400px) {
+
+      &__result {
+        margin-top: 10px
+;
+        display: flex;
+    flex-direction: column;
+    span{margin-left: 0px;margin-top: 10px;}
+    
+      }
+      &__condition {
+        margin-top: 10px;}
     }
   }
 

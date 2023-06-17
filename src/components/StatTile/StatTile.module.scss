@@ -35,6 +35,9 @@
   @media (max-width: 760px) {
     margin-top: 20px;
     width: 47%;
+    &__info {
+      margin-left: 20px;
+    }
   }
 
   @media (max-width: 500px) {

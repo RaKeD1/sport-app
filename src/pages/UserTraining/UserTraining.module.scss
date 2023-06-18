@@ -37,11 +37,13 @@
   @media screen and (max-width: 2000px) {
     &__stat {
       width: 80%;
-  }}
+    }
+  }
   @media screen and (max-width: 1800px) {
     &__stat {
       width: 70%;
-  }}
+    }
+  }
 }
 
 .actions {
@@ -76,5 +78,13 @@
     @media screen and (max-width: 550px) {
       justify-content: center;
     }
+  }
+
+  &__showAll {
+    display: block;
+    text-align: center;
+    margin: auto;
+    margin-top: 10px;
+    color: $button-clr;
   }
 }
